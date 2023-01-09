@@ -25,7 +25,7 @@ podman pull docker.io/mysql
 iniciar contenedor:
 
 ```
-podman run -d --pod my_pod --name myql_test -e MYSQL_ROOT_PASSWORD=<password> -e MYSQL_DATABASE=Pcomida_db mysql:latest
+podman run -d --pod my_pod --name mysql_test -e MYSQL_ROOT_PASSWORD=<password> -e MYSQL_DATABASE=Pcomida_db mysql:latest
 ```
 
 ---
@@ -43,7 +43,7 @@ podman build -t backend-container .
 Para ejecutar el contenedor de forma interactiva
 
 ```
-podman run -it --pod my_pod --name backend_node -e NODE_DOCKER_PORT=3000 --ignorefile .dockerignore backend-container
+podman run -it --pod my_pod --name backend_node -e NODE_DOCKER_PORT=3000 backend-container
 ```
 
 ---
