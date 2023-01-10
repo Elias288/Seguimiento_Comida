@@ -29,7 +29,7 @@ app.use('/api/user', userRouter)
 
 app.use((req, res, next) => {
     console.log('notFound')
-    res.status(404).end()
+    res.status(404).send('404 not found')
 })
 app.use(handleErrors)
 

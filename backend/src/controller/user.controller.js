@@ -1,53 +1,83 @@
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid')
 const db = require('../models')
+var jwt = require('jsonwebtoken')
+var bcrypt = require('bcryptjs')
 const User = db.User
 const Op = db.Sequelize.Op
+const userServices = require('../services/user.services')
 
 exports.create = (req, res, next) => {
     const { name, surName, email, password, password2 } = req.body 
 
-    if (password !== password2) return next({ name: "passwordValidationError", message: 'Contraseñas no coinciden' })
+    if (name) return next({ name: "missingData", message: "Name es requerido" })
+    if (email) return next({ name: "missingData", message: "Email es requerido" })
+    if (password) return next({ name: "missingData", message: "Password es requerido" })
+    if (password !== password2) return next({ name: "passwordValidationError" })
     
     try {
-        const user = {
+        var hashedPassword = bcrypt.hashSync(password, 8);
+
+        const userData = {
             _id: uuidv4(),
             name,
             surName,
             email,
-            password
+            password: hashedPassword
         }
-        User.create(user).then(data => {
-            res.status(201).send(data)
-        }).catch(err => {
-            next(err)
+
+        User.create(userData).then(data => {
+            const { dataValues: user } = data
+            return res.status(201).send(user)
         })
     } catch (error) {
-        next(error)
+        return next(error)
     }
 }
 
-exports.findOneById = (req, res) => {
+exports.findOneById = async (req, res, next) => {
     const { id } = req.body
-
-    User.findByPk(id).then(data => {
-        if (data) res.send(data)
-        else res.status(404).send({ message: 'Usuario no encontrado' })
-    }).catch(err => {
-        res.status(500).send({
-            message: 'Error recuperando los datos'
-        })
-    })
+    const data = await userServices.getUserById(id)
+    if (data.isError) {
+        return next(data)
+    }
+    return res.status(200).send(data)
 }
 
-exports.findOneByEmail = (req, res) => {
+exports.findOneByEmail = async (req, res, next) => {
     const { email } = req.body
+    const data = await userServices.getUserByEmail(email)
+    if (data.isError) {
+        return next(data)
+    }
+    return res.status(200).send(data)
+}
 
-    User.findOne({ where: { email } }).then(data => {
-        if (data) res.send(data)
-        else res.status(404).send({ message: 'Usuario no encontrado' })
-    }).catch(err => {
-        res.status(500).send({
-            message: 'Error recuperando los datos'
+exports.login = async (req, res, next) => {
+    const { email, password } = req.body
+    const data = await userServices.login(email, password)
+    if (data.isError) {
+        return next(data)
+    }
+    res.status(200).send(data)
+}
+
+exports.getMe = (req, res, next) => {
+    var token = req.headers['x-access-token']
+    if (!token) return next({ name: "tokenNotProvidedError" })
+
+    jwt.verify(token, process.env.SECRET, async (err, decoded) => {
+        if (err) return next(err)
+        
+        const data = await userServices.getUserById(decoded.id)
+        if (data.isError) {
+            return next(data)
+        }
+        res.status(200).send({
+            _id: data._id,
+            name: data.name,
+            surName: data.surName,
+            email: data.email
+
         })
     })
 }

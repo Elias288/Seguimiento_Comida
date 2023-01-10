@@ -4,7 +4,9 @@ const bodyParser = require('body-parser')
 
 userRouter.use(bodyParser.urlencoded({ extended: true }))
 userRouter.post('/', userControler.create)
+userRouter.post('/login', userControler.login)
 userRouter.get('/email', userControler.findOneByEmail)
 userRouter.get('/id', userControler.findOneById)
+userRouter.get('/me', userControler.getMe)
 
 module.exports = userRouter
