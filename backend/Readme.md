@@ -39,6 +39,11 @@ Explorador bash del conenedor elegido
 ```
 podman exec -it <name> bash
 ```
+
+Ver de forma interactiva los logs de un contenedor
+```
+podamn logs -f <name>
+```
 ---
 ---
 

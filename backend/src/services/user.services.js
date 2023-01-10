@@ -4,7 +4,7 @@ var bcrypt = require('bcryptjs')
 
 exports.getUserById = (id) => {
     if (!id) {
-        console.log(new Error('Id no encontrada'))
+        console.error(new Error('Id no encontrada'))
         return {
             isError: true,
             name: 'missingData',
@@ -13,7 +13,7 @@ exports.getUserById = (id) => {
     }
     return User.findByPk(id).then(data => {
         if (!data) {
-            console.log(new Error('Usuario no encontrado'))
+            console.error(new Error('Usuario no encontrado'))
             return {
                 isError: true,
                 name: 'userNotFound'
@@ -21,7 +21,7 @@ exports.getUserById = (id) => {
         }
         return { ...data.dataValues, isError: false }
     }).catch(() => {
-        console.log(new Error('Error recuperando los datos'))
+        console.error(new Error('Error recuperando los datos'))
         return {
             isError: true,
             name: 'notDataError'
@@ -31,34 +31,34 @@ exports.getUserById = (id) => {
 
 exports.getUserByEmail = (email) => {
     if (!email) {
-        console.log(new Error('Email no encontrada'))
+        console.error(new Error('Email no encontrada'))
         return { isError: true, name: 'missingData', message: 'Email es requerido' }
     }
     return User.findOne({ where: { email } }).then(data => {
         if (!data) {
-            console.log(new Error('Usuario no encontrado'))
+            console.error(new Error('Usuario no encontrado'))
             return { isError: true, name: 'userNotFound' }
         }
         return {...data.dataValues, isError: false}
     }).catch(() => {
-        console.log(new Error('Error recuperando los datos'))
+        console.error(new Error('Error recuperando los datos'))
         return { isError: true, name: 'notDataError' }
     })
 }
 
 exports.login = async (email, password) => {
     if (!password) {
-        console.log(new Error('Contraseña no encontrada'))
+        console.error(new Error('Contraseña no encontrada'))
         return { isError: true, name: "missingData", message: "Password es requerido" }
     }
     const data = await this.getUserByEmail(email)
     if (data.isError) {
-        console.log(new Error(data.name))
+        console.error(new Error(data.name))
         return { isError: true, name: data.name, message: data.message }
     }
 
     if (await bcrypt.compare(password, data.password)) {
-        var token = jwt.sign({ id: data._id }, process.env.SECRET, { expiresIn: 86400 })
+        const token = jwt.sign({ id: data._id }, process.env.SECRET, { expiresIn: 86400 })
         return {
             _id: data._id,
             name: data.name,
