@@ -5,6 +5,7 @@ El backend se carga en un pod con un contenedor de MYSQL y un contenedor con Nod
 ## Comandos utiles
 (Si se está usando Podman es necesario inicializar la maquina [aquí](https://github.com/containers/podman/blob/main/docs/tutorials/podman-for-windows.md))
 
+### Iniciar podman
 Para iniciar el [Pod](#pod) contenedor y de [MYSQL](#mysql): 
 ```
 npm run podmaninit
@@ -12,6 +13,7 @@ npm run podmaninit
 Ejecuta el siguiente codigo en [scripts/podmanInit.sh](./scripts/podmanInit.sh)
 
 ---
+### Construir imagen
 Para construir la imagen y ejecutar el [contenedor](#comandos-del-contenedor) con todo el backend: 
 ```
 npm run podmanStart
@@ -19,6 +21,7 @@ npm run podmanStart
 Ejecuta el siguiente codigo en [scripts/podmanStart.sh](./scripts/podmanStart.sh)
 
 ---
+### Actualizar contenedor
 Para actualizar contenedor de node:
 ```
 npm run podmanUpdate
@@ -26,7 +29,7 @@ npm run podmanUpdate
 Ejecuta el siguiente codigo en [scripts/podmanUpdate.sh](./scripts/podmanUpdate.sh)
 
 ---
-
+### Limpiar contenedor
 Para parar y limpiar los contenedores dentro del pod:
 ```
 npm run podmanClean
@@ -34,12 +37,13 @@ npm run podmanClean
 Ejecuta el siguiente codigo en [scripts/podmanClean.sh](./scripts/podmanClean.sh)
 
 ---
-
-Explorador bash del conenedor elegido
+### Entrar a un contenedor
+Para explorador bash del conenedor elegido
 ```
 podman exec -it <name> bash
 ```
-
+---
+### Logs de contenedor
 Ver de forma interactiva los logs de un contenedor
 ```
 podamn logs -f <name>
@@ -70,6 +74,18 @@ Inicia un contenedor de MYSQL en el pod ```my_pod``` llamado ```mysql_test``` co
 ```
 podman run -d --pod my_pod --name mysql_test -e MYSQL_ROOT_PASSWORD=<password> -e MYSQL_DATABASE=Pcomida_db mysql:latest
 ```
+
+Para iniciar solo el contenedor de Mysql con salida al puerto ```3306```
+```
+podman run -d --name mysql_test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=<password> -e MYSQL_DATABASE=Pcomida_db mysql:latest
+```
+
+Para ejecutar comandos de MYSQL en el contenedor [comandos](https://stackoverflow.com/questions/59838692/mysql-root-password-is-set-but-getting-access-denied-for-user-rootlocalhost)
+- [Entrar al contenedor](#entrar-a-un-contenedor)
+- Loguearse con la contraseña
+    ```
+    mysql -u root -p
+    ```
 
 ---
 ## Comandos del contenedor

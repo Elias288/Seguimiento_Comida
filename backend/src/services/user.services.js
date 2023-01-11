@@ -16,7 +16,8 @@ exports.getUserById = (id) => {
             console.error(new Error('Usuario no encontrado'))
             return {
                 isError: true,
-                name: 'userNotFound'
+                name: 'notFound',
+                message: 'User no encontrado'
             }
         }
         return { ...data.dataValues, isError: false }
@@ -56,17 +57,41 @@ exports.login = async (email, password) => {
         console.error(new Error(data.name))
         return { isError: true, name: data.name, message: data.message }
     }
+    const user = data
 
-    if (await bcrypt.compare(password, data.password)) {
-        const token = jwt.sign({ id: data._id }, process.env.SECRET, { expiresIn: 86400 })
+    if (await bcrypt.compare(password, user.password)) {
+        const tokenData = { id: user._id, admin: user.admin, kitchener: user.kitchener }
+        const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: 86400 })
         return {
-            _id: data._id,
-            name: data.name,
-            surName: data.surName,
-            email: data.email,
+            name: user.name,
+            surName: user.surName,
+            email: user.email,
             jwt: token
         }
     } else {
-        return { isError:true, name: 'invalidData' }
+        return { isError:true, name: 'invalidUserData' }
     }
+}
+
+exports.updateUser = (id, user) => {
+    if (!id) {
+        console.error(new Error('Id no encontrada'))
+        return {
+            isError: true,
+            name: 'missingData',
+            message: 'Id es requerida'
+        }
+    }
+    return User.update(user, { where: { _id: id } }).then(num => {
+        if (num == 1) {
+            return { isError: false }
+        }
+        return { isError: true, name: 'dataNotUpdated' }
+    }).catch(() => {
+        console.error(new Error('Error recuperando los datos'))
+        return {
+            isError: true,
+            name: 'notDataError'
+        }
+    })
 }

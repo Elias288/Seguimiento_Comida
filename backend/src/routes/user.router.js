@@ -6,6 +6,8 @@ const { verifyToken } = require('../middleware/verifyToken')
 userRouter.use(bodyParser.urlencoded({ extended: true }))
 userRouter.post('/', userControler.create)
 userRouter.post('/login', userControler.login)
+userRouter.put('/', verifyToken, userControler.update)
+
 userRouter.get('/email', userControler.findOneByEmail)
 userRouter.get('/id', userControler.findOneById)
 userRouter.get('/me', verifyToken, userControler.getMe)

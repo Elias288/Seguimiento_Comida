@@ -11,6 +11,8 @@
     "podmanInit": "bash ./scripts/podmanInit.sh",
     "podmanStart": "bash ./scripts/podmanStart.sh",
     "podmanUpdate": "bash ./scripts/podmanUpdate.sh",
+    "podmanStop": "podman pod stop my_pod",
+    "podmanRestart": "podman pod start my_pod",
     "podmanClean": "podman pod stop my_pod && podman pod rm my_pod"
   },
   "keywords": [],

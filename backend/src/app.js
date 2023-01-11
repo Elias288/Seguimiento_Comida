@@ -22,16 +22,25 @@ db.sequelize.sync().then(() => {
 })
 
 app.get('/', (req, res) => {
-    res.send({ name, author, description, license })
+    return res.send({ name, author, description, license })
 })
 
 app.use('/api/user', userRouter)
 
 app.use((req, res, next) => {
     console.log('notFound')
-    res.status(404).send('404 not found')
+    return res.status(404).send('404 not found')
 })
 app.use(handleErrors)
+
+/**
+ * TODO: Router, controller y service de Menú
+ * TODO: CreateMenu, updateMenu, getMenuById, getMenuByName, getUsersByMenu
+ * TODO: pushUserToMenu
+ * TODO: separar roles
+ * 
+ * DONE: updateUser
+ */
 
 module.exports = server
 

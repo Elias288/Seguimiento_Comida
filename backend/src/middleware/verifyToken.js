@@ -13,7 +13,7 @@ exports.verifyToken = (req, res, next) => {
 
     try {
         const subToken = token.substring(7)
-        req.user = jwt.verify(subToken, process.env.SECRET)
+        req.tokenData = jwt.verify(subToken, process.env.SECRET)
         return next()
     } catch (error) {
         console.error(new Error(error.name))
