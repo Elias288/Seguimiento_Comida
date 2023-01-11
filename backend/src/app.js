@@ -5,6 +5,7 @@ const db = require('./models')
 const bodyParser = require('body-parser')
 const { author, license, name, description } = require('../package.json')
 const userRouter = require('./routes/user.router')
+const menuRouter = require('./routes/menu.router')
 const handleErrors = require('./middleware/handleErrors')
 
 const app = express()
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/user', userRouter)
+app.use('/api/menu', menuRouter)
 
 app.use((req, res, next) => {
     console.log('notFound')
@@ -34,11 +36,11 @@ app.use((req, res, next) => {
 app.use(handleErrors)
 
 /**
- * TODO: Router, controller y service de Menú
- * TODO: CreateMenu, updateMenu, getMenuById, getMenuByName, getUsersByMenu
- * TODO: pushUserToMenu
- * TODO: separar roles
+ * TODO: pushUserToMenu, getUsersByMenu
  * 
+ * DONE: separar roles
+ * DONE: Router, controller y service de Menú
+ * DONE: CreateMenu, updateMenu, getAllMenu, getMenuById, getMenuByDate
  * DONE: updateUser
  */
 

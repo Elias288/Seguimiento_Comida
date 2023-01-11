@@ -1,6 +1,5 @@
 const dbConfig = require("../config/db.config.js")
 
-// console.log('database in:',dbConfig.HOST, dbConfig.port)
 const Sequelize = require("sequelize")
 const sequelize = new Sequelize(
   dbConfig.DB,
@@ -22,15 +21,10 @@ const sequelize = new Sequelize(
 
 const db = {};
 
-// sequelize.authenticate().then(() => {
-//   console.log('BD conectada')
-// }).catch((error) => {
-//   console.log('error: ', error)
-// })
-
 db.Sequelize = Sequelize
 db.sequelize = sequelize
 
 db.User = require("./user.model.js")(sequelize, Sequelize)
+db.Menu = require("./menu.model.js")(sequelize, Sequelize)
 
 module.exports = db
