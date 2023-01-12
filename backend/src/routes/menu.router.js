@@ -8,6 +8,7 @@ menuRouter.post('/', verifyToken, menuController.create)
 menuRouter.put('/', verifyToken, menuController.update)
 
 menuRouter.get('/', menuController.findAll)
+menuRouter.get('/users', menuController.findUsersByMenu)
 menuRouter.get('/id', menuController.findOneById)
 menuRouter.get('/date', menuController.findOneByDate)
 

@@ -2,6 +2,10 @@ const { User } = require("../models")
 var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
 
+exports.getAll = () => {
+    return User.findAll()
+}
+
 exports.getUserById = (id) => {
     if (!id) {
         console.error(new Error('Id no encontrada'))
@@ -20,7 +24,7 @@ exports.getUserById = (id) => {
                 message: 'User no encontrado'
             }
         }
-        return { ...data.dataValues, isError: false }
+        return { data, isError: false }
     }).catch(() => {
         console.error(new Error('Error recuperando los datos'))
         return {
@@ -40,7 +44,7 @@ exports.getUserByEmail = (email) => {
             console.error(new Error('Usuario no encontrado'))
             return { isError: true, name: 'userNotFound' }
         }
-        return {...data.dataValues, isError: false}
+        return { data, isError: false }
     }).catch(() => {
         console.error(new Error('Error recuperando los datos'))
         return { isError: true, name: 'notDataError' }
@@ -57,7 +61,7 @@ exports.login = async (email, password) => {
         console.error(new Error(data.name))
         return { isError: true, name: data.name, message: data.message }
     }
-    const user = data
+    const user = data.data
 
     if (await bcrypt.compare(password, user.password)) {
         const tokenData = { id: user._id, admin: user.admin, kitchener: user.kitchener }

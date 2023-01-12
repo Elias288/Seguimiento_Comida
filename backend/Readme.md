@@ -8,7 +8,7 @@ El backend se carga en un pod con un contenedor de MYSQL y un contenedor con Nod
 ### Iniciar podman
 Para iniciar el [Pod](#pod) contenedor y de [MYSQL](#mysql): 
 ```
-npm run podmaninit
+npm run podmanInit
 ```
 Ejecuta el siguiente codigo en [scripts/podmanInit.sh](./scripts/podmanInit.sh)
 
@@ -29,12 +29,18 @@ npm run podmanUpdate
 Ejecuta el siguiente codigo en [scripts/podmanUpdate.sh](./scripts/podmanUpdate.sh)
 
 ---
+### Reiniciar contenedor
+Para reiniciar los contenedores dentro del pod:
+```
+npm run podmanRestart
+```
+
+---
 ### Limpiar contenedor
 Para parar y limpiar los contenedores dentro del pod:
 ```
 npm run podmanClean
 ```
-Ejecuta el siguiente codigo en [scripts/podmanClean.sh](./scripts/podmanClean.sh)
 
 ---
 ### Entrar a un contenedor
@@ -46,7 +52,7 @@ podman exec -it <name> bash
 ### Logs de contenedor
 Ver de forma interactiva los logs de un contenedor
 ```
-podamn logs -f <name>
+podman logs -f <name>
 ```
 ---
 ---

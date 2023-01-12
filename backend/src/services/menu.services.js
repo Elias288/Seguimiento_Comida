@@ -1,15 +1,30 @@
-const { Menu } = require('../models')
+const { Menu, User } = require('../models')
 
 exports.getAllMenu = () => {
-    return Menu.findAll().then(data => {
-        const menus = data.map(menu => menu.dataValues)
-        return { menus, isError: false }
-    }).catch(() => {
-        console.error(new Error('Error recuperando los datos'))
+    return Menu.findAll()
+}
+
+exports.getUsersOfMenu = (id) => {
+    if (!id) {
+        console.error(new Error('Id no encontrada'))
         return {
             isError: true,
-            name: 'notDataError'
+            name: 'missingData',
+            message: 'Id es requerida'
         }
+    }
+    return Menu.findOne({ 
+        where: { _id: id },
+        include: { model: User }
+    }).then(data => {
+        if (!data) {
+            console.error(new Error('Menu no encontrado'))
+            return { isError: true, name: 'notFound', message: 'Menu no encontrado' }
+        }
+        return { data, isError: false }
+    }).catch(() => {
+        console.error(new Error('Error recuperando los datos'))
+        return { isError: true, name: 'notDataError' }
     })
 }
 
@@ -31,7 +46,7 @@ exports.getMenuById = (id) => {
                 message: 'Menu no encontrado'
             }
         }
-        return { ...data.dataValues, isError: false }
+        return { data, isError: false }
     }).catch(() => {
         console.error(new Error('Error recuperando los datos'))
         return {
@@ -51,7 +66,7 @@ exports.getMenuByDate = (date) => {
             console.error(new Error('Menu no encontrado'))
             return { isError: true, name: 'notFound', message: 'Menu no encontrado' }
         }
-        return {...data.dataValues, isError: false}
+        return { data, isError: false }
     }).catch(() => {
         console.error(new Error('Error recuperando los datos'))
         return { isError: true, name: 'notDataError' }

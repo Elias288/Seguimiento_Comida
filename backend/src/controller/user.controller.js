@@ -5,6 +5,8 @@ var bcrypt = require('bcryptjs')
 const User = db.User
 const Op = db.Sequelize.Op
 const userServices = require('../services/user.services')
+const menuService = require('../services/menu.services')
+const { Menu } = require('../models')
 
 exports.create = (req, res, next) => {
     const { name, surName, email, password, password2, admin, kitchener } = req.body 
@@ -44,24 +46,36 @@ exports.create = (req, res, next) => {
     })
 }
 
-exports.findOneById = async (req, res, next) => {
+exports.findOneById = (req, res, next) => {
     const { id } = req.body
-    const data = await userServices.getUserById(id)
-    if (data.isError) {
-        console.error(new Error(data))
-        return next(data)
-    }
-    return res.status(200).send(data)
+    return userServices.getUserById(id).then(data => {
+        if (data.isError) {
+            console.error(new Error(data))
+            return next(data)
+        }
+        const user = data.data
+        return res.status(200).send(user)
+    })
 }
 
-exports.findOneByEmail = async (req, res, next) => {
+exports.findOneByEmail = (req, res, next) => {
     const { email } = req.body
-    const data = await userServices.getUserByEmail(email)
-    if (data.isError) {
-        console.error(new Error(data))
-        return next(data)
-    }
-    return res.status(200).send(data)
+    return userServices.getUserByEmail(email).then(data => {
+        if (data.isError) {
+            console.error(new Error(data))
+            return next(data)
+        }
+        const user = data.data
+        return res.status(200).send(user)
+    })
+}
+
+exports.findAll = async (req, res, next) => {
+    return await userServices.getAll().then(data => {
+        res.status(200).send(data)
+    }).catch(error => {
+        next(error)
+    })
 }
 
 exports.login = async (req, res, next) => {
@@ -82,22 +96,23 @@ exports.getMe = async (req, res, next) => {
         console.error(new Error(data))
         return next(data)
     }
+    const user = data.data.dataValues
     res.status(200).send({
-        name: data.name,
-        surName: data.surName,
-        email: data.email,
+        name: user.name,
+        surName: user.surName,
+        email: user.email,
         admin: tokenData.admin,
         kitchener: tokenData.kitchener
     })
 }
 
 exports.update = async (req, res, next) => {
-    const { name, surName, email, password } = req.body
+    const { name, surName, email, password, kitchener, admin } = req.body
     const { tokenData } = req
 
     if (password) password = bcrypt.hashSync(password, 8)
 
-    const user = { name, surName, email, password }
+    const user = { name, surName, email, password, kitchener, admin }
     const data = await userServices.updateUser(tokenData.id, user)
 
     if (data.isError) {
@@ -105,4 +120,33 @@ exports.update = async (req, res, next) => {
         return next(data)
     }
     res.status(200).send('Usuario actualizado')
+}
+
+exports.addToMenu = async (req, res, next) => {
+    const { menuId } = req.body
+    const { tokenData } = req
+
+    let user, menu
+
+    return userServices.getUserById(tokenData.id).then(data => {
+        if (data.isError) {
+            return next(data)
+        }
+        return data.data
+    }).then(data => {
+        user = data
+        return menuService.getMenuById(menuId)
+    }).then(data => {
+        if (data.isError) {
+            return next(data)
+        }
+        menu = data.data
+        return user.addMenus(menu)
+    }).then(data => {
+        res.status(200).send({ message: 'Agregado correctamente' })
+    }).catch(error => {
+        next(error)
+    })
+
+    
 }

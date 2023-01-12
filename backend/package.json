@@ -8,6 +8,8 @@
     "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
 
+    "podmanHelp": "echo podmanInit && echo podmanStart && echo podmanUpdate && echo podmanStop && echo podmanRestart && echo podmanClean",
+
     "podmanInit": "bash ./scripts/podmanInit.sh",
     "podmanStart": "bash ./scripts/podmanStart.sh",
     "podmanUpdate": "bash ./scripts/podmanUpdate.sh",
@@ -26,7 +28,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.28.0",
+    "sequelize": "6.28.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

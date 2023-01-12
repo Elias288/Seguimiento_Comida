@@ -16,7 +16,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.set('json spaces', 2)
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ alter: true }).then(() => {
     console.log('db connected')
 }).catch(err => {
     console.log('error', err.message)
@@ -34,15 +34,6 @@ app.use((req, res, next) => {
     return res.status(404).send('404 not found')
 })
 app.use(handleErrors)
-
-/**
- * TODO: pushUserToMenu, getUsersByMenu
- * 
- * DONE: separar roles
- * DONE: Router, controller y service de Menú
- * DONE: CreateMenu, updateMenu, getAllMenu, getMenuById, getMenuByDate
- * DONE: updateUser
- */
 
 module.exports = server
 

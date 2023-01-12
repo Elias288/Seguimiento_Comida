@@ -41,12 +41,30 @@ exports.create = (req, res, next) => {
 }
 
 exports.findAll = async (req, res, next) => {
-    const data = await menuServices.getAllMenu()
+    return menuServices.getAllMenu().then(data => {
+        res.status(200).send(data)
+    }).catch(error => {
+        next(error)
+    })
+}
+
+exports.findUsersByMenu = async (req, res, next) => {
+    const { id } = req.body
+    const data = await menuServices.getUsersOfMenu(id)
     if (data.isError) {
         console.error(new Error(data))
         return next(data)
     }
-    return res.status(200).send(data)
+    const menu = data.data
+    const users = menu.users.map(user => {
+        return {
+            _id: user._id,
+            name: user.name,
+            surName: user.surName,
+            email: user.email
+        }
+    })
+    return res.status(200).send(users)
 }
 
 exports.findOneById = async (req, res, next) => {
@@ -56,7 +74,8 @@ exports.findOneById = async (req, res, next) => {
         console.error(new Error(data))
         return next(data)
     }
-    return res.status(200).send(data)
+    const menu = data.data
+    return res.status(200).send(menu)
 }
 
 exports.findOneByDate = async (req, res, next) => {
@@ -66,7 +85,8 @@ exports.findOneByDate = async (req, res, next) => {
         console.error(new Error(data))
         return next(data)
     }
-    return res.status(200).send(data)
+    const menu = data.data
+    return res.status(200).send(menu)
 }
 
 exports.update = async (req, res, next) => {

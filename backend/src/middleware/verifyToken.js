@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 exports.verifyToken = (req, res, next) => {
-    const token = req.headers['x-access-token']
+    const token = req.headers['authorization']
     if (!token) {
         console.error(new Error('tokenNotProvidedError'))
         return next({ name: "tokenNotProvidedError" })
