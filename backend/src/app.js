@@ -37,3 +37,6 @@ app.use(handleErrors)
 
 module.exports = server
 
+/**
+ * TODO: no se puede agregar ni modificar menu-user antes de 24
+ */

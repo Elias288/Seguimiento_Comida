@@ -13,6 +13,7 @@
     "podmanInit": "bash ./scripts/podmanInit.sh",
     "podmanStart": "bash ./scripts/podmanStart.sh",
     "podmanUpdate": "bash ./scripts/podmanUpdate.sh",
+    "podmanBd": "podman run -d --name mysql_test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=Pcomida_db mysql:latest ",
     "podmanStop": "podman pod stop my_pod",
     "podmanRestart": "podman pod start my_pod",
     "podmanClean": "podman pod stop my_pod && podman pod rm my_pod"

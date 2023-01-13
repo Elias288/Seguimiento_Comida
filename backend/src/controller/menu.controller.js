@@ -23,17 +23,22 @@ exports.create = (req, res, next) => {
         console.error(new Error('missingData'))
         return next({ name: "missingData", message: "Fecha es requerido" })
     }
+    const date = new Date(fecha)
+
+    if (+date <= +new Date()) {
+        console.error(new Error('invalidDate'))
+        return next({ name: "invalidDate" })
+    }
     
     const menuData = {
         _id: uuidv4(),
         name,
         ingredientes,
-        date: fecha
+        date
     }
 
     Menu.create(menuData).then(data => {
-        const { dataValues: menu } = data
-        return res.status(201).send(menu)
+        return res.status(201).send(data)
     }).catch(error => {
         console.error(new Error(error))
         return next(error)

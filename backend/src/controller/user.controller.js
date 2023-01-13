@@ -141,12 +141,18 @@ exports.addToMenu = async (req, res, next) => {
             return next(data)
         }
         menu = data.data
+        const msBetweenDates = Math.abs(menu.date.getTime() - new Date().getTime());
+        const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
+        if (hoursBetweenDates < 24) {
+            console.error(new Error("outOfTime"))
+            return next({ name: "outOfTime" })
+        }
+        
         return user.addMenus(menu)
     }).then(data => {
         res.status(200).send({ message: 'Agregado correctamente' })
     }).catch(error => {
         next(error)
     })
-
     
 }
