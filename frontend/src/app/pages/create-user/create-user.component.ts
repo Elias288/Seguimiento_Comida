@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/utils/user.interface';
 
@@ -22,7 +24,9 @@ export class CreateUserComponent implements OnInit{
     }
 
     constructor(
-        private userService: UserService
+        private router: Router,
+        private userService: UserService,
+        private _snackBar: MatSnackBar
     ) { }
     
     ngOnInit(): void {
@@ -47,18 +51,22 @@ export class CreateUserComponent implements OnInit{
         })
     }
 
-    async onSubmit(): Promise<void> {
+    onSubmit(): any {
         this.userData.email = this.createUserForm.controls['email'].value
         this.userData.surName = this.createUserForm.controls['surName'].value
         this.userData.name = this.createUserForm.controls['name'].value
         this.userData.password = this.createUserForm.controls['password'].value
         this.userData.password2 = this.createUserForm.controls['password2'].value
         
-        const data = await this.userService.create(this.userData)
-        console.log(data)
-        if (data.error) {
-            window.alert(data.error.message)
-        }
-        
+        this.userService.create(this.userData).then(data => {
+            if (data.error) {
+                this._snackBar.open(data.message, 'close', {
+                    duration: 5000
+                })
+                return
+            }
+
+            this.router.navigate(['login'])
+        })
     }
 }

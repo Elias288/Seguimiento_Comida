@@ -1,7 +1,7 @@
 const ERROR_HANDLERS = {
-    SequelizeValidationError: (res, error) => res.status(400).send({ error: error.name, message: error.errors}),
+    SequelizeValidationError: (res, error) => res.status(400).send({ error: error.name, message: error.errors[0].message}),
     JsonWebTokenError: (res, error) => res.status(400).send({ error: error.name, message: error.message }),
-    SequelizeUniqueConstraintError: (res, error) => res.status(400).send({ error: error.name, message: error.errors }),
+    SequelizeUniqueConstraintError: (res, error) => res.status(400).send({ error: error.name, message: error.errors[0].message}),
     missingData: (res, error) => res.status(404).send({ error: error.name, message: error.message }),
     passwordValidationError: (res, error) => res.status(400).send({ error: error.name, message: "Contraseñas no coinciden" }),
     tokenNotProvidedError: (res, error) => res.status(400).send({ error: error.name, message: "Token es requerido" }),

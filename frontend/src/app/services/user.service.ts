@@ -41,6 +41,30 @@ export class UserService {
         return fetch(`${this.ENDPOINT}/user`, data).then(res => {
             return res.json()
         }).then(data => {
+            if (!data.error) {
+                localStorage.setItem('user', JSON.stringify(data))
+            }
+            return data
+        }).catch(err => {
+            return err
+        })
+    }
+
+    login(email: String, password: String) {
+        const data = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        }
+
+        return fetch(`${this.ENDPOINT}/user/login`, data).then(res => {
+            return res.json()
+        }).then(data => {
+            if (!data.error) {
+                localStorage.setItem('user', JSON.stringify(data))
+            }
             return data
         }).catch(err => {
             return err
