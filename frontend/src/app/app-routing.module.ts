@@ -5,6 +5,7 @@ import { AngularHelpsComponent } from './pages/angular-helps/angular-helps.compo
 import { CreateUserComponent } from './pages/create-user/create-user.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { CanAccesService } from './services/canAcces/can-acces.service';
 
 const routes: Routes = [
   {
@@ -19,7 +20,8 @@ const routes: Routes = [
   {
     path: 'home',
     title: "Home",
-    component: HomeComponent
+    component: HomeComponent,
+    canActivate: [CanAccesService]
   },
   {
     path: 'login',

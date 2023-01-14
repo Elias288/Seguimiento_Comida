@@ -10,6 +10,9 @@ import { CreateUserComponent } from './pages/create-user/create-user.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { MaterialModule } from './components/material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CanAccesService } from './services/canAcces/can-acces.service';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,15 +22,17 @@ import { ReactiveFormsModule } from '@angular/forms';
     AngularHelpsComponent,
     CreateUserComponent,
     NotFoundComponent,
+    NavBarComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     MaterialModule,
     ReactiveFormsModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [CanAccesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

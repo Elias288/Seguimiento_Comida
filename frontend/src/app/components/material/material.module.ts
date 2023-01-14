@@ -6,13 +6,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 const materials = [
   MatButtonModule,
   MatFormFieldModule,
   MatInputModule,
   BrowserAnimationsModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatCheckboxModule,
 ]
 
 @NgModule({

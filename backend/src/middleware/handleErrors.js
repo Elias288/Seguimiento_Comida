@@ -14,6 +14,7 @@ const ERROR_HANDLERS = {
 
     notFound: (res, error) => res.status(404).send({ error: error.name, message: error.message }),
     invalidUserData: (res, error) => res.status(404).send({ error: error.name, message: "Usuario o contraseña invalida" }),
+    userNotFound: (res, error) => res.status(404).send({ error: error.name, message: "Usuario no encontrado" }),
 
     notDataError: (res, error) => res.status(500).send({ error: error.name, message: "Error recuperando los datos" }),
     defaultError: (res, error) => {

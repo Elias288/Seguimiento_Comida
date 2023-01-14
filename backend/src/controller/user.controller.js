@@ -98,6 +98,7 @@ exports.getMe = async (req, res, next) => {
     }
     const user = data.data.dataValues
     res.status(200).send({
+        _id: user._id,
         name: user.name,
         surName: user.surName,
         email: user.email,

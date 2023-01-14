@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UserService } from 'src/app/services/user.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
     selector: 'app-login',
@@ -11,24 +11,28 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class LoginComponent implements OnInit {
     loginForm!: FormGroup
-    loginData = {
-        email: "",
-        password: ""
-    }
 
     constructor(
         private router: Router,
-        private userService: UserService,
         private _snackBar: MatSnackBar,
-    ) {}
+        private authService: AuthService,
+    ) {
+        authService.isLoggedIn$.subscribe(status => {
+            if (status){
+                router.navigate(['home'])
+            }
+        })
+    }
 
     ngOnInit() {
+        
+
         this.loginForm = new FormGroup({
-            email: new FormControl(this.loginData.email, [
+            email: new FormControl("", [
                 Validators.required,
                 Validators.minLength(3),
             ]),
-            password: new FormControl(this.loginData.password, [
+            password: new FormControl("", [
                 Validators.required,
                 Validators.minLength(3),
             ])
@@ -37,17 +41,9 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit(): void {
-        this.loginData.email = this.loginForm.controls['email'].value
-        this.loginData.password = this.loginForm.controls['password'].value
-        
-        this.userService.login(this.loginData.email, this.loginData.password).then(data => {
-            if (data.error) {
-                this._snackBar.open(data.message, 'close', {
-                    duration: 5000
-                })
-                return
-            }
-            this.router.navigate(['home'])
+        this.authService.login(this.loginForm.controls['email'].value, this.loginForm.controls['password'].value).subscribe({
+            error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
+            complete: () => this.router.navigate(['home'])
         })
     }
 }

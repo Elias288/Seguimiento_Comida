@@ -1,5 +1,5 @@
 <h1>Crear usuario</h1>
-<form [formGroup]="createUserForm" (ngSubmit)="onSubmit()" style="width: min-content;">
+<form [formGroup]="userData" (ngSubmit)="onSubmit()" style="width: min-content;">
     <mat-form-field appearance="fill">
         <mat-label for="email">Email</mat-label>
         <input id="email" matInput type="text" formControlName="email">
@@ -25,6 +25,8 @@
         <input id="password2" matInput type="password" formControlName="password2">
     </mat-form-field>
     
-    <button type="submit" [disabled]="!createUserForm.valid" mat-flat-button color="primary">Entrar</button>
+    <mat-checkbox id="cocinero" class="example-margin" formControlName="kitchener">Cocinero</mat-checkbox>
+
+    <button type="submit" [disabled]="!userData.valid" mat-flat-button color="primary">Entrar</button>
 </form>
 <p>Loguearse: <a href="/login">aqui</a></p>

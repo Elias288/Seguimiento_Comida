@@ -6,13 +6,12 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             primaryKey: true
         },
-        name: {
+        menuPrincipal: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        ingredientes: {
+        menuSecundario: {
             type: Sequelize.STRING,
-            allowNull: false,
         },
         date: {
             type: Sequelize.DATE,

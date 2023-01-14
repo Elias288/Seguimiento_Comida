@@ -4,20 +4,16 @@ const Menu = db.Menu
 const { v4: uuidv4 } = require('uuid')
 
 exports.create = (req, res, next) => {
-    const { name, ingredientes, fecha } = req.body
+    const { menuPrincipal, menuSecundario, fecha } = req.body
     const { tokenData } = req
     
     if (!tokenData.kitchener) {
         console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }
-    if (!name) {
+    if (!menuPrincipal) {
         console.error(new Error('missingData'))
         return next({ name: "missingData", message: "Name es requerido" })
-    }
-    if (!ingredientes) {
-        console.error(new Error('missingData'))
-        return next({ name: "missingData", message: "Ingredientes es requerido" })
     }
     if (!fecha) {
         console.error(new Error('missingData'))
@@ -32,8 +28,8 @@ exports.create = (req, res, next) => {
     
     const menuData = {
         _id: uuidv4(),
-        name,
-        ingredientes,
+        menuPrincipal,
+        menuSecundario,
         date
     }
 

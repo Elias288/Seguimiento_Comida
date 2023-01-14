@@ -66,12 +66,7 @@ exports.login = async (email, password) => {
     if (await bcrypt.compare(password, user.password)) {
         const tokenData = { id: user._id, admin: user.admin, kitchener: user.kitchener }
         const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: 86400 })
-        return {
-            name: user.name,
-            surName: user.surName,
-            email: user.email,
-            jwt: token
-        }
+        return { jwt: token }
     } else {
         return { isError:true, name: 'invalidUserData' }
     }

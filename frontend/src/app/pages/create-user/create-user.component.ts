@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/utils/user.interface';
 
 @Component({
@@ -11,17 +11,7 @@ import { User } from 'src/app/utils/user.interface';
     styleUrls: ['./create-user.component.scss']
 })
 export class CreateUserComponent implements OnInit{
-    createUserForm!: FormGroup
-    userData: User = {
-        _id: "",
-        name: "",
-        surName: "",
-        email: "",
-        password: "",
-        password2: "",
-        kitchener: false,
-        admin: false,
-    }
+    userData!: FormGroup
 
     constructor(
         private router: Router,
@@ -30,21 +20,22 @@ export class CreateUserComponent implements OnInit{
     ) { }
     
     ngOnInit(): void {
-        this.createUserForm = new FormGroup({
-            name: new FormControl(this.userData.name, [
+        this.userData = new FormGroup({
+            name: new FormControl("", [
                 Validators.required,
                 Validators.minLength(3),
             ]),
-            surName: new FormControl(this.userData.surName),
-            email: new FormControl(this.userData.email, [
+            surName: new FormControl(""),
+            email: new FormControl("", [
                 Validators.required,
                 Validators.minLength(3),
             ]),
-            password: new FormControl(this.userData.password, [
+            kitchener: new FormControl(false),
+            password: new FormControl("", [
                 Validators.required,
                 Validators.minLength(3),
             ]),
-            password2: new FormControl(this.userData.password2, [
+            password2: new FormControl("", [
                 Validators.required,
                 Validators.minLength(3),
             ]),
@@ -52,21 +43,11 @@ export class CreateUserComponent implements OnInit{
     }
 
     onSubmit(): any {
-        this.userData.email = this.createUserForm.controls['email'].value
-        this.userData.surName = this.createUserForm.controls['surName'].value
-        this.userData.name = this.createUserForm.controls['name'].value
-        this.userData.password = this.createUserForm.controls['password'].value
-        this.userData.password2 = this.createUserForm.controls['password2'].value
-        
-        this.userService.create(this.userData).then(data => {
-            if (data.error) {
-                this._snackBar.open(data.message, 'close', {
-                    duration: 5000
-                })
-                return
-            }
-
-            this.router.navigate(['login'])
+        this.userService.create(this.userData.value).subscribe({
+            next: (v) => this._snackBar.open('Usuario ' + v.email + ' creado exitosamente', 'close', { duration: 5000 }),
+            error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
+            complete: () => this.router.navigate(['login'])
+            
         })
     }
 }
