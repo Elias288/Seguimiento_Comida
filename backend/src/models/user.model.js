@@ -22,12 +22,9 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        admin: {
-            type: Sequelize.BOOLEAN  
-        },
-        kitchener: {
-            type: Sequelize.BOOLEAN  
-        },
+        roles: {
+            type: Sequelize.JSON
+        }
     })
 
     return User

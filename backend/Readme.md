@@ -83,7 +83,7 @@ podman run -d --pod my_pod --name mysql_test -e MYSQL_ROOT_PASSWORD=<password> -
 
 Para iniciar solo el contenedor de Mysql con salida al puerto ```3306```
 ```
-podman run -d --name mysql_test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=<password> -e MYSQL_DATABASE=Pcomida_db mysql:latest
+podman run -d --name odb -p 3306:3306 -e MYSQL_ROOT_PASSWORD=<password> -e MYSQL_DATABASE=Pcomida_db mysql:latest
 ```
 
 Para ejecutar comandos de MYSQL en el contenedor [comandos](https://stackoverflow.com/questions/59838692/mysql-root-password-is-set-but-getting-access-denied-for-user-rootlocalhost)

@@ -43,7 +43,17 @@ export class CreateUserComponent implements OnInit{
     }
 
     onSubmit(): any {
-        this.userService.create(this.userData.value).subscribe({
+        const { _id, name, surName, email, password, password2 } = this.userData.value
+        const roles: string[] = []
+
+        console.log();
+        const isCocinero: Boolean = this.userData.controls['kitchener'].value
+        if (isCocinero){
+            roles.push('COCINERO')
+        }
+
+        const user: User = { _id, name, surName, email, password, password2, roles }
+        this.userService.create(user).subscribe({
             next: (v) => this._snackBar.open('Usuario ' + v.email + ' creado exitosamente', 'close', { duration: 5000 }),
             error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
             complete: () => this.router.navigate(['login'])

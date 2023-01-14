@@ -20,8 +20,8 @@ export class AuthService {
     login(email: string, password: string) {
         return this.userService.login(email, password).pipe(
             tap((res: any) => {
-                this._isLoggedIn$.next(true)
                 localStorage.setItem('jwt', res.jwt)
+                this._isLoggedIn$.next(true)
             })
         )
     }

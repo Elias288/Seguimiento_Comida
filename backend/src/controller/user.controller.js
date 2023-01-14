@@ -9,7 +9,7 @@ const menuService = require('../services/menu.services')
 const { Menu } = require('../models')
 
 exports.create = (req, res, next) => {
-    const { name, surName, email, password, password2, admin, kitchener } = req.body 
+    const { name, surName, email, password, password2, roles } = req.body 
 
     if (!name) {
         console.error(new Error('missingData'))
@@ -33,8 +33,7 @@ exports.create = (req, res, next) => {
         surName,
         email,
         password: hashedPassword,
-        admin: Boolean(admin),
-        kitchener: Boolean(kitchener)
+        roles
     }
 
     User.create(userData).then(data => {
@@ -96,15 +95,9 @@ exports.getMe = async (req, res, next) => {
         console.error(new Error(data))
         return next(data)
     }
-    const user = data.data.dataValues
-    res.status(200).send({
-        _id: user._id,
-        name: user.name,
-        surName: user.surName,
-        email: user.email,
-        admin: tokenData.admin,
-        kitchener: tokenData.kitchener
-    })
+    const { _id, name, surName, email, roles } = data.data.dataValues
+
+    res.status(200).send({ _id, name, surName, email, roles, })
 }
 
 exports.update = async (req, res, next) => {
