@@ -19,7 +19,7 @@ app.set('json spaces', 2)
 db.sequelize.sync({ alter: true }).then(() => {
     console.log('db connected')
 }).catch(err => {
-    console.log('error', err.message)
+    console.log('error', err)
 })
 
 app.get('/', (req, res) => {

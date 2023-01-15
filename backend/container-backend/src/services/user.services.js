@@ -64,7 +64,13 @@ exports.login = async (email, password) => {
     const user = data.data
 
     if (await bcrypt.compare(password, user.password)) {
-        const tokenData = { id: user._id, admin: user.admin, kitchener: user.kitchener }
+        const tokenData = { 
+            id: user._id,
+            roles: user.roles,
+            name: user.name,
+            surName: user.surName,
+            email: user.email 
+        }
         const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: 86400 })
         return { jwt: token }
     } else {

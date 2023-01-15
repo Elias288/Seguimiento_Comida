@@ -1,0 +1,77 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.3.1
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    io.kubernetes.cri-o.ContainerType/backendnode: container
+    io.kubernetes.cri-o.ContainerType/db: container
+    io.kubernetes.cri-o.SandboxID/backendnode: 2f7d442ae1e8a99b2ce4690046328e2e7fb51aecf287f01afe050d5d28cf45d
+    io.kubernetes.cri-o.SandboxID/db: 2f7d442ae1e8a99b2ce4690046328e2e7fb51aecf287f01afe050d5d28cf45d
+    io.kubernetes.cri-o.TTY/backendnode: "false"
+    io.kubernetes.cri-o.TTY/db: "false"
+    io.podman.annotations.autoremove/backendnode: "FALSE"
+    io.podman.annotations.autoremove/db: "FALSE"
+    io.podman.annotations.init/backendnode: "FALSE"
+    io.podman.annotations.init/db: "FALSE"
+    io.podman.annotations.privileged/backendnode: "FALSE"
+    io.podman.annotations.privileged/db: "FALSE"
+    io.podman.annotations.publish-all/backendnode: "FALSE"
+    io.podman.annotations.publish-all/db: "FALSE"
+    org.opencontainers.image.base.digest/backendnode: sha256:35b8a7d36f9af6150d5ab19514c73f93ed2383b9681dd41a75faaaac
+    org.opencontainers.image.base.name/backendnode: docker.io/library/node:18
+  creationTimestamp: "2023-01-15T19:14:50Z"
+  labels:
+    app: mypod
+  name: my_pod
+spec:
+  automountServiceAccountToken: false
+  containers:
+  - args:
+    - mysqld
+    env:
+    - name: MYSQL_DATABASE
+      value: Pcomida_db
+    - name: MYSQL_ROOT_PASSWORD
+      value: "123456"
+    image: docker.io/library/mysql:latest
+    name: db
+    ports:
+    - containerPort: 3000
+      hostPort: 8080
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_NET_RAW
+        - CAP_AUDIT_WRITE
+    volumeMounts:
+    - mountPath: /var/lib/mysql
+      name: 93b96e57bfb37432a5d014b4dbd9adbeec29682519adf452bd11c9a5e688be8e-pvc
+  - args:
+    - npm
+    - start
+    env:
+    - name: NODE_DOCKER_PORT
+      value: "3000"
+    image: localhost/backend-container:latest
+    name: backendnode
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_NET_RAW
+        - CAP_AUDIT_WRITE
+  enableServiceLinks: false
+  hostname: my_pod
+  restartPolicy: Never
+  volumes:
+  - name: 93b96e57bfb37432a5d014b4dbd9adbeec29682519adf452bd11c9a5e688be8e-pvc
+    persistentVolumeClaim:
+      claimName: 93b96e57bfb37432a5d014b4dbd9adbeec29682519adf452bd11c9a5e688be8e
+status: {}
+
