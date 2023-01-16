@@ -1,0 +1,22 @@
+<h1>Crear Menu</h1>
+<form [formGroup]="menuData" (ngSubmit)="onSubmit()" style="width: min-content;">
+    <mat-form-field appearance="fill">
+        <mat-label for="menuPrincipal">Menu Principal</mat-label>
+        <input id="menuPrincipal" matInput type="text" formControlName="menuPrincipal">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label for="menuSecundario">Menu Secundario</mat-label>
+        <input id="menuSecundario" matInput type="text" formControlName="menuSecundario">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label for="fecha">Fecha</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="fecha">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <button type="submit" [disabled]="!menuData.valid" mat-flat-button color="primary">Entrar</button>
+</form>

@@ -7,7 +7,7 @@ exports.create = (req, res, next) => {
     const { menuPrincipal, menuSecundario, fecha } = req.body
     const { tokenData } = req
     
-    if (!tokenData.kitchener) {
+    if (!tokenData.roles.includes('COCINERO')) {
         console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }

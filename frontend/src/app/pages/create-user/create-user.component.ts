@@ -11,53 +11,51 @@ import { User } from 'src/app/utils/user.interface';
     styleUrls: ['./create-user.component.scss']
 })
 export class CreateUserComponent implements OnInit{
-    userData!: FormGroup
-
     constructor(
         private router: Router,
         private userService: UserService,
         private _snackBar: MatSnackBar
     ) { }
     
+    userData = new FormGroup({
+        name: new FormControl<string>("", [
+            Validators.required,
+            Validators.minLength(3),
+        ]),
+        surName: new FormControl<string>(""),
+        email: new FormControl<string>("", [
+            Validators.required,
+            Validators.minLength(3),
+        ]),
+        kitchener: new FormControl<Boolean>(false),
+        password: new FormControl<string>("", [
+            Validators.required,
+            Validators.minLength(3),
+        ]),
+        password2: new FormControl<string>("", [
+            Validators.required,
+            Validators.minLength(3),
+        ]),
+    })
+        
     ngOnInit(): void {
-        this.userData = new FormGroup({
-            name: new FormControl("", [
-                Validators.required,
-                Validators.minLength(3),
-            ]),
-            surName: new FormControl(""),
-            email: new FormControl("", [
-                Validators.required,
-                Validators.minLength(3),
-            ]),
-            kitchener: new FormControl(false),
-            password: new FormControl("", [
-                Validators.required,
-                Validators.minLength(3),
-            ]),
-            password2: new FormControl("", [
-                Validators.required,
-                Validators.minLength(3),
-            ]),
-        })
     }
 
-    onSubmit(): any {
-        const { _id, name, surName, email, password, password2 } = this.userData.value
+    onSubmit(): void {
+        const { name, surName, email, password, password2 } = this.userData.value
         const roles: string[] = []
 
         console.log();
-        const isCocinero: Boolean = this.userData.controls['kitchener'].value
+        const isCocinero: Boolean = this.userData.controls['kitchener'].value || false
         if (isCocinero){
             roles.push('COCINERO')
         }
 
-        const user: User = { _id, name, surName, email, password, password2, roles }
+        const user: User = { _id: undefined, name, surName, email, password, password2, roles }
         this.userService.create(user).subscribe({
             next: (v) => this._snackBar.open('Usuario ' + v.email + ' creado exitosamente', 'close', { duration: 5000 }),
             error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
             complete: () => this.router.navigate(['login'])
-            
         })
     }
 }

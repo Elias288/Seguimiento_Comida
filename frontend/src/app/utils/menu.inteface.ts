@@ -1,6 +1,6 @@
 export interface Menu {
-    _id: String
-    name: String
-    ingredientes: String
-    date: String
+    _id: string | null | undefined
+    menuPrincipal: string, 
+    menuSecundario: string, 
+    fecha: Date
 }

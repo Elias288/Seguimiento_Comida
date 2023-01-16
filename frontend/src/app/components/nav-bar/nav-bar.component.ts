@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
@@ -12,21 +13,27 @@ export class NavBarComponent implements OnInit{
     roles!: string[]
 
     constructor(
-        private authService: AuthService
+        private router: Router,
+        private authService: AuthService,
     ) {
         authService.isLoggedIn$.subscribe(status => {
             this.logged = status
-            if (status && localStorage.getItem('jwt')) {
-                authService.getMe(localStorage.getItem('jwt')!).subscribe(user => {
-                    // console.log(user)
-                    this.userName = user.name
-                    this.roles = user.roles
+            if (status) {
+                this.authService.getUser().subscribe({
+                    next: (v) => {
+                        this.userName = v.name
+                        this.roles = v.roles
+                    }
                 })
             }
         })
     }
 
-    async ngOnInit() {}
+    ngOnInit() {}
+
+    createMenu() {
+        this.router.navigate(['create/menu'])
+    }
 
     public logout() {
         this.authService.logout()

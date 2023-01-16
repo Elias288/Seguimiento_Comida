@@ -13,11 +13,14 @@ export class AuthService {
     constructor(
         private userService: UserService
     ) {
-        const token = localStorage.getItem('jwt')
-        this._isLoggedIn$.next(!!token)
+        this._isLoggedIn$.next(!!this.token)
     }
 
-    login(email: string, password: string) {
+    get token(): any {
+        return localStorage.getItem('jwt')
+    }
+
+    public login(email: string, password: string) {
         return this.userService.login(email, password).pipe(
             tap((res: any) => {
                 localStorage.setItem('jwt', res.jwt)
@@ -25,10 +28,10 @@ export class AuthService {
             })
         )
     }
-
-    getMe(jwt: string) {
-        return this.userService.getMe(jwt).pipe(
-            tap((res: any) => {
+    
+    public getUser() {
+        return this.userService.getMe(this.token).pipe(
+            tap((res:any) => {
                 return res
             })
         )

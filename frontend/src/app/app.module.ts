@@ -13,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CanAccesService } from './services/canAcces/can-acces.service';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { HttpClientModule } from '@angular/common/http';
+import { CreateMenuComponent } from './pages/create-menu/create-menu.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     CreateUserComponent,
     NotFoundComponent,
     NavBarComponent,
+    CreateMenuComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

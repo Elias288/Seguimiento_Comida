@@ -12,7 +12,7 @@ import { Menu } from 'src/app/utils/menu.inteface';
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-    menues!: Menu[]
+    menues!: any
     constructor(
         private router: Router,
         private menuService: MenuService,
@@ -27,15 +27,14 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
-        this.menuService.getAllMenues().then(data => {
-            if (data.error) {
-                this._snackBar.open(data.message, 'close', {
-                    duration: 5000
-                })
-                return
-            }
-            this.menues = data
+        this.menuService.getAllMenues().subscribe({
+            next: (v) => {
+                console.log(v)
+                this.menues = v
+            },
+            error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
+            complete: () => console.log('menues')
+            
         })
     }
 

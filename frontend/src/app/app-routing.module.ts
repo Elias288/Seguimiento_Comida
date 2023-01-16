@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { AngularHelpsComponent } from './pages/angular-helps/angular-helps.component';
+import { CreateMenuComponent } from './pages/create-menu/create-menu.component';
 import { CreateUserComponent } from './pages/create-user/create-user.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -29,9 +30,15 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
-    path: 'create',
-    title: "Create",
+    path: 'create/user',
+    title: "Crear usuario",
     component: CreateUserComponent
+  },
+  {
+    path: 'create/menu',
+    title: "Crear menu",
+    component: CreateMenuComponent,
+    canActivate: [CanAccesService]
   },
   {
     path: '**',

@@ -1,7 +1,8 @@
-<p>nav-bar works!</p>
 <div *ngIf="logged">
+    <a href="/home">Home</a>
+
     <div class="kitchenerOptions" *ngIf="roles?.includes('COCINERO')">
-        <button>Agregar comida</button>
+        <button (click)="createMenu()">Agregar comida</button>
     </div>
 
     <button (click)="logout()">Logout</button>

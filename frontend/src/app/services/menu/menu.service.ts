@@ -1,24 +1,24 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Menu } from 'src/app/utils/menu.inteface';
 
 @Injectable({
     providedIn: 'root'
 })
 export class MenuService {
     ENDPOINT = 'http://localhost:8080/api'
-    constructor() { }
+    constructor(
+        private http: HttpClient,
+    ) { }
 
-    getAllMenues() {
-        const data = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }, 
-        }
+    public create(menuData: Menu, jwt: string){
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        const body = JSON.stringify(menuData)
+        return this.http.post(this.ENDPOINT + '/menu', body, { 'headers': headers })
+    }
 
-        return fetch(`${this.ENDPOINT}/menu`, data).then(data => {
-            return data
-        }).catch(err => {
-            return err
-        })
+    public getAllMenues() {
+        const headers = { 'Content-Type': 'application/json' }
+        return this.http.get(this.ENDPOINT + '/menu', { 'headers': headers })
     }
 }
