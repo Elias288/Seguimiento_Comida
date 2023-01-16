@@ -1,0 +1,69 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    height: 100vh;
+    margin-bottom: 2rem;
+
+    padding: 0 .5rem;
+    box-sizing: border-box;
+    
+    .title {
+        padding: .5rem 0;
+        text-align: center;
+    }
+}
+
+.login {
+    padding-bottom: 3rem;
+}
+
+
+form {
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+
+    & * {
+        width: 100%;
+    }
+    
+    button {
+        background-color: green;
+    }
+}
+
+.btnCreateUser {
+    background-color: #343c9d;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    
+    a {
+        display: block;
+        width: 100%;
+        color: #fff;
+        text-decoration: none;
+        padding: .5rem 0;
+    }
+}
+
+/* TABLET */
+@media screen and (min-width: 450px) {
+    .container {
+        padding: 0;
+    }
+
+    .login * {
+        max-width: 400px;
+    }
+}
+
+/* PC */
+// @media screen and (min-width: 850px) {
+//     .container {
+//         background-color: blue;
+
+//     }
+// }

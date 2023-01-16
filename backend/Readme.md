@@ -6,7 +6,7 @@ El backend se carga en un pod con un contenedor de MYSQL y un contenedor con Nod
 (Si se está usando Podman es necesario inicializar la maquina [aquí](https://github.com/containers/podman/blob/main/docs/tutorials/podman-for-windows.md))
 
 ### Iniciar podman
-Para iniciar el [Pod](#pod) contenedor y de [MYSQL](#mysql) usando el archivo kube [container-compose.yaml](./container-compose.yaml) explicado en [Generar manifiesto kubernete](#generar-manifiesto-kubernete).
+Para iniciar el contenedor [Pod](#pod) con [Node](#contenedor-node) y [MYSQL](#mysql) se utiliza el archivo kube [container-compose.yaml](./container-compose.yaml) explicado en [Generar manifiesto kubernete](#generar-manifiesto-kubernete).
 ```
 npm run podI
 ```
@@ -37,7 +37,7 @@ npm run podS
 ### Limpiar contenedor
 Para parar y limpiar los contenedores dentro del pod:
 ```
-npm run podmanClean
+npm run podC
 ```
 
 ---
@@ -76,6 +76,13 @@ Teniendo ya [creado](#crear-un-pod) con sus contenedores adentro, el siguiente c
 podman generate kube my_pod > container-compose.yaml
 ```
 
+### Ejecutar manifiesto kubernete
+Para ejecutar el [manifiesto kubernete](#generar-manifiesto-kubernete) se utiliza el siguiente comando:
+```
+podman play kube <container-compose.yaml>
+```
+
+
 ---
 ## MYSQL
 
@@ -84,17 +91,13 @@ Traer imagen de mysql desde docker.io
 podman pull docker.io/mysql
 ```
 
+### Iniciar contenedor MYSQL
 Inicia un contenedor de MYSQL en el pod ```my_pod``` llamado ```mysql_test``` con una contraseña y una base de datos llamada ```Pcomida_db```
-
 ```
 podman run -d --pod my_pod --name mysql_test -e MYSQL_ROOT_PASSWORD=<password> -e MYSQL_DATABASE=Pcomida_db mysql:latest
 ```
 
-Para iniciar solo el contenedor de Mysql con salida al puerto ```3306```
-```
-podman run -d --name odb -p 3306:3306 -e MYSQL_ROOT_PASSWORD=<password> -e MYSQL_DATABASE=Pcomida_db mysql:latest
-```
-
+### Ejecutar comandos de MYSQL
 Para ejecutar comandos de MYSQL en el contenedor [comandos](https://stackoverflow.com/questions/59838692/mysql-root-password-is-set-but-getting-access-denied-for-user-rootlocalhost)
 - [Entrar al contenedor](#entrar-a-un-contenedor)
 - Loguearse con la contraseña
@@ -103,15 +106,16 @@ Para ejecutar comandos de MYSQL en el contenedor [comandos](https://stackoverflo
     ```
 
 ---
-## Comandos del contenedor
+## Contenedor Node
 
+### Contruir imagen de contenedor
 Para construir el contenedor con [DockerFile](./container-backend/Dockerfile)
-
 ```
 podman build -t backend-container .
 ```
 
-Para ejecutar el contenedor de forma interactiva, con nombre ```backend_node``` con salida al puerto ```3000```
+### Montar contenedor de node
+Para ejecutar el contenedor de [] de forma interactiva, con nombre ```backend_node``` con salida al puerto ```3000```
 
 ```
 podman run -it --pod my_pod --name backend_node -e NODE_DOCKER_PORT=3000 backend-container

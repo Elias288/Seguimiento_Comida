@@ -1,13 +1,22 @@
-<h1>Login</h1>
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" style="width: min-content;">
-    <mat-form-field appearance="fill">
-        <mat-label for="email">Email</mat-label>
-        <input id="email" matInput type="text" formControlName="email">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label for="password">Password</mat-label>
-        <input id="password" matInput type="password" formControlName="password">
-    </mat-form-field>
-    <button type="submit" [disabled]="!loginForm.valid" mat-flat-button color="primary">Entrar</button>
-</form>
-<p>crear usuario: <a href="/create/user">aqui</a></p>
+<div class="container">
+    <div class="title">
+        <h1>Trazabilidad de Almuerzos</h1>
+    </div>
+    <div class="login">
+        <h2>Login</h2>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="fill">
+                <mat-label for="email">Email</mat-label>
+                <input id="email" matInput type="text" formControlName="email">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label for="password">Password</mat-label>
+                <input id="password" matInput type="password" formControlName="password">
+            </mat-form-field>
+            <button type="submit" [disabled]="!loginForm.valid" mat-raised-button color="primary">Entrar</button>
+        </form>
+        <div class="btnCreateUser">
+            <a href="/create/user">Crear Usuario</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+.navBar, .navBar * {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.navBar {
+    background: #252525;
+    padding: .5rem 1rem;
+    justify-content: space-between;
+
+    a, h1, h2, label {
+        color: #fff;
+    }
+}
+
+.btnHome,
+.btnHelp,
+.btnUser,
+button {
+    cursor: pointer;
+    margin-right: .5rem;
+}

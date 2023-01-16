@@ -1,0 +1,25 @@
+<!-- <pre>{{ menues | json }}</pre> -->
+<div class="calendario-container">
+    <header>
+        <p class="current-date">{{currentDate}}</p>
+        <div class="icons">
+            <mat-icon id="prev" (click)="prevNextMonth($event)" fontIcon="chevron_left" />
+            <mat-icon id="next" (click)="prevNextMonth($event)" fontIcon="chevron_right" />
+        </div>
+    </header>
+    
+    <div class="calendar">
+        <ul class="week">
+            <li>Domingo</li>
+            <li>Lunes</li>
+            <li>Martes</li>
+            <li>Miercoles</li>
+            <li>Jueves</li>
+            <li>Viernes</li>
+            <li>Sabado</li>
+        </ul>
+        <ul class="days">
+            <li *ngFor="let day of numbersDay" class="{{day.status}}">{{day.day}}</li>
+        </ul>
+    </div>
+</div>

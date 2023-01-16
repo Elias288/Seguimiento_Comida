@@ -14,6 +14,7 @@ import { CanAccesService } from './services/canAcces/can-acces.service';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CreateMenuComponent } from './pages/create-menu/create-menu.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { CreateMenuComponent } from './pages/create-menu/create-menu.component';
     NotFoundComponent,
     NavBarComponent,
     CreateMenuComponent,
+    CalendarComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

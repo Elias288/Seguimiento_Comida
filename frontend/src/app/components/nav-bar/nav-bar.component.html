@@ -1,10 +1,20 @@
-<div *ngIf="logged">
-    <a href="/home">Home</a>
-
-    <div class="kitchenerOptions" *ngIf="roles?.includes('COCINERO')">
-        <button (click)="createMenu()">Agregar comida</button>
+<div class="navBar" *ngIf="logged">
+    <div class="left">
+        <div class="btnHome">
+            <a href="/home" class="home">Home</a>
+        </div>
+        <div class="kitchenerOptions" *ngIf="roles?.includes('COCINERO')">
+            <button (click)="createMenu()">Agregar comida</button>
+        </div>
     </div>
 
-    <button (click)="logout()">Logout</button>
-    <p>{{userName}}</p>
+    <div class="right userOptions">
+        <div class="btnHelp">
+            <a href="/help">Helps</a>
+        </div>
+        <div class="btnUser">
+            <label>{{userName}}</label>
+        </div>
+        <button (click)="logout()">Logout</button>
+    </div>
 </div>

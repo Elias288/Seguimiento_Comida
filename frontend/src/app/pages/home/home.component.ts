@@ -13,6 +13,7 @@ import { Menu } from 'src/app/utils/menu.inteface';
 })
 export class HomeComponent implements OnInit {
     menues!: any
+    
     constructor(
         private router: Router,
         private menuService: MenuService,
@@ -29,12 +30,9 @@ export class HomeComponent implements OnInit {
     ngOnInit(): void {
         this.menuService.getAllMenues().subscribe({
             next: (v) => {
-                console.log(v)
                 this.menues = v
             },
             error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
-            complete: () => console.log('menues')
-            
         })
     }
 

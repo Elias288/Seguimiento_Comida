@@ -39,6 +39,9 @@ export class CreateMenuComponent implements OnInit{
         this.menuService.create(menu, this.authService.token).subscribe({
             next: (v) => this._snackBar.open('Menu creado exitosamente', 'close', { duration: 5000 }),
             error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
+            complete: () => {
+                this.menuData.reset()
+            }
         })
     }
 }
