@@ -50,8 +50,8 @@ exports.findAll = async (req, res, next) => {
 }
 
 exports.findUsersByMenu = async (req, res, next) => {
-    const { id } = req.body
-    const data = await menuServices.getUsersOfMenu(id)
+    const { id: menuId } = req.body
+    const data = await menuServices.getUsersOfMenu(menuId)
     if (data.isError) {
         console.error(new Error(data))
         return next(data)
@@ -62,7 +62,8 @@ exports.findUsersByMenu = async (req, res, next) => {
             _id: user._id,
             name: user.name,
             surName: user.surName,
-            email: user.email
+            email: user.email,
+            selectedMenu: user.Menu_User.selectedMenu
         }
     })
     return res.status(200).send(users)

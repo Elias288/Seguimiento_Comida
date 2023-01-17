@@ -117,10 +117,15 @@ exports.update = async (req, res, next) => {
 }
 
 exports.addToMenu = async (req, res, next) => {
-    const { menuId } = req.body
+    const { menuId, selectedMenu } = req.body
     const { tokenData } = req
 
     let user, menu
+
+    if (!selectedMenu) {
+        console.error(new Error('selectedMenu'))
+        return next({ name: "missingData", message: "selectedMenu es requerido" })
+    }
 
     return userServices.getUserById(tokenData.id).then(data => {
         if (data.isError) {
@@ -142,7 +147,7 @@ exports.addToMenu = async (req, res, next) => {
             return next({ name: "outOfTime" })
         }
         
-        return user.addMenus(menu)
+        return user.addMenus(menu, { through: { selectedMenu } })
     }).then(data => {
         res.status(200).send({ message: 'Agregado correctamente' })
     }).catch(error => {

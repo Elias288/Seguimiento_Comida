@@ -2,21 +2,21 @@ const dbConfig = require("../config/db.config.js")
 
 const Sequelize = require("sequelize")
 const sequelize = new Sequelize(
-  dbConfig.DB,
-  dbConfig.USER,
-  dbConfig.PASSWORD,
-  {
-    host: dbConfig.HOST,
-    port: dbConfig.port,
-    dialect: dbConfig.dialect,
-    operatorsAliases: 0,
-    pool: {
-      max: dbConfig.pool.max,
-      min: dbConfig.pool.min,
-      acquire: dbConfig.pool.acquire,
-      idle: dbConfig.pool.idle
+    dbConfig.DB,
+    dbConfig.USER,
+    dbConfig.PASSWORD,
+    {
+        host: dbConfig.HOST,
+        port: dbConfig.port,
+        dialect: dbConfig.dialect,
+        operatorsAliases: 0,
+        pool: {
+            max: dbConfig.pool.max,
+            min: dbConfig.pool.min,
+            acquire: dbConfig.pool.acquire,
+            idle: dbConfig.pool.idle
+        }
     }
-  }
 )
 
 const db = {};
@@ -27,7 +27,9 @@ db.sequelize = sequelize
 db.User = require("./user.model.js")(sequelize, Sequelize)
 db.Menu = require("./menu.model.js")(sequelize, Sequelize)
 
-db.Menu_User = sequelize.define('Menu_User', {}, { timestamps: false })
+db.Menu_User = sequelize.define('Menu_User', {
+    selectedMenu: { type: Sequelize.STRING }
+}, { timestamps: false })
 
 db.User.belongsToMany(db.Menu, { through: 'Menu_User' })
 db.Menu.belongsToMany(db.User, { through: 'Menu_User' })
