@@ -12,11 +12,9 @@ import { Menu } from 'src/app/utils/menu.inteface';
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-    menues!: any
-    
+
     constructor(
         private router: Router,
-        private menuService: MenuService,
         private _snackBar: MatSnackBar,
         private authService: AuthService
     ) {
@@ -27,13 +25,6 @@ export class HomeComponent implements OnInit {
         })
     }
 
-    ngOnInit(): void {
-        this.menuService.getAllMenues().subscribe({
-            next: (v) => {
-                this.menues = v
-            },
-            error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
-        })
-    }
+    ngOnInit(): void {}
 
 }

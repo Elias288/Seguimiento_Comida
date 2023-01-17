@@ -34,7 +34,7 @@ export class CreateMenuComponent implements OnInit{
 
     onSubmit(): void {
         const { menuPrincipal, menuSecundario, fecha } = this.menuData.value
-        const menu: Menu = { _id: undefined, menuPrincipal, menuSecundario, fecha }
+        const menu: Menu = { _id: undefined, menuPrincipal, menuSecundario, date: fecha }
         
         this.menuService.create(menu, this.authService.token).subscribe({
             next: (v) => this._snackBar.open('Menu creado exitosamente', 'close', { duration: 5000 }),

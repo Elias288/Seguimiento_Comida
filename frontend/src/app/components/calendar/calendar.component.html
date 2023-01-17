@@ -1,25 +1,53 @@
 <!-- <pre>{{ menues | json }}</pre> -->
-<div class="calendario-container">
-    <header>
-        <p class="current-date">{{currentDate}}</p>
-        <div class="icons">
-            <mat-icon id="prev" (click)="prevNextMonth($event)" fontIcon="chevron_left" />
-            <mat-icon id="next" (click)="prevNextMonth($event)" fontIcon="chevron_right" />
+<div class="container">
+    <div class="calendario">
+        <header>
+            <p class="current-date">{{currentDate}}</p>
+            <div class="icons">
+                <mat-icon id="prev" (click)="prevNextMonth($event)" fontIcon="chevron_left" />
+                <mat-icon id="next" (click)="prevNextMonth($event)" fontIcon="chevron_right" />
+            </div>
+        </header>
+        
+        <div class="calendar">
+            <ul class="week">
+                <li><strong>Domingo</strong></li>
+                <li><strong>Lunes</strong></li>
+                <li><strong>Martes</strong></li>
+                <li><strong>Miercoles</strong></li>
+                <li><strong>Jueves</strong></li>
+                <li><strong>Viernes</strong></li>
+                <li><strong>Sabado</strong></li>
+            </ul>
+            <ul class="days">
+                <li *ngFor="let day of numbersDay" class="{{day.status}}">
+                    <p>{{day.day}}</p>
+                    <div *ngIf="day.menu" class="menu">
+                        <div class="menuInfo">
+                            <ul>
+                                <li>{{day.menu.menuPrincipal}}</li>
+                                <li *ngIf="day.menu.menuSecundario">{{day.menu.menuSecundario}}</li>
+                            </ul>
+                        </div>
+
+                        <button *ngIf="day.validToAdd" mat-raised-button>
+                            <mat-icon fontIcon="edit" />
+                            Editar Menu
+                        </button>
+                    </div>
+
+                    <div *ngIf="!day.menu && roles?.includes('COCINERO') && day.status != 'inactive' && day.validToAdd && !day.weekend" class="addMenu">
+                        <button mat-raised-button color="primary">
+                            <mat-icon fontIcon="add_circle" />
+                            Agregar Menu
+                        </button>
+                    </div>
+                </li>
+            </ul>
         </div>
-    </header>
-    
-    <div class="calendar">
-        <ul class="week">
-            <li>Domingo</li>
-            <li>Lunes</li>
-            <li>Martes</li>
-            <li>Miercoles</li>
-            <li>Jueves</li>
-            <li>Viernes</li>
-            <li>Sabado</li>
-        </ul>
-        <ul class="days">
-            <li *ngFor="let day of numbersDay" class="{{day.status}}">{{day.day}}</li>
-        </ul>
     </div>
+</div>
+
+<div class="mobile">
+    <h1>No disponible para dispositivos moviles</h1>
 </div>
