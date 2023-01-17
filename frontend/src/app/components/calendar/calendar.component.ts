@@ -1,7 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { MenuService } from 'src/app/services/menu/menu.service';
 import { Menu } from 'src/app/utils/menu.inteface';
+
+interface Day {
+    numberDay: number
+    status: string
+    menu: Menu | undefined
+    isWeekend: boolean
+    validToAdd: boolean
+}
 
 @Component({
     selector: 'app-calendar',
@@ -20,7 +29,7 @@ export class CalendarComponent implements OnInit{
     currYear!: number 
     currMonth!: number 
 
-    numbersDay!: { day: number, status: string, menu: Menu | undefined, weekend: boolean, validToAdd: boolean }[]
+    numbersDay!: Array<Day>
     currentDate!: string
     lastDateOfMonth!: number 
     lastDayOfMonth!: number 
@@ -30,7 +39,7 @@ export class CalendarComponent implements OnInit{
     constructor (
         private menuService: MenuService,
         private authService: AuthService,
-        
+        private router: Router,
     ) {
         this.date = new Date()
         this.currYear = this.date.getFullYear()
@@ -65,8 +74,15 @@ export class CalendarComponent implements OnInit{
         
         for(let i = this.firstDayOfMonth; i > 0; i--) {
             const day = this.lastDateOfLastMonth - i + 1
-            this.numbersDay.push({ day, status: 'inactive', menu: undefined, weekend: false, validToAdd: false })
+            this.numbersDay.push({
+                numberDay: day,
+                status: 'inactive',
+                menu: undefined,
+                isWeekend: false,
+                validToAdd: false
+            })
         }
+
         for(let i = 1; i <= this.lastDateOfMonth; i++) {
             const menu = this.checkMenu(i)
 
@@ -75,12 +91,27 @@ export class CalendarComponent implements OnInit{
                 && this.currYear === new Date().getFullYear() ? 'active' : ''
 
             const day = new Date(this.currYear, this.currMonth, i).getDay()
+            const tomorrow = new Date()
+            tomorrow.setDate(tomorrow.getDate() + 1)
+            const validToAdd = +new Date(this.currYear, this.currMonth, i) > +tomorrow
 
-            this.numbersDay.push({ day: i, status: isToday, menu, weekend: day == 0 || day == 6, validToAdd: +new Date(this.currYear, this.currMonth, i) > +this.date})
+            this.numbersDay.push({
+                numberDay: i,
+                status: isToday,
+                menu,
+                isWeekend: day == 0 || day == 6,
+                validToAdd
+            })
         }
         for(let i = this.lastDayOfMonth; i < 6; i++) {
             const day = i - this.lastDayOfMonth + 1
-            this.numbersDay.push({ day, status: 'inactive', menu: undefined, weekend: false, validToAdd: false })
+            this.numbersDay.push({
+                numberDay: day,
+                status: 'inactive',
+                menu: undefined,
+                isWeekend: false,
+                validToAdd: false
+            })
         }
 
         this.currentDate = `${this.months[this.currMonth]} ${this.currYear}`
@@ -104,5 +135,10 @@ export class CalendarComponent implements OnInit{
     private checkMenu(day: number) {
         const date = new Date(this.currYear, this.currMonth, day, 0,0,0)
         return this.menues.find(menu => new Date(menu.date).getTime() === date.getTime())
+    }
+
+    public addMenu(day: any) {
+        const date = new Date(this.currYear, this.currMonth, day).getTime()
+        this.router.navigate(['create/menu', date])
     }
 }

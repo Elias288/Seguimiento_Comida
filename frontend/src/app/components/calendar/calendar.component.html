@@ -1,4 +1,3 @@
-<!-- <pre>{{ menues | json }}</pre> -->
 <div class="container">
     <div class="calendario">
         <header>
@@ -21,23 +20,15 @@
             </ul>
             <ul class="days">
                 <li *ngFor="let day of numbersDay" class="{{day.status}}">
-                    <p>{{day.day}}</p>
+                    <p>{{day.numberDay}}</p>
+                    
                     <div *ngIf="day.menu" class="menu">
-                        <div class="menuInfo">
-                            <ul>
-                                <li>{{day.menu.menuPrincipal}}</li>
-                                <li *ngIf="day.menu.menuSecundario">{{day.menu.menuSecundario}}</li>
-                            </ul>
-                        </div>
-
-                        <button *ngIf="day.validToAdd" mat-raised-button>
-                            <mat-icon fontIcon="edit" />
-                            Editar Menu
-                        </button>
+                        <div class="menuInfo principalMenu">{{day.menu.menuPrincipal}}</div>
+                        <div class="menuInfo secodaryMenu" *ngIf="day.menu.menuSecundario">{{day.menu.menuSecundario}}</div>
                     </div>
 
-                    <div *ngIf="!day.menu && roles?.includes('COCINERO') && day.status != 'inactive' && day.validToAdd && !day.weekend" class="addMenu">
-                        <button mat-raised-button color="primary">
+                    <div *ngIf="!day.menu && roles?.includes('COCINERO') && day.status != 'inactive' && day.validToAdd && !day.isWeekend" class="addMenu">
+                        <button mat-raised-button color="primary" (click)="addMenu(day.numberDay)" id="{{day.numberDay}}">
                             <mat-icon fontIcon="add_circle" />
                             Agregar Menu
                         </button>
@@ -46,8 +37,7 @@
             </ul>
         </div>
     </div>
-</div>
-
-<div class="mobile">
-    <h1>No disponible para dispositivos moviles</h1>
+    <div class="mobile">
+        <h1>No disponible para dispositivos moviles</h1>
+    </div>
 </div>

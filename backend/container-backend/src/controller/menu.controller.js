@@ -4,7 +4,7 @@ const Menu = db.Menu
 const { v4: uuidv4 } = require('uuid')
 
 exports.create = (req, res, next) => {
-    const { menuPrincipal, menuSecundario, fecha } = req.body
+    const { menuPrincipal, menuSecundario, date } = req.body
     const { tokenData } = req
     
     if (!tokenData.roles.includes('COCINERO')) {
@@ -15,13 +15,13 @@ exports.create = (req, res, next) => {
         console.error(new Error('missingData'))
         return next({ name: "missingData", message: "Name es requerido" })
     }
-    if (!fecha) {
+    if (!date) {
         console.error(new Error('missingData'))
         return next({ name: "missingData", message: "Fecha es requerido" })
     }
-    const date = new Date(fecha)
+    const dataDate = new Date(date)
 
-    if (+date <= +new Date()) {
+    if (+dataDate <= +new Date()) {
         console.error(new Error('invalidDate'))
         return next({ name: "invalidDate" })
     }
@@ -30,7 +30,7 @@ exports.create = (req, res, next) => {
         _id: uuidv4(),
         menuPrincipal,
         menuSecundario,
-        date
+        date: dataDate
     }
 
     Menu.create(menuData).then(data => {

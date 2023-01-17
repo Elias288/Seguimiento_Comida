@@ -35,7 +35,7 @@ const routes: Routes = [
     component: CreateUserComponent
   },
   {
-    path: 'create/menu',
+    path: 'create/menu/:fechaId',
     title: "Crear menu",
     component: CreateMenuComponent,
     canActivate: [CanAccesService]

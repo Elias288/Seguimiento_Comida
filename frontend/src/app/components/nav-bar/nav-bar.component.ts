@@ -23,6 +23,10 @@ export class NavBarComponent implements OnInit{
                     next: (v) => {
                         this.userName = v.name
                         this.roles = v.roles
+                    },
+                    error: (e) => {
+                        window.localStorage.removeItem('jwt')
+                        window.location.href = '/'
                     }
                 })
             }
@@ -32,7 +36,7 @@ export class NavBarComponent implements OnInit{
     ngOnInit() {}
 
     createMenu() {
-        this.router.navigate(['create/menu'])
+        this.router.navigate(['create/menu/0'])
     }
 
     public logout() {

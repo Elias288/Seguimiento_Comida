@@ -14,6 +14,8 @@ export class MenuService {
     public create(menuData: Menu, jwt: string){
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
         const body = JSON.stringify(menuData)
+        console.log(body);
+        
         return this.http.post(this.ENDPOINT + '/menu', body, { 'headers': headers })
     }
 

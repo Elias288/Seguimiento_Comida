@@ -21,8 +21,8 @@ npm run podU
 Ejecuta el siguiente codigo en [scripts/podmanUpdate.sh](./container-backend/scripts/podmanUpdate.sh)
 
 ---
-### Pauser contenedor
-Para pauser la ejecución del pod:
+### Pausar contenedor
+Para pausar la ejecución del pod:
 ```
 npm run podP
 ```
@@ -58,10 +58,10 @@ podman logs -f <name>
 ## Pod
 
 ### Crear un pod 
-Para crear un pod de contenedores local llamado ```my_pod``` con salida al puerto ```3001```.
+Para crear un pod de contenedores local llamado ```my_pod``` con salida al puerto ```8080```.
 
 ```
-podman pod create --name my_pod -p 3001:3000
+podman pod create --name my_pod -p 8080:3000
 ```
 
 [Ayuda Pod](https://mohitgoyal-co.translate.goog/2021/04/23/spinning-up-and-managing-pods-with-multiple-containers-with-podman/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=sc)
@@ -94,7 +94,7 @@ podman pull docker.io/mysql
 ### Iniciar contenedor MYSQL
 Inicia un contenedor de MYSQL en el pod ```my_pod``` llamado ```mysql_test``` con una contraseña y una base de datos llamada ```Pcomida_db```
 ```
-podman run -d --pod my_pod --name mysql_test -e MYSQL_ROOT_PASSWORD=<password> -e MYSQL_DATABASE=Pcomida_db mysql:latest
+podman run -d --pod my_pod --name db -e MYSQL_ROOT_PASSWORD=<password> -e MYSQL_DATABASE=Pcomida_db mysql:latest
 ```
 
 ### Ejecutar comandos de MYSQL
@@ -115,10 +115,10 @@ podman build -t backend-container .
 ```
 
 ### Montar contenedor de node
-Para ejecutar el contenedor de [] de forma interactiva, con nombre ```backend_node``` con salida al puerto ```3000```
+Para ejecutar el contenedor, con nombre ```backend_node``` con salida al puerto ```3000```
 
 ```
-podman run -it --pod my_pod --name backend_node -e NODE_DOCKER_PORT=3000 backend-container
+podman run -d --pod my_pod --name backend_node -e NODE_DOCKER_PORT=3000 backend-container
 ```
 
 ---
