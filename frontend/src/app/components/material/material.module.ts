@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common'
 
 import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field'
-import {MatInputModule} from '@angular/material/input'
+import { MatInputModule } from '@angular/material/input'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import {MatSnackBarModule} from '@angular/material/snack-bar'
-import {MatCheckboxModule} from '@angular/material/checkbox'
-import {MatDatepickerModule} from '@angular/material/datepicker'
+import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core'
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const materials = [
   MatButtonModule,
@@ -21,6 +22,7 @@ const materials = [
   MatDatepickerModule,
   MatNativeDateModule,
   MatIconModule,
+  MatDialogModule,
 ]
 
 @NgModule({

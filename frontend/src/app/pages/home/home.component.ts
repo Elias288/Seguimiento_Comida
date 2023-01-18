@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -12,7 +12,6 @@ import { Menu } from 'src/app/utils/menu.inteface';
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
     constructor(
         private router: Router,
         private _snackBar: MatSnackBar,

@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { HomeComponent } from 'src/app/pages/home/home.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { CalendarComponent } from '../calendar/calendar.component';
+import { CreateMenuDialogComponent } from '../create-menu-dialog/create-menu-dialog.component';
 
 @Component({
     selector: 'app-nav-bar',
@@ -15,6 +19,7 @@ export class NavBarComponent implements OnInit{
     constructor(
         private router: Router,
         private authService: AuthService,
+        public dialog: MatDialog,
     ) {
         authService.isLoggedIn$.subscribe(status => {
             this.logged = status
@@ -36,7 +41,14 @@ export class NavBarComponent implements OnInit{
     ngOnInit() {}
 
     createMenu() {
-        this.router.navigate(['create/menu/0'])
+        const dialogRef = this.dialog.open(CreateMenuDialogComponent, {
+            data : {
+                date: 0
+            }
+        })
+        dialogRef.afterClosed().subscribe(result => {
+            window.location.href = '/'
+        })
     }
 
     public logout() {

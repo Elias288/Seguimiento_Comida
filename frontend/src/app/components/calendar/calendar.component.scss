@@ -83,7 +83,7 @@
                 &.inactive {
                     color: #aaa;
                 }
-                &.active {
+                &.today {
                     background-color: #c7fac3;
                 }
 
@@ -115,6 +115,12 @@
                         &.secodaryMenu {
                             background-color: #4350bf;
                         }
+                    }
+                }
+
+                .addMenu {
+                    button {
+                        background-color: #af8e01;
                     }
                 }
             }

@@ -14,7 +14,7 @@ export class MenuService {
     public create(menuData: Menu, jwt: string){
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
         const body = JSON.stringify(menuData)
-        console.log(body);
+        // console.log(body);
         
         return this.http.post(this.ENDPOINT + '/menu', body, { 'headers': headers })
     }
@@ -22,5 +22,11 @@ export class MenuService {
     public getAllMenues() {
         const headers = { 'Content-Type': 'application/json' }
         return this.http.get(this.ENDPOINT + '/menu', { 'headers': headers })
+    }
+
+    public deleteMenu(menuId: string, jwt: string) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        const body = JSON.stringify({ id: menuId})
+        return this.http.delete(this.ENDPOINT + `/menu/${menuId}`, { 'headers': headers })
     }
 }

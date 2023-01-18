@@ -22,7 +22,7 @@
                 <li *ngFor="let day of numbersDay" class="{{day.status}}">
                     <p>{{day.numberDay}}</p>
                     
-                    <div *ngIf="day.menu" class="menu">
+                    <div *ngIf="day.menu" class="menu" (click)="openDialog(day)">
                         <div class="menuInfo principalMenu">{{day.menu.menuPrincipal}}</div>
                         <div class="menuInfo secodaryMenu" *ngIf="day.menu.menuSecundario">{{day.menu.menuSecundario}}</div>
                     </div>

@@ -13,8 +13,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CanAccesService } from './services/canAcces/can-acces.service';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { HttpClientModule } from '@angular/common/http';
-import { CreateMenuComponent } from './pages/create-menu/create-menu.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
+import { MenuDialogComponent } from './components/menu-dialog/menu-dialog.component';
+import { CreateMenuDialogComponent } from './components/create-menu-dialog/create-menu-dialog.component';
 
 @NgModule({
   declarations: [
@@ -25,8 +26,9 @@ import { CalendarComponent } from './components/calendar/calendar.component';
     CreateUserComponent,
     NotFoundComponent,
     NavBarComponent,
-    CreateMenuComponent,
     CalendarComponent,
+    MenuDialogComponent,
+    CreateMenuDialogComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

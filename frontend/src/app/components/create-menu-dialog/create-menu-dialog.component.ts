@@ -1,35 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { MenuService } from 'src/app/services/menu/menu.service';
 import { Menu } from 'src/app/utils/menu.inteface';
 
 @Component({
-    selector: 'app-create-menu',
-    templateUrl: './create-menu.component.html',
-    styleUrls: ['./create-menu.component.scss']
+    selector: 'app-create-menu-dialog',
+    templateUrl: './create-menu-dialog.component.html',
+    styleUrls: ['./create-menu-dialog.component.scss']
 })
-export class CreateMenuComponent implements OnInit{
+export class CreateMenuDialogComponent implements OnInit {
     menuData!: FormGroup
     fecha!: Date
 
-    constructor(
+    constructor (
+        public dialogRef: MatDialogRef<CreateMenuDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
         private menuService: MenuService,
         private authService: AuthService,
-        private activatedRoute: ActivatedRoute,
         private _snackBar: MatSnackBar,
     ) {
-        activatedRoute.params.subscribe((params) => {
-            if (params['fechaId'] != 0)
-                this.fecha = new Date(parseInt(params['fechaId'] as string, 10)) 
-        })
+        if (data.date != 0) this.fecha = new Date(parseInt(data.date as string, 10))
     }
 
     ngOnInit(): void {
-
-        this.menuData= new FormGroup({
+        this.menuData = new FormGroup ({
             menuPrincipal: new FormControl<string>("", [
                 Validators.required,
                 Validators.minLength(3),
@@ -40,7 +37,6 @@ export class CreateMenuComponent implements OnInit{
             ])
         })
     }
-    
 
     onSubmit(): void {
         const { menuPrincipal, menuSecundario, date } = this.menuData.value
@@ -54,6 +50,7 @@ export class CreateMenuComponent implements OnInit{
                 error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
                 complete: () => {
                    this.menuData.reset()
+                   this.dialogRef.close()
                 }
             })
         }

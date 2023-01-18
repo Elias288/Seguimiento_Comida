@@ -113,7 +113,7 @@ exports.update = async (req, res, next) => {
         console.error(new Error(data))
         return next(data)
     }
-    res.status(200).send('Usuario actualizado')
+    res.status(200).send({ message: 'Usuario actualizado' })
 }
 
 exports.addToMenu = async (req, res, next) => {

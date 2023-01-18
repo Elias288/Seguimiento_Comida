@@ -101,5 +101,22 @@ exports.update = async (req, res, next) => {
         console.error(new Error(data))
         return next(data)
     }
-    res.status(200).send('Menu actualizado')
+    res.status(200).send({ message: 'Menu actualizado' })
+}
+
+exports.delete = async (req, res, next) => {
+    const { menuId } = req.params
+    const { tokenData } = req
+    
+    if (!tokenData.roles.includes('COCINERO')) {
+        console.error(new Error('unauthorized'))
+        return next({ name: "unauthorized" })
+    }
+
+    const data = await menuServices.deleteMenu(menuId)
+    if (data.isError) {
+        console.error(new Error(data))
+        return next(data)
+    }
+    res.status(200).send({ message: 'Menu eliminado' })
 }

@@ -1,0 +1,24 @@
+<div class="container">
+    <!-- <p>menu-dialog works!</p>
+    {{ data | json }}
+    <br> -->
+
+    <div class="menuInfo">
+        <div>
+            {{data.completeDate}}
+        </div>
+        <div class="menu principalMenu">
+            {{ data.day.menu.menuPrincipal }}
+        </div>
+        <div class="menu secodaryMenu">
+            {{ data.day.menu.menuSecundario }}
+        </div>
+    </div>
+
+    <div class="editContainer" *ngIf="data.roles?.includes('COCINERO')">
+        <button mat-raised-button color="primary" class="btnEdit">Editar</button>
+        <button mat-raised-button color="primary" class="btnDelete" (click)="deleteMenu(data.day.menu._id)">Borrar</button>
+    </div>
+
+    {{ menuData.value | json }}
+</div>

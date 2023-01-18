@@ -95,3 +95,24 @@ exports.updateMenu = (id, menu) => {
         }
     })
 }
+
+exports.deleteMenu = (id) => {
+    if (!id) {
+        console.error(new Error('Id no encontrada'))
+        return {
+            isError: true,
+            name: 'missingData',
+            message: 'Id es requerida'
+        }
+    }
+    return Menu.destroy({ where: { _id: id }}).then(num => {
+        if (num == 1) return { isError: false }
+        return { isError: true, name: 'dataNoDeleted' } 
+    }).catch(() => {
+        console.error(new Error('Error recuperando los datos'))
+        return {
+            isError: true,
+            name: 'notDataError'
+        }
+    })
+}
