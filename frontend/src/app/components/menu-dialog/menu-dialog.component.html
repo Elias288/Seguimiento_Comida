@@ -1,24 +1,34 @@
 <div class="container">
-    <!-- <p>menu-dialog works!</p>
-    {{ data | json }}
-    <br> -->
-
+    <div class="title">
+        <h1>Información del Menu</h1>
+    </div>
     <div class="menuInfo">
-        <div>
-            {{data.completeDate}}
+        <div class="menuInfo">
+            <div [formGroup]="menuData" class="form">
+                <mat-form-field appearance="fill">
+                    <mat-label for="menuPrincipal">Menu Principal</mat-label>
+                    <input id="menuPrincipal" matInput type="text" formControlName="menuPrincipal" [readonly]="!data.roles?.includes('COCINERO')">
+                </mat-form-field>
+            
+                <mat-form-field appearance="fill">
+                    <mat-label for="menuSecundario">Menu Secundario</mat-label>
+                    <input id="menuSecundario" matInput type="text" formControlName="menuSecundario" [readonly]="!data.roles?.includes('COCINERO')">
+                </mat-form-field>
+            
+                <mat-form-field appearance="fill">
+                    <mat-label for="fecha">Fecha</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="date" id="fecha" value="fecha" [readonly]="!data.roles?.includes('COCINERO')">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
         </div>
-        <div class="menu principalMenu">
-            {{ data.day.menu.menuPrincipal }}
-        </div>
-        <div class="menu secodaryMenu">
-            {{ data.day.menu.menuSecundario }}
+        <div class="editContainer" *ngIf="data.roles?.includes('COCINERO')">
+            <button mat-raised-button color="primary" class="btnEdit" (click)="updateMenu()" >Editar</button>
+            <button mat-raised-button color="primary" class="btnDelete" (click)="deleteMenu()">Borrar</button>
         </div>
     </div>
-
-    <div class="editContainer" *ngIf="data.roles?.includes('COCINERO')">
-        <button mat-raised-button color="primary" class="btnEdit">Editar</button>
-        <button mat-raised-button color="primary" class="btnDelete" (click)="deleteMenu(data.day.menu._id)">Borrar</button>
-    </div>
-
-    {{ menuData.value | json }}
+    <p-confirmDialog icon="pi pi-exclamation-triangle"></p-confirmDialog>
+    <!-- {{ menuData.value | json }} -->
 </div>

@@ -92,11 +92,16 @@ exports.findOneByDate = async (req, res, next) => {
 }
 
 exports.update = async (req, res, next) => {
-    const { name, ingredientes, date, } = req.body
+    const { menuPrincipal, menuSecundario, date, _id } = req.body
     const { tokenData } = req
 
-    const menu = { name, ingredientes, date }
-    const data = await menuServices.updateMenu(tokenData.id, menu)
+    if (!tokenData.roles.includes('COCINERO') || tokenData.roles.includes('ADMIN')) {
+        console.error(new Error('unauthorized'))
+        return next({ name: "unauthorized" })
+    }
+
+    const menu = {  menuPrincipal, menuSecundario, date, _id }
+    const data = await menuServices.updateMenu(menu)
     if (data.isError) {
         console.error(new Error(data))
         return next(data)

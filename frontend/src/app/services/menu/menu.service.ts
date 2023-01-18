@@ -24,6 +24,12 @@ export class MenuService {
         return this.http.get(this.ENDPOINT + '/menu', { 'headers': headers })
     }
 
+    public updateMenu(jwt: string, menu: Menu) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        const body = JSON.stringify( menu )
+        return this.http.put(this.ENDPOINT + '/menu', body, { 'headers': headers })
+    }
+
     public deleteMenu(menuId: string, jwt: string) {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
         const body = JSON.stringify({ id: menuId})

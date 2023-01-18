@@ -73,8 +73,8 @@ exports.getMenuByDate = (date) => {
     })
 }
 
-exports.updateMenu = (id, menu) => {
-    if (!id) {
+exports.updateMenu = (menu) => {
+    if (!menu._id) {
         console.error(new Error('Id no encontrada'))
         return {
             isError: true,
@@ -82,7 +82,7 @@ exports.updateMenu = (id, menu) => {
             message: 'Id es requerida'
         }
     }
-    return Menu.update(menu, { where: { _id: id } }).then(num => {
+    return Menu.update(menu, { where: { _id: menu._id } }).then(num => {
         if (num == 1) {
             return { isError: false }
         }

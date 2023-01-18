@@ -17,6 +17,9 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { MenuDialogComponent } from './components/menu-dialog/menu-dialog.component';
 import { CreateMenuDialogComponent } from './components/create-menu-dialog/create-menu-dialog.component';
 
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import { ConfirmCancelDialogComponent } from './components/confirm-cancel-dialog/confirm-cancel-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +32,7 @@ import { CreateMenuDialogComponent } from './components/create-menu-dialog/creat
     CalendarComponent,
     MenuDialogComponent,
     CreateMenuDialogComponent,
+    ConfirmCancelDialogComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
