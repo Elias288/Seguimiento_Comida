@@ -7,6 +7,8 @@ const ERROR_HANDLERS = {
     tokenNotProvidedError: (res, error) => res.status(400).send({ error: error.name, message: "Token es requerido" }),
     dataNotUpdated: (res, error) => res.status(400).send({ error: error.name, message: "No se pudo actualizar" }),
     invalidDate: (res, error) => res.status(400).send({ error: error.name, message: "Fecha erronea" }),
+    invalidUserData: (res, error) => res.status(400).send({ error: error.name, message: "Usuario o contraseña invalida" }),
+    invalidData: (res, error) => res.status(400).send({ error: error.name, message: error.message }),
     outOfTime: (res, error) => res.status(400).send({ error: error.name, message: "Ya no es posible agendarse" }),
 
     unauthorized: (res, error) => res.status(401).send({ error: error.name, message: "No está autorizado" }),
@@ -14,7 +16,6 @@ const ERROR_HANDLERS = {
     dataNoDeleted: (res, error) => res.status(401).send({ error: error.name, message: "No fue posible eliminar" }),
 
     notFound: (res, error) => res.status(404).send({ error: error.name, message: error.message }),
-    invalidUserData: (res, error) => res.status(404).send({ error: error.name, message: "Usuario o contraseña invalida" }),
     userNotFound: (res, error) => res.status(404).send({ error: error.name, message: "Usuario no encontrado" }),
 
     notDataError: (res, error) => res.status(500).send({ error: error.name, message: "Error recuperando los datos" }),

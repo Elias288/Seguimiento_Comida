@@ -3,8 +3,14 @@
         <div class="btnHome">
             <a href="/home" class="home">Home</a>
         </div>
-        <div class="kitchenerOptions" *ngIf="roles?.includes('COCINERO')">
+        <div class="kitchenerOptions" *ngIf="roles?.includes('COCINERO') || roles?.includes('ADMIN')">
             <button (click)="createMenu()">Agregar comida</button>
+        </div>
+        <div class="adminOptions" *ngIf="roles?.includes('ADMIN')">
+            <button>Modificar roles</button>
+        </div>
+        <div class="options">
+            <button (click)="gotToUsuarios()">Usuarios</button>
         </div>
     </div>
 

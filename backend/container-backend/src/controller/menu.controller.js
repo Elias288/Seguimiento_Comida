@@ -3,11 +3,17 @@ const menuServices = require('../services/menu.services')
 const Menu = db.Menu
 const { v4: uuidv4 } = require('uuid')
 
+const ROLES = [
+    'ADMIN',
+    'COMENSAL',
+    'COCINERO'
+]
+
 exports.create = (req, res, next) => {
     const { menuPrincipal, menuSecundario, date } = req.body
     const { tokenData } = req
     
-    if (!tokenData.roles.includes('COCINERO')) {
+    if (!tokenData || !checkRoles(tokenData)) {
         console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }
@@ -51,6 +57,7 @@ exports.findAll = async (req, res, next) => {
 
 exports.findUsersByMenu = async (req, res, next) => {
     const { id: menuId } = req.body
+    
     const data = await menuServices.getUsersOfMenu(menuId)
     if (data.isError) {
         console.error(new Error(data))
@@ -95,7 +102,7 @@ exports.update = async (req, res, next) => {
     const { menuPrincipal, menuSecundario, date, _id } = req.body
     const { tokenData } = req
 
-    if (!tokenData.roles.includes('COCINERO') || tokenData.roles.includes('ADMIN')) {
+    if (!checkRoles(tokenData)) {
         console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }
@@ -113,7 +120,7 @@ exports.delete = async (req, res, next) => {
     const { menuId } = req.params
     const { tokenData } = req
     
-    if (!tokenData.roles.includes('COCINERO')) {
+    if (!checkRoles(tokenData)) {
         console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }
@@ -124,4 +131,8 @@ exports.delete = async (req, res, next) => {
         return next(data)
     }
     res.status(200).send({ message: 'Menu eliminado' })
+}
+
+checkRoles = (token) => {
+    return token.roles.includes(ROLES[2]) || token.roles.includes(ROLES[0])
 }

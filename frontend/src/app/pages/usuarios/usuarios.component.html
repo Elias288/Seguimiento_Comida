@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="title">
+        <h1>Usuarios</h1>
+    </div>
+    <div class="container-content">
+        <app-users-table
+            *ngIf="roles"
+            [hasActions]="roles.includes('ADMIN')"
+            (actions)="getUser($event)"
+        >
+        </app-users-table>
+    </div>
+</div>

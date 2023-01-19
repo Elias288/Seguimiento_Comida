@@ -30,6 +30,11 @@ export class UserService {
         return this.http.get(this.ENDPOINT + '/user/me', { 'headers': headers })
     }
 
+    public getAll(jwt: string) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        return this.http.get(this.ENDPOINT + '/user', { 'headers': headers })
+    }
+
     public logout(): void {
         localStorage.removeItem('jwt')
         window.location.href="/"

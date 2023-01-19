@@ -11,6 +11,9 @@ import { User } from 'src/app/utils/user.interface';
     styleUrls: ['./create-user.component.scss']
 })
 export class CreateUserComponent implements OnInit{
+    hide1 = true;
+    hide2 = true;
+    
     constructor(
         private router: Router,
         private userService: UserService,
@@ -27,7 +30,6 @@ export class CreateUserComponent implements OnInit{
             Validators.required,
             Validators.minLength(3),
         ]),
-        kitchener: new FormControl<Boolean>(false),
         password: new FormControl<string>("", [
             Validators.required,
             Validators.minLength(3),
@@ -44,12 +46,6 @@ export class CreateUserComponent implements OnInit{
     onSubmit(): void {
         const { name, surName, email, password, password2 } = this.userData.value
         const roles: string[] = []
-
-        console.log();
-        const isCocinero: Boolean = this.userData.controls['kitchener'].value || false
-        if (isCocinero){
-            roles.push('COCINERO')
-        }
 
         const user: User = { _id: undefined, name, surName, email, password, password2, roles }
         this.userService.create(user).subscribe({

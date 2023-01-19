@@ -19,6 +19,8 @@ import { CreateMenuDialogComponent } from './components/create-menu-dialog/creat
 
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import { ConfirmCancelDialogComponent } from './components/confirm-cancel-dialog/confirm-cancel-dialog.component';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { UsersTableComponent } from './components/users-table/users-table.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { ConfirmCancelDialogComponent } from './components/confirm-cancel-dialog
     MenuDialogComponent,
     CreateMenuDialogComponent,
     ConfirmCancelDialogComponent,
+    UsuariosComponent,
+    UsersTableComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

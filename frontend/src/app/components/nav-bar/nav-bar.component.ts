@@ -51,6 +51,10 @@ export class NavBarComponent implements OnInit{
         })
     }
 
+    gotToUsuarios() {
+        this.router.navigate(['/users'])
+    }
+
     public logout() {
         this.authService.logout()
     }

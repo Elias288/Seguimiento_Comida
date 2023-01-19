@@ -21,7 +21,7 @@
 }
 
 
-form {
+.form {
     margin-bottom: 1rem;
     box-sizing: border-box;
 
@@ -29,7 +29,7 @@ form {
         width: 100%;
     }
     
-    button {
+    > button {
         background-color: green;
     }
 }

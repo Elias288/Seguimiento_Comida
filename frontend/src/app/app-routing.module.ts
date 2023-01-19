@@ -5,6 +5,7 @@ import { AngularHelpsComponent } from './pages/angular-helps/angular-helps.compo
 import { CreateUserComponent } from './pages/create-user/create-user.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { CanAccesService } from './services/canAcces/can-acces.service';
 
 const routes: Routes = [
@@ -32,6 +33,12 @@ const routes: Routes = [
         path: 'create/user',
         title: "Crear usuario",
         component: CreateUserComponent
+    },
+    {
+        path: 'users',
+        title: "Crear usuario",
+        component: UsuariosComponent,
+        canActivate: [CanAccesService]
     },
     {
         path: '**',
