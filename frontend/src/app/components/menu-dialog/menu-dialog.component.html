@@ -1,34 +1,26 @@
-<div class="container">
-    <div class="title">
-        <h1>Información del Menu</h1>
+<h1 mat-dialog-title>Información del Menu</h1>
+<div mat-dialog-content>
+    <div [formGroup]="menuData" class="form">
+        <mat-form-field appearance="fill">
+            <mat-label for="menuPrincipal">Menu Principal</mat-label>
+            <input id="menuPrincipal" matInput type="text" formControlName="menuPrincipal" [readonly]="!data.roles?.includes('COCINERO')">
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+            <mat-label for="menuSecundario">Menu Secundario</mat-label>
+            <input id="menuSecundario" matInput type="text" formControlName="menuSecundario" [readonly]="!data.roles?.includes('COCINERO')">
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+            <mat-label for="fecha">Fecha</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date" id="fecha" value="fecha" [readonly]="!data.roles?.includes('COCINERO')">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
     </div>
-    <div class="menuInfo">
-        <div class="menuInfo">
-            <div [formGroup]="menuData" class="form">
-                <mat-form-field appearance="fill">
-                    <mat-label for="menuPrincipal">Menu Principal</mat-label>
-                    <input id="menuPrincipal" matInput type="text" formControlName="menuPrincipal" [readonly]="!data.roles?.includes('COCINERO')">
-                </mat-form-field>
-            
-                <mat-form-field appearance="fill">
-                    <mat-label for="menuSecundario">Menu Secundario</mat-label>
-                    <input id="menuSecundario" matInput type="text" formControlName="menuSecundario" [readonly]="!data.roles?.includes('COCINERO')">
-                </mat-form-field>
-            
-                <mat-form-field appearance="fill">
-                    <mat-label for="fecha">Fecha</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="date" id="fecha" value="fecha" [readonly]="!data.roles?.includes('COCINERO')">
-                    <mat-hint>MM/DD/YYYY</mat-hint>
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="editContainer" *ngIf="data.roles?.includes('COCINERO')">
-            <button mat-raised-button color="primary" class="btnEdit" (click)="updateMenu()" >Editar</button>
-            <button mat-raised-button color="primary" class="btnDelete" (click)="deleteMenu()">Borrar</button>
-        </div>
-    </div>
-    <p-confirmDialog icon="pi pi-exclamation-triangle"></p-confirmDialog>
-    <!-- {{ menuData.value | json }} -->
+</div>
+<div mat-dialog-actions class="dialogActions">
+    <button mat-button class="btnEdit" (click)="updateMenu()" >Editar</button>
+    <button mat-button class="btnDelete" (click)="deleteMenu()">Borrar</button>
 </div>

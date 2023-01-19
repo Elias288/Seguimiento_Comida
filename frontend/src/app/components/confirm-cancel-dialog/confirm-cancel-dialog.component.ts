@@ -15,12 +15,4 @@ export class ConfirmCancelDialogComponent {
         public dialogRef: MatDialogRef<ConfirmCancelDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData,
     ) {  }
-
-    onNoClick(): void {
-        this.dialogRef.close(false);
-    }
-    
-    onOkClick(): void {
-        this.dialogRef.close(true);
-    }
 }
