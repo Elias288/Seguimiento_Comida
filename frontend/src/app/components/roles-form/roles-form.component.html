@@ -1,0 +1,12 @@
+<div class="container">
+    <div class="title">
+        <h3>Agregar Roles al usuario</h3>
+    </div>
+    <form novalidate [formGroup]="rolesForm">
+        <mat-checkbox formControlName="admin">ADMIN</mat-checkbox>
+        <mat-checkbox formControlName="comensal">COMENSAL</mat-checkbox>
+        <mat-checkbox formControlName="cocinero">COCINERO</mat-checkbox>
+
+        <button mat-raised-button color="primary" (click)="updateRoles()">Aceptar</button>
+    </form>
+</div>

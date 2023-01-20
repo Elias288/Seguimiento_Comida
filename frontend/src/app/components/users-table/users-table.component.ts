@@ -1,6 +1,5 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { AuthService } from 'src/app/services/auth/auth.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/utils/user.interface';
 
@@ -17,6 +16,9 @@ interface todo {
 })
 export class UsersTableComponent implements OnInit{
     @Input() hasActions!: boolean | undefined
+    @Input() actionsFunctions!: Array<any>
+    @Input() ignoreId!: string
+    @Input() jwt!: string
     @Output() actions: EventEmitter<object> = new EventEmitter<object>()
 
     usuarios!: Array<User>
@@ -28,20 +30,12 @@ export class UsersTableComponent implements OnInit{
     }
 
     constructor (
-        userService: UserService,
-        authService: AuthService,
-    ) { 
-        userService.getAll(authService.token).subscribe({
-            next: (v) => {
-                this.usuarios = v as Array<User>
-            },
-            error: (e) => {
-                console.error(e);
-            }
-        })
-    }
+        private userService: UserService,
+    ) { }
 
     ngOnInit(): void {
+        this.updateUsers()
+
         this.columsDefinitions = [
             { def: 'name', label: 'name', hide: true },
             { def: 'email', label: 'email', hide: true },
@@ -49,6 +43,18 @@ export class UsersTableComponent implements OnInit{
             { def: 'roles', label: 'roles', hide: true },
             { def: 'actions', label: 'actions', hide: this.hasActions},
         ]
+    }
+
+    public updateUsers() {
+        this.userService.getAll(this.jwt).subscribe({
+            next: (v) => {
+                const allUsers = v as Array<User>
+                this.usuarios = allUsers.filter(user => user._id != this.ignoreId)
+            },
+            error: (e) => {
+                console.error(e);
+            }
+        })
     }
 
     sendInfo(user: any, option: string) {

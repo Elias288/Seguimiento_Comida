@@ -24,7 +24,6 @@ export class MenuDialogComponent implements OnInit {
         private authService: AuthService,
         private _snackBar: MatSnackBar,
         public dialog: MatDialog,
-        private confirmationService: ConfirmationService,
     ) {  }
 
     ngOnInit(): void {
@@ -44,8 +43,6 @@ export class MenuDialogComponent implements OnInit {
         const message = "¿Seguro que quiere elminar este menu?"
         const dialogref = this.openConfirmCancelDialog(message)
         dialogref.afterClosed().subscribe(result => {
-            // console.log(result);
-            
             if (result) {
                 this.menuService.deleteMenu(this.data.day.menu._id, this.authService.token).subscribe({
                     next:(v: any) => {
@@ -65,17 +62,8 @@ export class MenuDialogComponent implements OnInit {
 
     public updateMenu() {
         const message = "¿Seguro que quiere actualizar este menu?"
-        // this.confirmationService.confirm({
-        //     message,
-        //     accept: () => {
-        //         console.log('acept');
-                
-        //     }
-        // })
         const dialogref = this.openConfirmCancelDialog(message)
         dialogref.afterClosed().subscribe(result => {
-            // console.log(result);
-            
             if (result) {
                 const menu: Menu = { _id: this.data.day.menu._id, ...this.menuData.value }
                 

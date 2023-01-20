@@ -4,9 +4,12 @@
     </div>
     <div class="container-content">
         <app-users-table
-            *ngIf="roles"
-            [hasActions]="roles.includes('ADMIN')"
-            (actions)="getUser($event)"
+            *ngIf="myRoles"
+            [jwt]="authService.token"
+            [hasActions]="myRoles.includes('ADMIN')"
+            [actionsFunctions]="actionsFunctions"
+            [ignoreId]="myId"
+            (actions)="getFunctions($event)"
         >
         </app-users-table>
     </div>

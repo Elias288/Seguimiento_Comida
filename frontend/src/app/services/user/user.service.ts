@@ -35,6 +35,12 @@ export class UserService {
         return this.http.get(this.ENDPOINT + '/user', { 'headers': headers })
     }
 
+    public addRole(jwt: string, userId: string, roles: string) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        const body = { userId, roles }
+        return this.http.put(this.ENDPOINT + '/user/addRoles', body, { 'headers': headers })
+    }
+
     public logout(): void {
         localStorage.removeItem('jwt')
         window.location.href="/"

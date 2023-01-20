@@ -16,11 +16,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { MenuDialogComponent } from './components/menu-dialog/menu-dialog.component';
 import { CreateMenuDialogComponent } from './components/create-menu-dialog/create-menu-dialog.component';
-
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import { ConfirmCancelDialogComponent } from './components/confirm-cancel-dialog/confirm-cancel-dialog.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { UsersTableComponent } from './components/users-table/users-table.component';
+import { RolesFormComponent } from './components/roles-form/roles-form.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +36,7 @@ import { UsersTableComponent } from './components/users-table/users-table.compon
     ConfirmCancelDialogComponent,
     UsuariosComponent,
     UsersTableComponent,
+    RolesFormComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
