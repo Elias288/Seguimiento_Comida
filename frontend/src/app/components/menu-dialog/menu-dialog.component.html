@@ -1,30 +1,91 @@
 <h1 mat-dialog-title>Información del Menu</h1>
+
 <div mat-dialog-content>
     <div [formGroup]="menuData" class="form">
         <mat-form-field appearance="fill">
             <mat-label for="menuPrincipal">Menu Principal</mat-label>
-            <input id="menuPrincipal" matInput type="text" formControlName="menuPrincipal" [readonly]="!data.roles?.includes('COCINERO') || !data.roles?.includes('ADMIN')">
+            <textarea  matInput
+                id="menuPrincipal"
+                type="text"
+                formControlName="menuPrincipal"
+                [readonly]="!roles.includes('COCINERO') && !roles.includes('ADMIN')"></textarea>
         </mat-form-field>
     
         <mat-form-field appearance="fill">
             <mat-label for="menuSecundario">Menu Secundario</mat-label>
-            <input id="menuSecundario" matInput type="text" formControlName="menuSecundario" [readonly]="!data.roles?.includes('COCINERO') || !data.roles?.includes('ADMIN')">
+            <textarea  matInput
+                id="menuSecundario"
+                type="text"
+                formControlName="menuSecundario"
+                [readonly]="!roles.includes('COCINERO') && !roles.includes('ADMIN')"></textarea>
         </mat-form-field>
     
         <mat-form-field appearance="fill">
             <mat-label for="fecha">Fecha</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="date" id="fecha" value="fecha" [readonly]="!data.roles?.includes('COCINERO') || !data.roles?.includes('ADMIN')">
+            <input matInput 
+                [matDatepicker]="picker"
+                formControlName="date"
+                id="fecha" value="fecha"
+                [readonly]="!roles.includes('COCINERO') && !roles.includes('ADMIN')">
             <mat-hint>MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
     </div>
+    <!-- <pre>{{menu | json}}</pre> -->
+    <!-- <pre>{{mySelection | json}}</pre> -->
 </div>
-<div mat-dialog-actions class="dialogActions">
-    <button mat-raised-button class="btnAddToMenu">Agregarse al Menu</button>
-    <button mat-raised-button color="warn" class="btnDown">Darse de baja</button>
-</div>
-<div mat-dialog-actions align="end" *ngIf="data.roles?.includes('COCINERO') || data.roles?.includes('ADMIN')">
+
+<div mat-dialog-actions align="end" *ngIf="roles.includes('COCINERO') || roles.includes('ADMIN')">
     <button mat-raised-button class="btnEdit" (click)="updateMenu()" >Editar</button>
     <button mat-raised-button color="warn" class="btnDelete" (click)="deleteMenu()">Borrar</button>
+</div>
+
+<div mat-dialog-actions align="center" class="dialogActions">
+    <mat-button-toggle-group #group="matButtonToggleGroup" (change)="addtoMenu(group.value)" [value]="mySelection">
+        <mat-button-toggle 
+            class="btnAddToMenuP" 
+            value="MP" 
+            aria-label="Text align left"
+            [disabled]="mySelection == 'MP'">
+            Agregarse al Menu Principal
+        </mat-button-toggle>
+        <mat-button-toggle 
+            class="btnAddToMenuS" 
+            value="MS" 
+            aria-label="Text align center"
+            *ngIf="menu.menuSecundario"
+            [disabled]="mySelection == 'MS'">
+            Agregarse al Menu Secundario
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <button
+        mat-raised-button
+        color="warn"
+        class="btnDown"
+        [disabled]="mySelection == undefined"
+        (click)="deleteToMenu(menu._id)">
+        Darse de baja
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <table mat-table [dataSource]="dataSource">
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <ng-container matColumnDef="menu_principal">
+            <th mat-header-cell *matHeaderCellDef> Menu Principal </th>
+            <td mat-cell *matCellDef="let element"> {{element.MP}} </td>
+        </ng-container>
+        <ng-container matColumnDef="menu_secundario">
+            <th mat-header-cell *matHeaderCellDef> Menu Secundario </th>
+            <td mat-cell *matCellDef="let element"> {{element.MS}} </td>
+        </ng-container>
+        <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef> Total </th>
+            <td mat-cell *matCellDef="let element"> {{element.total}} </td>
+        </ng-container>
+    </table>
 </div>

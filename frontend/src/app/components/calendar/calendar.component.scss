@@ -95,18 +95,24 @@
                     min-height: 100px;
                     display: flex;
                     flex-direction: column;
-                    align-items: center;
+                    align-items: stretch;
                     cursor: pointer;
+                    padding: 0 10px;
                     
                     .menuInfo {
                         text-align: initial;
                         border-radius: 10px;
                         box-sizing: border-box;
-                        // margin: auto;
-                        width: 90%;
-                        margin-bottom: .5rem;
+                        width: 100%;
+                        margin-bottom: .2rem;
                         color: #fff;
-                        padding: 10px 30px;
+                        padding: 10px 15px;
+
+                        & div {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
                         
                         &.principalMenu {
                             background-color: #008000;
@@ -115,7 +121,13 @@
                         &.secodaryMenu {
                             background-color: #4350bf;
                         }
+
+                        &.MPCount {
+                            background-color: #8d8d8d;
+                            text-align: end;
+                        }
                     }
+
                 }
 
                 .addMenu {

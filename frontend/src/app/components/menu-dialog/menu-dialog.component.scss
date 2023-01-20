@@ -9,9 +9,15 @@
 }
 
 .dialogActions {
-    .btnAddToMenu:hover {
+    justify-content: space-between;
+
+    .btnAddToMenuP:hover {
         color: #fff;
         background-color: #009b1a;
+    }
+    .btnAddToMenuS:hover {
+        color: #fff;
+        background-color: #4350bf;
     }
 }
 

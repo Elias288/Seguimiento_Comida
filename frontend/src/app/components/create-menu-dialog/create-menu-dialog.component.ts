@@ -40,7 +40,7 @@ export class CreateMenuDialogComponent implements OnInit {
 
     onSubmit(): void {
         const { menuPrincipal, menuSecundario, date } = this.menuData.value
-        const menu: Menu = { _id: undefined, menuPrincipal, menuSecundario, date }
+        const menu: Menu = { _id: '', menuPrincipal, menuSecundario, date, users: undefined }
         
         if (this.menuData.invalid) {
             this.menuData.markAllAsTouched()

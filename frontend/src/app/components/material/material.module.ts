@@ -12,6 +12,7 @@ import { MatNativeDateModule } from '@angular/material/core'
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 const materials = [
   MatButtonModule,
@@ -25,6 +26,7 @@ const materials = [
   MatIconModule,
   MatDialogModule,
   MatTableModule,
+  MatButtonToggleModule,
 ]
 
 @NgModule({

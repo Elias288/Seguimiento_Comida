@@ -47,7 +47,7 @@ export class CreateUserComponent implements OnInit{
         const { name, surName, email, password, password2 } = this.userData.value
         const roles: string[] = []
 
-        const user: User = { _id: undefined, name, surName, email, password, password2, roles }
+        const user: User = { _id: undefined, name, surName, email, password, password2, roles, Menu_User: undefined }
         this.userService.create(user).subscribe({
             next: (v) => this._snackBar.open('Usuario ' + v.email + ' creado exitosamente', 'close', { duration: 5000 }),
             error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),

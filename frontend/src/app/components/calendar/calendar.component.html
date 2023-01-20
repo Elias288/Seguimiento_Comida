@@ -23,8 +23,15 @@
                     <p>{{day.numberDay}}</p>
                     
                     <div *ngIf="day.menu" class="menu" (click)="openDialog(day)">
-                        <div class="menuInfo principalMenu">{{day.menu.menuPrincipal}}</div>
-                        <div class="menuInfo secodaryMenu" *ngIf="day.menu.menuSecundario">{{day.menu.menuSecundario}}</div>
+                        <div class="menuInfo principalMenu">
+                            <div class="MPName">{{day.menu.menuPrincipal}}</div>
+                        </div>
+                        <div class="menuInfo secodaryMenu" *ngIf="day.menu.menuSecundario">
+                            <div class="MSName">{{day.menu.menuSecundario}}</div>
+                        </div>
+                        <div class="menuInfo MPCount">
+                            Totales: {{day.menu.users?.length | number}}
+                        </div>
                     </div>
                     <div *ngIf="!day.menu && (roles?.includes('COCINERO') || roles?.includes('ADMIN')) && day.status != 'inactive' && day.validToAdd && !day.isWeekend" class="addMenu">
                         <button mat-raised-button color="primary" (click)="addMenu(day.numberDay)" id="{{day.numberDay}}">

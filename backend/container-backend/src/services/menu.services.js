@@ -1,7 +1,11 @@
-const { Menu, User } = require('../models')
+const db = require('../models')
+const User = db.User
+const Menu = db.Menu
 
 exports.getAllMenu = () => {
-    return Menu.findAll()
+    return Menu.findAll({
+        include: { model: User }
+    })
 }
 
 exports.getUsersOfMenu = (id) => {

@@ -40,6 +40,18 @@ export class UserService {
         const body = { userId, roles }
         return this.http.put(this.ENDPOINT + '/user/addRoles', body, { 'headers': headers })
     }
+    
+    public addToMenu(jwt: string, menuId: string, selectedMenu: string) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        const body = { menuId, selectedMenu }
+        return this.http.post(this.ENDPOINT + '/user/menu', body, { 'headers': headers })
+    }
+
+    public removeToMenu(jwt: string, menuId: string) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        const body = { menuId }
+        return this.http.delete(this.ENDPOINT + '/user/menu/' + menuId, { 'headers': headers })   
+    }
 
     public logout(): void {
         localStorage.removeItem('jwt')

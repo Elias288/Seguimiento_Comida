@@ -1,8 +1,9 @@
 const { v4: uuidv4 } = require('uuid')
+const { Op } = require("sequelize")
 const db = require('../models')
-var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
 const User = db.User
+const Menu_User = db.Menu_User
 const userServices = require('../services/user.services')
 const menuService = require('../services/menu.services')
 
@@ -205,7 +206,7 @@ exports.addToMenu = async (req, res, next) => {
 
     let user, menu
 
-    if (!tokenData || !tokenData.roles.includes(ROLES[1])) {
+    if (!tokenData || !(tokenData.roles.includes(ROLES[0]) || tokenData.roles.includes(ROLES[1]))) {
         console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }
@@ -235,7 +236,7 @@ exports.addToMenu = async (req, res, next) => {
             return next({ name: "outOfTime" })
         }
 
-        if (selectedMenu != menu.menuPrincipal && selectedMenu != menu.menuSecundario) {
+        if (selectedMenu != 'MP' && selectedMenu != 'MS') {
             console.error(new Error("invalidData"))
             return next({ name: "invalidData", message: 'Error en el menu seleccionado' })
         }
@@ -247,4 +248,43 @@ exports.addToMenu = async (req, res, next) => {
         next(error)
     })
     
+}
+
+exports.deleteToMenu = async (req, res, next) => {
+    const { menuId } = req.params
+    const { tokenData } = req
+
+    if (!tokenData) {
+        console.error(new Error('unauthorized'))
+        return next({ name: "unauthorized" })
+    }
+
+    return userServices.getUserById(tokenData.id).then(data => {
+        if (data.isError) {
+            return next(data)
+        }
+        return data.data
+    }).then(data => {
+        return Menu_User.destroy({ 
+            where: {
+                [Op.and]: [
+                    { menuId },
+                    { userId: tokenData.id }
+                ]
+            }
+        }).then(num => {
+            if (num == 1) return { isError: false }
+            return { isError: true, name: 'dataNoDeleted' }
+        }).catch(() => {
+            console.error(new Error('Error recuperando los datos'))
+            return {
+                isError: true,
+                name: 'notDataError'
+            }
+        })
+    }).then(data => {
+        if (data.isError) return next(data)
+
+        return res.status(200).send({ message: 'Usuario dado de baja correctamente' })
+    })
 }
