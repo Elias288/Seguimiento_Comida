@@ -6,12 +6,12 @@
         <form [formGroup]="menuData" (ngSubmit)="onSubmit()" novalidate>
             <mat-form-field appearance="fill">
                 <mat-label for="menuPrincipal">Menu Principal</mat-label>
-                <input id="menuPrincipal" matInput type="text" formControlName="menuPrincipal">
+                <textarea id="menuPrincipal" matInput type="text" formControlName="menuPrincipal"></textarea>
             </mat-form-field>
         
             <mat-form-field appearance="fill">
                 <mat-label for="menuSecundario">Menu Secundario</mat-label>
-                <input id="menuSecundario" matInput type="text" formControlName="menuSecundario">
+                <textarea id="menuSecundario" matInput type="text" formControlName="menuSecundario"></textarea>
             </mat-form-field>
         
             <mat-form-field appearance="fill">

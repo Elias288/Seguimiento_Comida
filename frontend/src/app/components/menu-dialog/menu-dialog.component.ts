@@ -102,10 +102,10 @@ export class MenuDialogComponent implements OnInit {
                     },
                     error: (e) => {
                         this._snackBar.open(e.error.message, 'close', { duration: 5000 })
-                        this.dialogRef.close()
+                        this.dialogRef.close(false)
                     },
                     complete: () => {
-                        this.dialogRef.close()
+                        this.dialogRef.close(true)
                     }
                 })
             }
@@ -124,10 +124,10 @@ export class MenuDialogComponent implements OnInit {
                     },
                     error: (e) => {
                         this._snackBar.open(e.error.message, 'close', { duration: 5000 })
-                        this.dialogRef.close()
+                        this.dialogRef.close(false)
                     },
                     complete: () => {
-                        this.dialogRef.close()
+                        this.dialogRef.close(true)
                     }
                 })
             }
@@ -141,8 +141,7 @@ export class MenuDialogComponent implements OnInit {
                 this.userService.addToMenu(this.authService.token, this.menu._id, value).subscribe({
                     next: (v: any) => this._snackBar.open(v.message, 'close', { duration: 5000 }),
                     error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
-                    complete: () => this.dialogRef.close()
-                    
+                    complete: () => this.dialogRef.close(true)
                 })
             }
         })
@@ -155,7 +154,7 @@ export class MenuDialogComponent implements OnInit {
                 this.userService.removeToMenu(this.authService.token, menuId).subscribe({
                     next: (v: any) => this._snackBar.open(v.message, 'close', { duration: 5000 }),
                     error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
-                    complete: () => this.dialogRef.close()
+                    complete: () => this.dialogRef.close(true)
                 })
             }
         })

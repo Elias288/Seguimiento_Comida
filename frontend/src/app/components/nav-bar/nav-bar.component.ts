@@ -1,9 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { HomeComponent } from 'src/app/pages/home/home.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { CalendarComponent } from '../calendar/calendar.component';
 import { CreateMenuDialogComponent } from '../create-menu-dialog/create-menu-dialog.component';
 
 @Component({
@@ -12,9 +10,11 @@ import { CreateMenuDialogComponent } from '../create-menu-dialog/create-menu-dia
     styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit{
-    logged: boolean = false
-    userName!: string
-    roles!: string[]
+    logged: boolean = false         // ESTÁ LOGUEADO
+    userName!: string               // NOMBRE DEL USUARIO LOGUEADO
+    hasRoles: boolean = false       // TIENE EL ROL PARA MOSTRARLO
+
+    isMenuOpen = false
 
     constructor(
         private router: Router,
@@ -27,7 +27,7 @@ export class NavBarComponent implements OnInit{
                 this.authService.getUser().subscribe({
                     next: (v) => {
                         this.userName = v.name
-                        this.roles = v.roles
+                        this.hasRoles = v.roles.includes('COCINERO') || v.roles.includes('ADMIN')
                     },
                     error: (e) => {
                         window.localStorage.removeItem('jwt')
@@ -40,7 +40,11 @@ export class NavBarComponent implements OnInit{
 
     ngOnInit() {}
 
-    createMenu() {
+    public toggleMenu() {
+        this.isMenuOpen = !this.isMenuOpen
+    }
+
+    public createMenu() {
         const dialogRef = this.dialog.open(CreateMenuDialogComponent, {
             data : {
                 date: 0
@@ -51,7 +55,7 @@ export class NavBarComponent implements OnInit{
         })
     }
 
-    gotToUsuarios() {
+    public gotToUsuarios() {
         this.router.navigate(['/users'])
     }
 

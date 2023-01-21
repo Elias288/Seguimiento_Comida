@@ -9,10 +9,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core'
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon'
+import { MatDialogModule } from '@angular/material/dialog'
+import { MatTableModule } from '@angular/material/table'
+import { MatButtonToggleModule } from '@angular/material/button-toggle'
+import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatMenuModule } from '@angular/material/menu'
 
 const materials = [
   MatButtonModule,
@@ -27,6 +30,9 @@ const materials = [
   MatDialogModule,
   MatTableModule,
   MatButtonToggleModule,
+  MatToolbarModule,
+  MatSidenavModule,
+  MatMenuModule,
 ]
 
 @NgModule({

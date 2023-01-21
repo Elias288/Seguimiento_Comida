@@ -1,23 +1,93 @@
-.navBar, .navBar * {
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-}
+$navbarHeight: 60px;
+$tabletSize: 450px;
+$pcSize: 850px;
 
 .navBar {
     background: #252525;
-    padding: .5rem 1rem;
-    justify-content: space-between;
+    color: #fff;
+    height: $navbarHeight;
 
-    a, h1, h2, label {
-        color: #fff;
+    a {
+        text-decoration: none;
+        color: #454545;
+    }
+
+    ul {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .toggleBtn {
+            display: block;
+            
+            @media screen and (min-width: $pcSize) {
+                display: none;
+            }
+        }   
     }
 }
 
-.btnHome,
-.btnHelp,
-.btnUser,
-button {
-    cursor: pointer;
-    margin-right: .5rem;
+.home {
+    a {
+        padding: 0 20px;
+        text-decoration: none;
+        height: $navbarHeight;
+        line-height: $navbarHeight;
+        display: block;
+        text-transform: uppercase;
+        text-align: center;
+        box-sizing: border-box;
+
+        &:hover {
+            background: #454545;
+            color: #fff;
+        }
+    }
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+
+    @media screen and (max-width: $pcSize) {
+        display: none;
+
+        &.is-open {
+            display: block;
+            position: absolute;
+            top: #{$navbarHeight + 2};
+            width: 100%;
+            height: calc(100vh - #{$navbarHeight + 2});
+            background-color: #fff;
+            z-index: 10;
+        }
+    }
+
+    .menu-item {
+        height: $navbarHeight;
+        line-height: $navbarHeight;
+        display: block;
+        padding: 0 20px;
+        text-decoration: none;
+        text-transform: uppercase;
+        color: #454545;
+        width: 100%;
+        text-align: center;
+        border-radius: 0;
+        box-sizing: border-box;
+            display: flex;
+
+        &:hover {
+            background: #454545;
+            color: #fff;
+        }
+
+        .warn {
+            background: #890606;
+        }
+
+        @media screen and (min-width: $pcSize) {
+            width: fit-content;
+        }
+    }
 }

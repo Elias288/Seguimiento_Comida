@@ -1,3 +1,6 @@
+$tabletSize: 450px;
+$pcSize: 850px;
+
 .container {
     display: flex;
     flex-direction: column;
@@ -14,10 +17,18 @@
         padding: .5rem 0;
         text-align: center;
     }
+
+    @media screen and (min-width: $tabletSize) {
+        padding: 0;
+    }
 }
 
-.login {
+.container-content {
     padding-bottom: 3rem;
+
+    @media screen and (min-width: $tabletSize) {
+        max-width: 400px;
+    }
 }
 
 
@@ -48,22 +59,3 @@
         padding: .5rem 0;
     }
 }
-
-/* TABLET */
-@media screen and (min-width: 450px) {
-    .container {
-        padding: 0;
-    }
-
-    .login * {
-        max-width: 400px;
-    }
-}
-
-/* PC */
-// @media screen and (min-width: 850px) {
-//     .container {
-//         background-color: blue;
-
-//     }
-// }

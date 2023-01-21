@@ -18,10 +18,9 @@ export class UsuariosComponent implements OnInit{
     myId!: string
     showRoleForm: boolean = false
     @ViewChild(UsersTableComponent) table!: UsersTableComponent
-    // userSelectedRoles!: Array<string>
 
     actionsFunctions = [
-        { name: 'Roles', option: 'addRoles' },
+        { name: 'Editar Roles', option: 'addRoles' },
         { name: 'Eliminar', option: 'delete', color: 'warn'},
     ]
 

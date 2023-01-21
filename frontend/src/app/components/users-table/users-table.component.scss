@@ -1,0 +1,8 @@
+$tabletSize: 450px;
+$pcSize: 850px;
+
+.container {
+    @media screen and (max-width: $pcSize) {
+        width: max-content;
+    }
+}

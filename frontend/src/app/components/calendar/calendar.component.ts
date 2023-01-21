@@ -4,10 +4,8 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { MenuService } from 'src/app/services/menu/menu.service';
 import { Menu } from 'src/app/utils/menu.inteface';
-import { ConfirmCancelDialogComponent } from '../confirm-cancel-dialog/confirm-cancel-dialog.component';
 import { CreateMenuDialogComponent } from '../create-menu-dialog/create-menu-dialog.component';
 import { MenuDialogComponent } from '../menu-dialog/menu-dialog.component';
-// import { ConfirmCancelDialogComponent } from '../confirm-cancel-dialog/confirm-cancel-dialog.component';
 
 interface Day {
     numberDay: number
@@ -76,7 +74,7 @@ export class CalendarComponent implements OnInit{
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            this.constructCalendar()
+            if (result) this.constructCalendar()
         })
     }
 
@@ -165,7 +163,7 @@ export class CalendarComponent implements OnInit{
             }
         })
         dialogRef.afterClosed().subscribe(result => {
-            this.constructCalendar()
+            if (result) this.constructCalendar()
         })
     }
 }

@@ -1,23 +1,46 @@
-<div class="navBar" *ngIf="logged">
-    <div class="left">
-        <div class="btnHome">
-            <a href="/home" class="home">Home</a>
-        </div>
-        <div class="kitchenerOptions" *ngIf="roles?.includes('COCINERO') || roles?.includes('ADMIN')">
-            <button (click)="createMenu()">Agregar comida</button>
-        </div>
-        <div class="options">
-            <button (click)="gotToUsuarios()">Usuarios</button>
-        </div>
-    </div>
+<nav class="navBar" *ngIf="logged">
+    <ul>
+        <li class="home">
+            <a href="#" class="home">Home</a>
+        </li>
+        <li class="toggleBtn">
+            <button 
+                mat-icon-button class="example-icon"
+                aria-label="Example icon-button with menu icon"
+                (click)="toggleMenu()">
+                <mat-icon>menu</mat-icon>
+            </button>
+        </li>
+        <li class="menu" [class.is-open]="isMenuOpen">
+            <button mat-button 
+                class="menu-item" 
+                (click)="gotToUsuarios()">
+                <mat-icon fontIcon="group" />
+                Usuarios
+            </button>
 
-    <div class="right userOptions">
-        <div class="btnHelp">
-            <a href="/help">Helps</a>
-        </div>
-        <div class="btnUser">
-            <label>{{userName}}</label>
-        </div>
-        <button (click)="logout()">Logout</button>
-    </div>
-</div>
+            <button mat-button
+                class="menu-item"
+                (click)="createMenu()"
+                *ngIf="hasRoles">
+                <mat-icon fontIcon="lunch_dining" />
+                Agregar Comida
+            </button>
+
+            <button mat-button 
+                class="menu-item countBtn" 
+                [matMenuTriggerFor]="menu">
+                <mat-icon fontIcon="account_circle" />
+                {{userName}}
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item 
+                    color="warn"
+                    (click)="logout()">
+                    <mat-icon fontIcon="logout" />
+                    Logout
+                </button>
+            </mat-menu>
+        </li>
+    </ul>
+</nav>
