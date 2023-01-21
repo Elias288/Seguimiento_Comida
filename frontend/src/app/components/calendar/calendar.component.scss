@@ -1,57 +1,65 @@
+$navbarHeight: 60px;
+$tabletSize: 450px;
+$pcSize: 850px;
+$calendarWidth: 1280px;
+
 .container {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    height: calc(100vh - #{$navbarHeight + 2});
+
+    @media screen and (min-width: $pcSize) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }
 
-.mobile {
-    display: block;
-    margin-top: 5rem;
-    text-align: center;
-}
-
-.calendario {
-    display: none;
-    width: 90%;
-    min-width: 550px;
+.container-content {
     background-color: #fff;
     border-radius: 10px;
+    // overflow: hidden;
+    height: 100%;
 
-    header {
-        display: flex;
-        align-items: center;
-        padding: 25px 30px 10px;
-        justify-content: space-between;
+    @media screen and (min-width: $pcSize) {
+        width: 90%;
+        padding: 0 30px;
+        box-sizing: border-box;
+    }
+}
 
-        .current-date {
-            font-size: 1.45rem;
-            font-weight: 500;
-        }
+header {
+    display: flex;
+    align-items: center;
+    padding: 25px 30px 10px;
+    justify-content: space-between;
 
-        .icons  * {
-            cursor: pointer;
-            height: 38px;
-            width: 38px;
-            margin: 0 1px;
-            line-height: 38px;
-            text-align: center;
-            border-radius: 50%;
-
-            
-            &:hover {
-                background: #f2f2f2;
-            }
-        }
-        
+    .current-date {
+        font-size: 1.45rem;
+        font-weight: 500;
     }
 
-    .calendar {
-        padding: 20px;
+    .icons  * {
+        cursor: pointer;
+        height: 38px;
+        width: 38px;
+        margin: 0 1px;
+        line-height: 38px;
+        text-align: center;
+        border-radius: 50%;
 
-        // & * {
-        //     outline: 1px solid red;
-        // }
+        
+        &:hover {
+            background: #f2f2f2;
+        }
+    }
+    
+}
+
+.calendar {
+    overflow: auto;
+
+    .calendar-content {
+        padding: 20px;;
     
         > ul {
             display: flex;
@@ -62,90 +70,93 @@
                 text-align: center;
                 width: calc((100% / 7));
                 position: relative;
-                padding: 1rem 0 2rem;
+                padding: 10px 0;
                 box-shadow: 0 0.1px 0.1px 0 #00000033, 0 0.1px 1px 0 #00000030;
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;
+
+                @media screen and (min-width: $pcSize) {
+                    padding: 1rem 0 2rem;
+                }
             }
         }
 
-        .week {
-            li{
-                font-size: 1rem;
-            }
+        @media screen and (max-width: $pcSize) {
+            min-width: $calendarWidth
         }
-    
-        .days {
-            margin-bottom: 20px;
-    
-            > li {
-                &.inactive {
-                    color: #aaa;
-                }
-                &.today {
-                    background-color: #c7fac3;
-                }
+    }
 
-                p {
-                    font-size: 1rem;
-                }
+}
 
-                .menu {
-                    min-height: 100px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: stretch;
-                    cursor: pointer;
-                    padding: 0 10px;
-                    
-                    .menuInfo {
-                        text-align: initial;
-                        border-radius: 10px;
-                        box-sizing: border-box;
-                        width: 100%;
-                        margin-bottom: .2rem;
-                        color: #fff;
-                        padding: 10px 15px;
+.week {
+    li{
+        font-size: 1rem;
+    }
+}
 
-                        & div {
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                        }
-                        
-                        &.principalMenu {
-                            background-color: #008000;
-                        }
-                        
-                        &.secodaryMenu {
-                            background-color: #4350bf;
-                        }
+.days {
+    margin-bottom: 20px;
 
-                        &.MPCount {
-                            background-color: #8d8d8d;
-                            text-align: end;
-                        }
-                    }
+    > li {
+        &.inactive {
+            color: #aaa;
+        }
+        &.today {
+            background-color: #c7fac3;
+        }
 
-                }
-
-                .addMenu {
-                    button {
-                        background-color: #af8e01;
-                    }
-                }
-            }
+        p {
+            font-size: 1rem;
         }
     }
 }
 
-@media screen and (min-width: 850px) {
-    .calendario{
-        display: initial;
+.menu {
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    cursor: pointer;
+    padding: 0 10px;
+    box-sizing: border-box;
+    
+    .menuInfo {
+        text-align: initial;
+        border-radius: 10px;
+        box-sizing: border-box;
+        width: 100%;
+        margin-bottom: .2rem;
+        color: #fff;
+        padding: 10px 15px;
+
+        & div {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        &.principalMenu {
+            background-color: #008000;
+        }
+        
+        &.secodaryMenu {
+            background-color: #4350bf;
+        }
+
+        &.MPCount {
+            background-color: #8d8d8d;
+            text-align: end;
+        }
     }
 
-    .mobile {
-        display: none;
+}
+
+.addMenu {
+    padding: 0 10px;
+    box-sizing: border-box;
+
+    button {
+        background-color: #af8e01;
     }
 }

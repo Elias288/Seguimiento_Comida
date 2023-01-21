@@ -1,3 +1,15 @@
+$tabletSize: 450px;
+$pcSize: 850px;
+
+.container {
+    min-width: 360px;
+
+    @media screen and (min-width: $pcSize) { 
+        display: grid;
+        grid-template-columns: auto 30%;
+    }
+}
+
 .form {
     margin-bottom: 1rem;
     box-sizing: border-box;
@@ -8,22 +20,23 @@
     }
 }
 
-.dialogActions {
-    justify-content: space-between;
-
-    .btnAddToMenuP:hover {
-        color: #fff;
-        background-color: #009b1a;
-    }
-    .btnAddToMenuS:hover {
-        color: #fff;
-        background-color: #4350bf;
+.title,
+.table {
+    @media screen and (min-width: $pcSize) { 
+        grid-column: 1/3;
     }
 }
 
-// /* TABLET */
-// @media screen and (min-width: 450px) {
-//     .menuInfo * {
-//         max-width: 400px;
-//     }
-// }
+.publicActions,
+.dialogActions-mat-button-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;   
+}
+
+.privateActions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}

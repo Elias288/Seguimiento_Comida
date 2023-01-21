@@ -21,6 +21,7 @@ export class MenuDialogComponent implements OnInit {
     menu!: Menu                         // TODA LA INFORMACIÓN DEL MENU
     completeDate!: Date                 // FECHA COMPLETA DEL MENU
     roles!: Array<string>               // ROL DEL USUARIO LOGUEADO
+    hasRoles: boolean = false
     myId!: string                       // ID DEL USUARIO LOGUEADO
     usersInMenu!: Array<User>           // USUARIOS EN EL MENU
     mySelection!: string | undefined    // SI EL USUARIO YA ESTÁ EN EL MENU, CUAL MENU ESTÁ SELECCIONADO
@@ -48,6 +49,7 @@ export class MenuDialogComponent implements OnInit {
         this.menu = this.day.menu
         this.completeDate = this.data.completeDate
         this.roles = this.data.roles
+        this.hasRoles = this.data.roles.includes('ADMIN') || this.data.roles.includes('COCINERO')
         if (this.menu.users) {
             this.usersInMenu = this.menu.users
             this.dataSource = [{ 

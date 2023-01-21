@@ -140,11 +140,9 @@ export class CalendarComponent implements OnInit{
         this.currMonth = option === 'prev' ? this.currMonth -1 : this.currMonth + 1
         
         if (this.currMonth < 0 || this.currMonth > 11) {
-            this.date = new Date(this.currYear, this.currMonth)
-            this.currYear = this.date.getFullYear()
-            this.currMonth = this.date.getMonth()
-        } else {
-            this.date = new Date()
+            const newDate = new Date(this.currYear, this.currMonth)
+            this.currYear = newDate.getFullYear()
+            this.currMonth = newDate.getMonth()
         }
 
         this.constructCalendar()

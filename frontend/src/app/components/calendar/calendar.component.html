@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="calendario">
+    <div class="container-content">
         <header>
             <p class="current-date">{{currentDate}}</p>
             <div class="icons">
@@ -9,41 +9,41 @@
         </header>
         
         <div class="calendar">
-            <ul class="week">
-                <li><strong>Domingo</strong></li>
-                <li><strong>Lunes</strong></li>
-                <li><strong>Martes</strong></li>
-                <li><strong>Miercoles</strong></li>
-                <li><strong>Jueves</strong></li>
-                <li><strong>Viernes</strong></li>
-                <li><strong>Sabado</strong></li>
-            </ul>
-            <ul class="days">
-                <li *ngFor="let day of numbersDay" class="{{day.status}}">
-                    <p>{{day.numberDay}}</p>
-                    
-                    <div *ngIf="day.menu" class="menu" (click)="openDialog(day)">
-                        <div class="menuInfo principalMenu">
-                            <div class="MPName">{{day.menu.menuPrincipal}}</div>
+            <div class="calendar-content">
+                <ul class="week">
+                    <li><strong>Domingo</strong></li>
+                    <li><strong>Lunes</strong></li>
+                    <li><strong>Martes</strong></li>
+                    <li><strong>Miercoles</strong></li>
+                    <li><strong>Jueves</strong></li>
+                    <li><strong>Viernes</strong></li>
+                    <li><strong>Sabado</strong></li>
+                </ul>
+                <ul class="days">
+                    <li *ngFor="let day of numbersDay" class="{{day.status}}">
+                        <p>{{day.numberDay}}</p>
+                        
+                        <div *ngIf="day.menu" class="menu" (click)="openDialog(day)">
+                            <div class="menuInfo principalMenu">
+                                <div class="MPName">{{day.menu.menuPrincipal}}</div>
+                            </div>
+                            <div class="menuInfo secodaryMenu" *ngIf="day.menu.menuSecundario">
+                                <div class="MSName">{{day.menu.menuSecundario}}</div>
+                            </div>
+                            <div class="menuInfo MPCount">
+                                Totales: {{day.menu.users?.length | number}}
+                            </div>
                         </div>
-                        <div class="menuInfo secodaryMenu" *ngIf="day.menu.menuSecundario">
-                            <div class="MSName">{{day.menu.menuSecundario}}</div>
+                        
+                        <div *ngIf="!day.menu && (roles?.includes('COCINERO') || roles?.includes('ADMIN')) && day.status != 'inactive' && day.validToAdd && !day.isWeekend" class="addMenu">
+                            <button mat-raised-button color="primary" (click)="addMenu(day.numberDay)" id="{{day.numberDay}}">
+                                <mat-icon fontIcon="add_circle" />
+                                Agregar Menu
+                            </button>
                         </div>
-                        <div class="menuInfo MPCount">
-                            Totales: {{day.menu.users?.length | number}}
-                        </div>
-                    </div>
-                    <div *ngIf="!day.menu && (roles?.includes('COCINERO') || roles?.includes('ADMIN')) && day.status != 'inactive' && day.validToAdd && !day.isWeekend" class="addMenu">
-                        <button mat-raised-button color="primary" (click)="addMenu(day.numberDay)" id="{{day.numberDay}}">
-                            <mat-icon fontIcon="add_circle" />
-                            Agregar Menu
-                        </button>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class="mobile">
-        <h1>No disponible para dispositivos moviles</h1>
     </div>
 </div>
