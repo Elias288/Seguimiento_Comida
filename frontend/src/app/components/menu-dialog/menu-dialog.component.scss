@@ -2,7 +2,8 @@ $tabletSize: 450px;
 $pcSize: 850px;
 
 .container {
-    min-width: 360px;
+    // min-width: 360px;
+    height: 90vh;
 
     @media screen and (min-width: $pcSize) { 
         display: grid;

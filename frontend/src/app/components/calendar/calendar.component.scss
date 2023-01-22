@@ -59,7 +59,8 @@ header {
     overflow: auto;
 
     .calendar-content {
-        padding: 20px;;
+        padding: 20px;
+        padding-bottom: 5rem;
     
         > ul {
             display: flex;
