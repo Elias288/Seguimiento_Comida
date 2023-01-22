@@ -11,7 +11,12 @@ const handleErrors = require('./middleware/handleErrors')
 const app = express()
 const server = http.createServer(app)
 
-app.use(cors())
+const whiteList = [ 'https://seguimiento-comida-sofkau.netlify.app', 'https://master--seguimiento-comida-sofkau.netlify.app' ]
+
+app.use(cors({
+    origin: whiteList
+}))
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.set('json spaces', 2)

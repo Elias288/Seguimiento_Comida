@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmationService } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { MenuService } from 'src/app/services/menu/menu.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -14,7 +13,7 @@ import { ConfirmCancelDialogComponent } from '../confirm-cancel-dialog/confirm-c
     selector: 'app-menu-dialog',
     templateUrl: './menu-dialog.component.html',
     styleUrls: ['./menu-dialog.component.scss'],
-    providers: [ConfirmationService]
+    providers: []
 })
 export class MenuDialogComponent implements OnInit {
     day!: any                           // TODA LA INFORMACIÓN DEL DIA
