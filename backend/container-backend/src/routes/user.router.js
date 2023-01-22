@@ -2,6 +2,7 @@ const userControler = require('../controller/user.controller')
 const userRouter = require('express').Router()
 const bodyParser = require('body-parser')
 const { verifyToken } = require('../middleware/verifyToken')
+const cors = require('cors')
 
 userRouter.use(bodyParser.urlencoded({ extended: true }))
 userRouter.post('/', userControler.create)

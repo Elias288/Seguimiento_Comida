@@ -11,15 +11,19 @@ const handleErrors = require('./middleware/handleErrors')
 const app = express()
 const server = http.createServer(app)
 
-const whiteList = {
-    origin: [
-        '*',
-        'https://seguimiento-comida-sofkau.netlify.app/',
-        'https://master--seguimiento-comida-sofkau.netlify.app'
-    ]
-}
+const whiteList = [ 'http://localhost:4200', 'https://master--seguimiento-comida-sofkau.netlify.app', 'https://seguimiento-comida-sofkau.netlify.app' ],
+corsOptions = {
+    origin: (origin, callback) => {
+        if (whiteList.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    },
+    methods: "GET,PUT,POST,DELETE"
+  }
 
-app.use(cors({ origin: '*' }))
+// app.use(cors(corsOptions))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -35,8 +39,8 @@ app.get('/', (req, res) => {
     return res.send({ name, author, description, license })
 })
 
-app.use('/api/user', userRouter)
-app.use('/api/menu', menuRouter)
+app.use('/api/user', cors(corsOptions), userRouter)
+app.use('/api/menu', cors(corsOptions), menuRouter)
 
 app.use((req, res, next) => {
     console.log('notFound')
