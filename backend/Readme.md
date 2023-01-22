@@ -118,7 +118,7 @@ podman build -t backend-container .
 Para ejecutar el contenedor, con nombre ```backend_node``` con salida al puerto ```3000```
 
 ```
-podman run -d --pod my_pod --name backend_node -e NODE_DOCKER_PORT=3000 backend-container
+podman run -d --pod my_pod --name backend_node -e PORT=3000 backend-container
 ```
 
 ---

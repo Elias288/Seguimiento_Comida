@@ -11,11 +11,15 @@ const handleErrors = require('./middleware/handleErrors')
 const app = express()
 const server = http.createServer(app)
 
-const whiteList = [ 'https://seguimiento-comida-sofkau.netlify.app', 'https://master--seguimiento-comida-sofkau.netlify.app' ]
+const whiteList = {
+    origin: [
+        '*',
+        'https://seguimiento-comida-sofkau.netlify.app/',
+        'https://master--seguimiento-comida-sofkau.netlify.app'
+    ]
+}
 
-app.use(cors({
-    origin: whiteList
-}))
+app.use(cors({ origin: '*' }))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -41,7 +45,3 @@ app.use((req, res, next) => {
 app.use(handleErrors)
 
 module.exports = server
-
-/**
- * TODO: no se puede agregar ni modificar menu-user antes de 24
- */
