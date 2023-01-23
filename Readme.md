@@ -6,6 +6,10 @@ Aplicación web que permite llevar un control del menu de comida que se consume 
 
 [Backend readme](./backend/Readme.md)
 
+Hosteado [aqui](https://seguimientocomida-production.up.railway.app)
+
 ## Frontend
 
 [Frontend Readme](./frontend/README.md)
+
+Hosteado [aqui](https://seguimiento-comida-sofkau.netlify.app/)
