@@ -11,19 +11,11 @@ const handleErrors = require('./middleware/handleErrors')
 const app = express()
 const server = http.createServer(app)
 
-const whiteList = [ 'http://localhost:4200', 'https://master--seguimiento-comida-sofkau.netlify.app', 'https://seguimiento-comida-sofkau.netlify.app' ],
+const whiteList = [ '*', 'http://localhost:4200', 'https://master--seguimiento-comida-sofkau.netlify.app', 'https://seguimiento-comida-sofkau.netlify.app' ],
 corsOptions = {
-    origin: (origin, callback) => {
-        if (whiteList.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    },
+    origin: whiteList,
     methods: "GET,PUT,POST,DELETE"
-  }
-
-// app.use(cors(corsOptions))
+}
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))

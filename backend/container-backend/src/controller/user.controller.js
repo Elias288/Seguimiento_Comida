@@ -54,8 +54,8 @@ exports.findOneById = async (req, res, next) => {
     const { tokenData } = req
 
     if (!tokenData) {
-        console.error(new Error('unauthorized'))
-        return next({ name: "unauthorized" })
+        console.error(new Error('tokenNotProvidedError'))
+        return next({ name: "tokenNotProvidedError" })
     }
     const data = await userServices.getUserById(tokenData.id)
     if (data.isError) {
@@ -78,8 +78,8 @@ exports.findOneByEmail = async (req, res, next) => {
     const { tokenData } = req
 
     if (!tokenData) {
-        console.error(new Error('unauthorized'))
-        return next({ name: "unauthorized" })
+        console.error(new Error('tokenNotProvidedError'))
+        return next({ name: "tokenNotProvidedError" })
     }
     const data = await userServices.getUserById(tokenData.id)
     if (data.isError) {
@@ -102,8 +102,8 @@ exports.findAll = async (req, res, next) => {
     const { tokenData } = req
 
     if (!tokenData) {
-        console.error(new Error('unauthorized'))
-        return next({ name: "unauthorized" })
+        console.error(new Error('tokenNotProvidedError'))
+        return next({ name: "tokenNotProvidedError" })
     }
     const data = await userServices.getUserById(tokenData.id)
     if (data.isError) {
@@ -122,7 +122,7 @@ exports.login = async (req, res, next) => {
     const { email, password } = req.body
     const data = await userServices.login(email, password)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     res.status(200).send(data)
@@ -132,8 +132,8 @@ exports.getMe = async (req, res, next) => {
     const { tokenData } = req
 
     if (!tokenData) {
-        console.error(new Error('unauthorized'))
-        return next({ name: "unauthorized" })
+        console.error(new Error('tokenNotProvidedError'))
+        return next({ name: "tokenNotProvidedError" })
     }
 
     const data = await userServices.getUserById(tokenData.id)
@@ -151,8 +151,8 @@ exports.update = async (req, res, next) => {
     const { tokenData } = req
     
     if (!tokenData) {
-        console.error(new Error('unauthorized'))
-        return next({ name: "unauthorized" })
+        console.error(new Error('tokenNotProvidedError'))
+        return next({ name: "tokenNotProvidedError" })
     }
 
     if (password) password = bcrypt.hashSync(password, 8)
@@ -171,7 +171,11 @@ exports.addRole = async (req, res, next) => {
     const { roles, userId } = req.body
     const { tokenData } = req
 
-    if (!tokenData || !tokenData.roles.includes(ROLES[0])) {
+    if (!tokenData){
+        console.error(new Error('tokenNotProvidedError'))
+        return next({ name: "tokenNotProvidedError" })
+    }
+    if (!tokenData.roles.includes(ROLES[0])) {
         console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }
@@ -206,7 +210,11 @@ exports.addToMenu = async (req, res, next) => {
 
     let user, menu
 
-    if (!tokenData || !(tokenData.roles.includes(ROLES[0]) || tokenData.roles.includes(ROLES[1]))) {
+    if (!tokenData){
+        console.error(new Error('tokenNotProvidedError'))
+        return next({ name: "tokenNotProvidedError" })
+    }
+    if (!(tokenData.roles.includes(ROLES[0]) || tokenData.roles.includes(ROLES[1]))) {
         console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }
@@ -255,8 +263,8 @@ exports.deleteToMenu = async (req, res, next) => {
     const { tokenData } = req
 
     if (!tokenData) {
-        console.error(new Error('unauthorized'))
-        return next({ name: "unauthorized" })
+        console.error(new Error('tokenNotProvidedError'))
+        return next({ name: "tokenNotProvidedError" })
     }
 
     return userServices.getUserById(tokenData.id).then(data => {
@@ -287,4 +295,27 @@ exports.deleteToMenu = async (req, res, next) => {
 
         return res.status(200).send({ message: 'Usuario dado de baja correctamente' })
     })
+}
+
+exports.delete = async (req, res, next) => {
+    const { tokenData } = req
+    const { userId } = req.params
+
+    if (!tokenData) {
+        console.error(new Error('tokenNotProvidedError'))
+        return next({ name: "tokenNotProvidedError" })
+    }
+
+    if (!(tokenData.roles.includes(ROLES[0]) || tokenData.id == userId)){
+        console.error(new Error('unauthorized'))
+        return next({ name: "unauthorized" })
+    }
+
+    const data = await userServices.deleteUser(userId)
+    if (data.isError) {
+        console.error(new Error(data))
+        return next(data)
+    }
+
+    res.status(200).send({ message: 'Usuario eliminado' })
 }

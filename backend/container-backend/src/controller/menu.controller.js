@@ -60,7 +60,7 @@ exports.findUsersByMenu = async (req, res, next) => {
     
     const data = await menuServices.getUsersOfMenu(menuId)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     const menu = data.data
@@ -80,7 +80,7 @@ exports.findOneById = async (req, res, next) => {
     const { id } = req.body
     const data = await menuServices.getMenuById(id)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     const menu = data.data
@@ -91,7 +91,7 @@ exports.findOneByDate = async (req, res, next) => {
     const { date } = req.body
     const data = await menuServices.getMenuByDate(date)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     const menu = data.data
@@ -110,7 +110,7 @@ exports.update = async (req, res, next) => {
     const menu = {  menuPrincipal, menuSecundario, date, _id }
     const data = await menuServices.updateMenu(menu)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     res.status(200).send({ message: 'Menu actualizado' })
@@ -127,7 +127,7 @@ exports.delete = async (req, res, next) => {
 
     const data = await menuServices.deleteMenu(menuId)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     res.status(200).send({ message: 'Menu eliminado' })
