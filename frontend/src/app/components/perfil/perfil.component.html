@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="title">
+        <h1>Mi Perfil</h1>
+    </div>
+    <div class="container-content">
+        <h2>{{userInfo.name}} {{userInfo.surName}}</h2>
+
+        <h3>{{userInfo.email}}</h3>
+
+        <label for="">Roles:</label>
+        <ul *ngFor="let rol of userInfo.roles">
+            <li>{{rol}}</li>
+        </ul>
+    </div>
+    <div class="container-actions" *ngIf="itsMe || itsAdmin">
+        <button mat-raised-button color="warn" (click)="deleteUser()">Eliminar</button>
+        <!-- <button mat-raised-button (click)="updateUser()">Editar</button> -->
+    </div>
+</div>

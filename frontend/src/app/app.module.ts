@@ -20,6 +20,7 @@ import { ConfirmCancelDialogComponent } from './components/confirm-cancel-dialog
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { UsersTableComponent } from './components/users-table/users-table.component';
 import { RolesFormComponent } from './components/roles-form/roles-form.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { RolesFormComponent } from './components/roles-form/roles-form.component
     UsuariosComponent,
     UsersTableComponent,
     RolesFormComponent,
+    PerfilComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

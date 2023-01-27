@@ -52,6 +52,7 @@ exports.create = (req, res, next) => {
 
 exports.findOneById = async (req, res, next) => {
     const { tokenData } = req
+    const { id } = req.params
 
     if (!tokenData) {
         console.error(new Error('tokenNotProvidedError'))
@@ -62,8 +63,6 @@ exports.findOneById = async (req, res, next) => {
         console.error(new Error(data))
         return next(data)
     }
-
-    const { id } = req.body
     return userServices.getUserById(id).then(data => {
         if (data.isError) {
             console.error(new Error(data))
@@ -76,6 +75,7 @@ exports.findOneById = async (req, res, next) => {
 
 exports.findOneByEmail = async (req, res, next) => {
     const { tokenData } = req
+    const { email } = req.params
 
     if (!tokenData) {
         console.error(new Error('tokenNotProvidedError'))
@@ -87,7 +87,6 @@ exports.findOneByEmail = async (req, res, next) => {
         return next(data)
     }
 
-    const { email } = req.body
     return userServices.getUserByEmail(email).then(data => {
         if (data.isError) {
             console.error(new Error(data))
@@ -239,7 +238,7 @@ exports.addToMenu = async (req, res, next) => {
         menu = data.data
         const msBetweenDates = Math.abs(menu.date.getTime() - new Date().getTime());
         const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
-        if (hoursBetweenDates < 24) {
+        if (hoursBetweenDates < 12) {
             console.error(new Error("outOfTime"))
             return next({ name: "outOfTime" })
         }

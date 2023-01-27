@@ -17,7 +17,7 @@ interface todo {
 export class UsersTableComponent implements OnInit{
     @Input() hasActions!: boolean | undefined
     @Input() actionsFunctions!: Array<any>
-    @Input() ignoreId!: string
+    @Input() myId!: string
     @Input() jwt!: string
     @Output() actions: EventEmitter<object> = new EventEmitter<object>()
 
@@ -49,7 +49,10 @@ export class UsersTableComponent implements OnInit{
         this.userService.getAll(this.jwt).subscribe({
             next: (v) => {
                 const allUsers = v as Array<User>
-                this.usuarios = allUsers.filter(user => user._id != this.ignoreId)
+                this.usuarios = allUsers.sort((a) => {
+                    if(a._id == this.myId) return -1
+                    return 0
+                })
             },
             error: (e) => {
                 console.error(e);

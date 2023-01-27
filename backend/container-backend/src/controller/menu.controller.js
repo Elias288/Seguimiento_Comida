@@ -56,7 +56,7 @@ exports.findAll = async (req, res, next) => {
 }
 
 exports.findUsersByMenu = async (req, res, next) => {
-    const { id: menuId } = req.body
+    const { menuId } = req.params
     
     const data = await menuServices.getUsersOfMenu(menuId)
     if (data.isError) {
@@ -77,8 +77,8 @@ exports.findUsersByMenu = async (req, res, next) => {
 }
 
 exports.findOneById = async (req, res, next) => {
-    const { id } = req.body
-    const data = await menuServices.getMenuById(id)
+    const { menuId } = req.params
+    const data = await menuServices.getMenuById(menuId)
     if (data.isError) {
         console.error(new Error(data.name))
         return next(data)
@@ -88,7 +88,7 @@ exports.findOneById = async (req, res, next) => {
 }
 
 exports.findOneByDate = async (req, res, next) => {
-    const { date } = req.body
+    const { date } = req.params
     const data = await menuServices.getMenuByDate(date)
     if (data.isError) {
         console.error(new Error(data.name))

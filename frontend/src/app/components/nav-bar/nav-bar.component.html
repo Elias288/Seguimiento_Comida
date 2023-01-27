@@ -14,7 +14,7 @@
         <li class="menu" [class.is-open]="isMenuOpen">
             <button mat-button 
                 class="menu-item" 
-                (click)="gotToUsuarios()">
+                (click)="goToUsuarios()">
                 <mat-icon fontIcon="group" />
                 Usuarios
             </button>
@@ -34,6 +34,12 @@
                 {{userName}}
             </button>
             <mat-menu #menu="matMenu">
+                <button mat-menu-item 
+                    color="warn"
+                    (click)="goToPerfil()">
+                    <mat-icon fontIcon="manage_accounts" />
+                    Perfil
+                </button>
                 <button mat-menu-item 
                     color="warn"
                     (click)="logout()">

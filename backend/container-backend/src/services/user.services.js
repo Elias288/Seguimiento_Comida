@@ -65,7 +65,7 @@ exports.login = async (email, password) => {
             surName: user.surName,
             email: user.email 
         }
-        const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: 86400 })
+        const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: 43200 }) // EXPIRA EN 12 HORAS CADA VEZ QUE SE LOGUEA
         return { jwt: token }
     } else {
         return { isError:true, name: 'invalidUserData' }
