@@ -2,6 +2,54 @@ const db = require("../models")
 const User = db.User
 var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
+const { v4: uuidv4 } = require('uuid')
+
+exports.createUser = (name, surName, email, password, password2, roles) => {
+    if (!name) {
+        return {
+            isError: true,
+            name: "missingData", 
+            message: "Name es requerido" 
+        }
+    }
+    if (!email) {
+        return {
+            isError: true,
+            name: "missingData", 
+            message: "Email es requerido" 
+        }
+    }
+    if (!password) {
+        return {
+            isError: true,
+            name: "missingData", 
+            message: "Password es requerido" 
+        }
+    }
+
+    if (password !== password2) return { isError: true, name: "passwordValidationError" }
+
+    const hashedPassword = bcrypt.hashSync(password, 8);
+
+    const userData = {
+        _id: uuidv4(),
+        name,
+        surName,
+        email,
+        password: hashedPassword,
+        roles
+    }
+
+    User.create(userData).then(data => {
+        const { dataValues: user } = data
+        return { isError: false, user }
+    }).catch(() => {
+        return {
+            isError: true,
+            name: 'notDataError'
+        }
+    })
+}
 
 exports.getAll = () => {
     return User.findAll()
@@ -94,7 +142,47 @@ exports.updateUser = (id, user) => {
         }
         return { isError: true, name: 'dataNotUpdated' }
     }).catch(() => {
-        console.error(new Error('Error recuperando los datos'))
+        // console.error(new Error('Error recuperando los datos'))
+        return {
+            isError: true,
+            name: 'notDataError'
+        }
+    })
+}
+
+exports.addToMenu = (menuId, selectedMenu, userId) => {
+    
+    if (!selectedMenu) {
+        return {
+            isError: true,
+            name: "missingData",
+            message: "selectedMenu es requerido"
+        }
+    }
+
+    return getUserById(userId).then(data => {
+        return data.data
+    }).then(data => {
+        user = data
+        return menuService.getMenuById(menuId)
+    }).then(data => {
+        menu = data.data
+        const msBetweenDates = Math.abs(menu.date.getTime() - new Date().getTime());
+        const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
+        if (hoursBetweenDates < 24) {
+            console.error(new Error("outOfTime"))
+            return next({ name: "outOfTime" })
+        }
+
+        if (selectedMenu != 'MP' && selectedMenu != 'MS') {
+            console.error(new Error("invalidData"))
+            return next({ name: "invalidData", message: 'Error en el menu seleccionado' })
+        }
+        
+        return user.addMenus(menu, { through: { selectedMenu } })
+    }).then(data => {
+        return { isError: false, message: 'Agregado correctamente' }
+    }).catch(error => {
         return {
             isError: true,
             name: 'notDataError'

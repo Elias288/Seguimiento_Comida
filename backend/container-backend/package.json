@@ -7,14 +7,12 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-
     "podh": "echo podI (init) && echo podU (update) && echo podC (clean) && echo podP (pause) && && echo podS (start)",
-
     "podI": "bash ./scripts/podmanInit.sh",
     "podU": "bash ./scripts/podmanUpdate.sh",
     "podC": "podman pod stop my_pod && podman pod rm my_pod",
     "podP": "podman pod stop my_pod",
-    "podS": "podman pod start my_pod"    
+    "podS": "podman pod start my_pod"
   },
   "keywords": [],
   "author": "Elias",
@@ -28,6 +26,7 @@
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^2.3.3",
     "sequelize": "6.28.0",
+    "socket.io": "^4.5.4",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
