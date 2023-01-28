@@ -32,6 +32,11 @@ export class UserService {
         return this.http.get(`${environment.apiUrl}/user/me`, { 'headers': headers })
     }
 
+    public getUserById(jwt: String, userId: string) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        return this.http.get(`${environment.apiUrl}/user/id/${userId}`, { 'headers': headers })
+    }
+
     public getAll(jwt: string) {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
         return this.http.get(`${environment.apiUrl}/user`, { 'headers': headers })
@@ -51,8 +56,12 @@ export class UserService {
 
     public removeToMenu(jwt: string, menuId: string) {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
-        const body = { menuId }
-        return this.http.delete(`${environment.apiUrl}/user/menu/` + menuId, { 'headers': headers })   
+        return this.http.delete(`${environment.apiUrl}/user/menu/${menuId}`, { 'headers': headers })   
+    }
+
+    public deleteUser(jwt: string, userId: string) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        return this.http.delete(`${environment.apiUrl}/user/${userId}`, { 'headers': headers })   
     }
 
     public logout(): void {

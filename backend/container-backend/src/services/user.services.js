@@ -66,7 +66,6 @@ exports.getUserById = (id) => {
     }
     return User.findByPk(id).then(data => {
         if (!data) {
-            console.error(new Error('Usuario no encontrado'))
             return {
                 isError: true,
                 name: 'notFound',
@@ -75,7 +74,6 @@ exports.getUserById = (id) => {
         }
         return { data, isError: false }
     }).catch(() => {
-        console.error(new Error('Error recuperando los datos'))
         return {
             isError: true,
             name: 'notDataError'
@@ -85,29 +83,24 @@ exports.getUserById = (id) => {
 
 exports.getUserByEmail = (email) => {
     if (!email) {
-        console.error(new Error('Email no encontrada'))
         return { isError: true, name: 'missingData', message: 'Email es requerido' }
     }
     return User.findOne({ where: { email } }).then(data => {
         if (!data) {
-            console.error(new Error('Usuario no encontrado'))
             return { isError: true, name: 'userNotFound' }
         }
         return { data, isError: false }
     }).catch(() => {
-        console.error(new Error('Error recuperando los datos'))
         return { isError: true, name: 'notDataError' }
     })
 }
 
 exports.login = async (email, password) => {
     if (!password) {
-        console.error(new Error('Contraseña no encontrada'))
         return { isError: true, name: "missingData", message: "Password es requerido" }
     }
     const data = await this.getUserByEmail(email)
     if (data.isError) {
-        console.error(new Error(data.name))
         return { isError: true, name: data.name, message: data.message }
     }
     const user = data.data
@@ -120,7 +113,7 @@ exports.login = async (email, password) => {
             surName: user.surName,
             email: user.email 
         }
-        const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: 86400 })
+        const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: 43200 }) // EXPIRA EN 12 HORAS CADA VEZ QUE SE LOGUEA
         return { jwt: token }
     } else {
         return { isError:true, name: 'invalidUserData' }
@@ -129,7 +122,6 @@ exports.login = async (email, password) => {
 
 exports.updateUser = (id, user) => {
     if (!id) {
-        console.error(new Error('Id no encontrada'))
         return {
             isError: true,
             name: 'missingData',
@@ -142,7 +134,6 @@ exports.updateUser = (id, user) => {
         }
         return { isError: true, name: 'dataNotUpdated' }
     }).catch(() => {
-        // console.error(new Error('Error recuperando los datos'))
         return {
             isError: true,
             name: 'notDataError'
@@ -151,7 +142,6 @@ exports.updateUser = (id, user) => {
 }
 
 exports.addToMenu = (menuId, selectedMenu, userId) => {
-    
     if (!selectedMenu) {
         return {
             isError: true,
@@ -183,6 +173,25 @@ exports.addToMenu = (menuId, selectedMenu, userId) => {
     }).then(data => {
         return { isError: false, message: 'Agregado correctamente' }
     }).catch(error => {
+        return {
+            isError: true,
+            name: 'notDataError'
+        }
+    })
+}
+
+exports.deleteUser = (id) => {
+    if (!id) {
+        return {
+            isError: true,
+            name: 'missingData',
+            message: 'Id es requerida'
+        }
+    }
+    return User.destroy({ where: { _id: id } }).then(num => {
+        if (num == 1) return { isError: false }
+        return { isError: true, name: 'dataNoDeleted' }
+    }).catch(() => {
         return {
             isError: true,
             name: 'notDataError'

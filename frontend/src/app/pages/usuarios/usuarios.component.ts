@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmCancelDialogComponent } from 'src/app/components/confirm-cancel-dialog/confirm-cancel-dialog.component';
 import { RolesFormComponent } from 'src/app/components/roles-form/roles-form.component';
 import { UsersTableComponent } from 'src/app/components/users-table/users-table.component';
@@ -12,11 +13,9 @@ import { User } from 'src/app/utils/user.interface';
     templateUrl: './usuarios.component.html',
     styleUrls: ['./usuarios.component.scss']
 })
-export class UsuariosComponent implements OnInit{
-    myRoles!: string[]
+export class UsuariosComponent implements OnInit {
     admin!: boolean
     myId!: string
-    showRoleForm: boolean = false
     @ViewChild(UsersTableComponent) table!: UsersTableComponent
 
     actionsFunctions = [
@@ -28,21 +27,14 @@ export class UsuariosComponent implements OnInit{
         public authService: AuthService,
         public userService: UserService,
         public dialog: MatDialog,
+        private _snackBar: MatSnackBar,
     ) { 
         this.authService.isLoggedIn$.subscribe(status => {
             if (status) {
                 this.authService.getUser().subscribe({
                     next: (v) => {
-                        this.myRoles = v.roles
-                        this.admin = v.roles.includes('ADMIN')
-                    }
-                })
-                this.authService.getUser().subscribe({
-                    next: (v) => {
                         this.myId = v._id
-                    },
-                    error: (e) => {
-                        console.error(e);
+                        this.admin = v.roles.includes('ADMIN')
                     }
                 })
             }
@@ -59,7 +51,19 @@ export class UsuariosComponent implements OnInit{
                 this.openConfirmCancelDialog("¿Seguro que quiere actualizar este usuario?")
                 .afterClosed().subscribe(result => {
                     if (result) {
-                        console.log('no implementado')
+                        // console.log(user._id)
+                        this.userService.deleteUser(this.authService.token, user._id).subscribe({
+                            next: () => {
+                                this._snackBar.open('Usuario eliminado exitosamente', 'close', { duration: 5000 })
+                            },
+                            error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
+                            complete: () => {
+                                if(user._id == this.myId) {
+                                    this.authService.logout()
+                                }
+                                this.table.updateUsers()
+                            },
+                        })
                     }
                 })
             },

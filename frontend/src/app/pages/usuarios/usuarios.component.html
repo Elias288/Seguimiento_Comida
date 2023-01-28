@@ -4,13 +4,12 @@
     </div>
     <div class="container-content">
         <app-users-table
-            *ngIf="myRoles"
+            *ngIf="myId"
             [jwt]="authService.token"
-            [hasActions]="myRoles.includes('ADMIN')"
+            [hasActions]="admin"
             [actionsFunctions]="actionsFunctions"
-            [ignoreId]="myId"
-            (actions)="getFunctions($event)"
-        >
+            [myId]="myId"
+            (actions)="getFunctions($event)">
         </app-users-table>
     </div>
 </div>

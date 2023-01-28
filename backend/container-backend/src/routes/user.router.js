@@ -8,13 +8,13 @@ userRouter.post('/', userControler.create)
 userRouter.post('/login', userControler.login)
 userRouter.post('/menu', verifyToken, userControler.addToMenu)
 userRouter.delete('/menu/:menuId', verifyToken, userControler.deleteToMenu)
-userRouter.delete('/:userId', verifyToken, userControler.deleteToMenu)
+userRouter.delete('/:userId', verifyToken, userControler.delete)
 userRouter.put('/', verifyToken, userControler.update)
 userRouter.put('/addRoles', verifyToken, userControler.addRole)
 
 userRouter.get('/', verifyToken, userControler.findAll)
-userRouter.get('/email', verifyToken, userControler.findOneByEmail)
-userRouter.get('/id', verifyToken, userControler.findOneById)
+userRouter.get('/email/:email', verifyToken, userControler.findOneByEmail)
+userRouter.get('/id/:id', verifyToken, userControler.findOneById)
 userRouter.get('/me', verifyToken, userControler.getMe)
 
 module.exports = userRouter

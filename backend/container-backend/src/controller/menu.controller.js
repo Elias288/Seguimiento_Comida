@@ -56,11 +56,11 @@ exports.findAll = async (req, res, next) => {
 }
 
 exports.findUsersByMenu = async (req, res, next) => {
-    const { id: menuId } = req.body
+    const { menuId } = req.params
     
     const data = await menuServices.getUsersOfMenu(menuId)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     const menu = data.data
@@ -77,10 +77,10 @@ exports.findUsersByMenu = async (req, res, next) => {
 }
 
 exports.findOneById = async (req, res, next) => {
-    const { id } = req.body
-    const data = await menuServices.getMenuById(id)
+    const { menuId } = req.params
+    const data = await menuServices.getMenuById(menuId)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     const menu = data.data
@@ -88,10 +88,10 @@ exports.findOneById = async (req, res, next) => {
 }
 
 exports.findOneByDate = async (req, res, next) => {
-    const { date } = req.body
+    const { date } = req.params
     const data = await menuServices.getMenuByDate(date)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     const menu = data.data
@@ -110,7 +110,7 @@ exports.update = async (req, res, next) => {
     const menu = {  menuPrincipal, menuSecundario, date, _id }
     const data = await menuServices.updateMenu(menu)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     res.status(200).send({ message: 'Menu actualizado' })
@@ -127,7 +127,7 @@ exports.delete = async (req, res, next) => {
 
     const data = await menuServices.deleteMenu(menuId)
     if (data.isError) {
-        console.error(new Error(data))
+        console.error(new Error(data.name))
         return next(data)
     }
     res.status(200).send({ message: 'Menu eliminado' })

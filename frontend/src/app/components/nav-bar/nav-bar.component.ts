@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { User } from 'src/app/utils/user.interface';
 import { CreateMenuDialogComponent } from '../create-menu-dialog/create-menu-dialog.component';
 
 @Component({
@@ -13,6 +14,7 @@ export class NavBarComponent implements OnInit{
     logged: boolean = false         // ESTÁ LOGUEADO
     userName!: string               // NOMBRE DEL USUARIO LOGUEADO
     hasRoles: boolean = false       // TIENE EL ROL PARA MOSTRARLO
+    myId!: string
 
     isMenuOpen = false
 
@@ -25,8 +27,9 @@ export class NavBarComponent implements OnInit{
             this.logged = status
             if (status) {
                 this.authService.getUser().subscribe({
-                    next: (v) => {
+                    next: (v: User) => {
                         this.userName = v.name
+                        this.myId = v._id
                         this.hasRoles = v.roles.includes('COCINERO') || v.roles.includes('ADMIN')
                     },
                     error: (e) => {
@@ -45,6 +48,7 @@ export class NavBarComponent implements OnInit{
     }
 
     public createMenu() {
+        this.toggleMenu()
         const dialogRef = this.dialog.open(CreateMenuDialogComponent, {
             data : {
                 date: 0
@@ -55,8 +59,14 @@ export class NavBarComponent implements OnInit{
         })
     }
 
-    public gotToUsuarios() {
+    public goToUsuarios() {
+        this.toggleMenu()
         this.router.navigate(['/users'])
+    }
+
+    public goToPerfil() {
+        this.toggleMenu()
+        this.router.navigate([`/perfil/${this.myId}`])
     }
 
     public logout() {
