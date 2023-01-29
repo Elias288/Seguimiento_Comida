@@ -12,12 +12,11 @@ export class HomeComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private _snackBar: MatSnackBar,
         private authService: AuthService,
     ) {
-        authService.isLoggedIn$.subscribe(status => {
+        this.authService.isLoggedIn$.subscribe(status => {
             if (!status){
-                router.navigate([''])
+                this.router.navigate([''])
             }
         })
     }

@@ -18,5 +18,6 @@ const httpServer = app.listen(PORT, () => {
 	console.log(`Escuchando en el puerto: ${PORT}`)
 })
 
-const io = new WebsocketServer(httpServer)
+const whiteList = [ 'http://localhost:4200', 'https://master--seguimiento-comida-sofkau.netlify.app', 'https://seguimiento-comida-sofkau.netlify.app' ]
+const io = new WebsocketServer(httpServer, { cors: { origin: whiteList } })
 sockets(io)
