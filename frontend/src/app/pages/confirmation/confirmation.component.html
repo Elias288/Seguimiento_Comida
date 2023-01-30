@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="loading" *ngIf="loading">
+        <h1>Confirmando Email...</h1>
+        <mat-spinner></mat-spinner>
+    </div>
+    
+    <div class="confirmed" *ngIf="confirmed">
+        <h1>Email Confirmado</h1>
+        <button (click)="goToLogin()" mat-raised-button color="primary">Ir al loguin</button>
+    </div>
+    
+    <div class="error" *ngIf="error">
+        <h1>Algo salio mal, vuelve a intentarlo o consulta con un administrador</h1>
+        <button (click)="goToLogin()" mat-raised-button color="primary">Volver al inicio</button>
+    </div>
+</div>

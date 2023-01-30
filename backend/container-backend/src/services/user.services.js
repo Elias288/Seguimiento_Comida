@@ -44,7 +44,7 @@ sendConfirmationEmail = (user) => {
 
     var token = jwt.sign({ email: user.email, id: user._id }, process.env.SECRET)
 
-    const urlConfirm = `${process.env.APIGETWAY_URL}/api/user/confirm/${token}`
+    const urlConfirm = `${process.env.APIGETWAY_URL}/confirm/${token}`
 
     return {
         isError: false,

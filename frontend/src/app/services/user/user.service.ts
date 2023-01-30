@@ -47,16 +47,10 @@ export class UserService {
         const body = { userId, roles }
         return this.http.put(`${environment.ENDPOINT}/api/user/addRoles`, body, { 'headers': headers })
     }
-    
-    public addToMenu(jwt: string, menuId: string, selectedMenu: string) {
-        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
-        const body = { menuId, selectedMenu }
-        return this.http.post(`${environment.ENDPOINT}/api/user/menu`, body, { 'headers': headers })
-    }
 
-    public removeToMenu(jwt: string, menuId: string) {
-        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
-        return this.http.delete(`${environment.ENDPOINT}/api/user/menu/${menuId}`, { 'headers': headers })   
+    public confirmEmail(jwt: string) {
+        const headers = { 'Content-Type': 'application/json'}
+        return this.http.get(`${environment.ENDPOINT}/api/user/confirm/${jwt}`, { 'headers': headers })   
     }
 
     public deleteUser(jwt: string, userId: string) {

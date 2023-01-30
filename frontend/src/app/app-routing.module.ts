@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { AngularHelpsComponent } from './pages/angular-helps/angular-helps.component';
+import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
 import { CreateUserComponent } from './pages/create-user/create-user.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -13,11 +14,17 @@ const routes: Routes = [
     {
         path: '',
         redirectTo: '/login',
-        pathMatch: 'full' },
+        pathMatch: 'full' 
+    },
     {
         path: 'help',
         title: "Help",
         component: AngularHelpsComponent
+    },
+    {
+        path: 'confirm/:token',
+        title: "Email confirmation",
+        component: ConfirmationComponent
     },
     {
         path: 'home',
