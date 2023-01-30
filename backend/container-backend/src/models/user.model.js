@@ -16,6 +16,11 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             unique: true
         },
+        emailVerified: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
+        },
         password: {
             type: Sequelize.STRING,
             allowNull: false,

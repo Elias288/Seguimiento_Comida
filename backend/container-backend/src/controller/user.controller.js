@@ -33,15 +33,30 @@ exports.create = (req, res, next) => {
     }
 
     if (password !== password2) return { isError: true, name: "passwordValidationError" }
-    
-    let newRoles = []
 
-    return userServices.createUser(name, surName, email, password, password2, newRoles).then(data => {
+    return userServices.createUser(name, surName, email, password, []).then(data => {
         if (data.isError){
             console.error(new Error(data.name))
             return next(data)
         }
-        return res.status(200).send({ message: 'Usuario creado exitosamente' })
+        return res.status(200).send({ message: 'Usuario creado exitosamente', user: data.user })
+    })
+}
+
+exports.confirmEmail = (req, res, next) => {
+    const { token } = req.params
+
+    if (!token) {
+        console.error(new Error('tokenNotProvidedError'))
+        return next({ name: "tokenNotProvidedError" })
+    }
+
+    return userServices.validateEmail(token).then(data => {
+        if (data.isError) {
+            console.error(new Error(data.name))
+            return next(data)
+        }
+        return res.status(200).send({message: 'Email verificado'})
     })
 }
 

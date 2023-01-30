@@ -13,6 +13,7 @@ userRouter.put('/', verifyToken, userControler.update)
 userRouter.put('/addRoles', verifyToken, userControler.addRole)
 
 userRouter.get('/', verifyToken, userControler.findAll)
+userRouter.get('/confirm/:token', userControler.confirmEmail)
 userRouter.get('/email/:email', verifyToken, userControler.findOneByEmail)
 userRouter.get('/id/:id', verifyToken, userControler.findOneById)
 userRouter.get('/me', verifyToken, userControler.getMe)

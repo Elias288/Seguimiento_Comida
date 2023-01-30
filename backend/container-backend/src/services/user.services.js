@@ -1,4 +1,5 @@
 const db = require("../models")
+const nodemailer = require('nodemailer')
 const { Op } = require("sequelize")
 const User = db.User
 const Menu = db.Menu
@@ -7,8 +8,7 @@ var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
 const { v4: uuidv4 } = require('uuid')
 
-exports.createUser = (name, surName, email, password, password2, roles) => {
-
+exports.createUser = (name, surName, email, password, roles) => {
     const hashedPassword = bcrypt.hashSync(password, 8);
 
     const userData = {
@@ -20,14 +20,65 @@ exports.createUser = (name, surName, email, password, password2, roles) => {
         roles
     }
 
-    return User.create(userData).then(() => {
-        return { isError: false }
+    return User.create(userData)
+    .then((user) => {
+        return { isError: false, data: sendConfirmationEmail(user) }
     }).catch(() => {
         return {
             isError: true,
             name: 'notDataError'
         }
     })
+}
+
+sendConfirmationEmail = (user) => {
+    let transporter = nodemailer.createTransport({
+        host: process.env.MAIL_HOST,
+        port: process.env.MAIL_PORT,
+        secure: true,
+        auth: {
+            user: process.env.MAIL_USERNAME,
+            pass: process.env.MAIL_PASSWORD,
+        }
+    })
+
+    var token = jwt.sign({ email: user.email, id: user._id }, process.env.SECRET)
+
+    const urlConfirm = `${process.env.APIGETWAY_URL}/api/user/confirm/${token}`
+
+    return {
+        isError: false,
+        transport: transporter.sendMail({
+            from: process.env.MAIL_ADMIN_ADDRESS,
+            to: user.email,
+            subject: "Confirmar Email - Seguimiento comida Sofka",
+            html: `<p>Cofirmar email: <a href="${urlConfirm}">Aquí</a></p>`
+        })
+    }
+}
+
+exports.validateEmail = (token) => {
+    try {
+        const id = jwt.verify(token, process.env.SECRET).id
+        
+        return User.update({ emailVerified: 1 }, { where: { _id: id } }).then(num => {
+            if (num == 1) {
+                return { isError: false }
+            }
+            return { isError: true, name: 'dataNotUpdated' }
+        }).catch(() => {
+            return {
+                isError: true,
+                name: 'notDataError'
+            }
+        })
+    } catch (error) {
+        console.error(new Error(error.name))
+        return {
+            isError: true,
+            name: error.name
+        }
+    }
 }
 
 exports.getAll = () => {
@@ -80,9 +131,13 @@ exports.login = async (email, password) => {
         return { isError: true, name: data.name, message: data.message }
     }
     const user = data.data
+    
+    if (!user.emailVerified) {
+        return { isError: true, name: 'emailNotVerified'}
+    }
 
     if (await bcrypt.compare(password, user.password)) {
-        const tokenData = { id: user._id }
+        const tokenData = { id: user._id, email: user.email }
         const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: 43200 }) // EXPIRA EN 12 HORAS CADA VEZ QUE SE LOGUEA
         return { jwt: token }
     } else {
