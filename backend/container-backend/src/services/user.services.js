@@ -17,7 +17,8 @@ exports.createUser = (name, surName, email, password, roles) => {
         surName,
         email,
         password: hashedPassword,
-        roles
+        roles,
+        emailVerified: 0,
     }
 
     return User.create(userData)

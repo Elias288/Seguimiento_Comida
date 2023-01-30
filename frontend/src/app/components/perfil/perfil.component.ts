@@ -22,6 +22,7 @@ export class PerfilComponent {
         password: '',
         password2: '',
         Menu_User: undefined,
+        emailVerified: undefined
     }
     myId!: string
     perfilId!: string
