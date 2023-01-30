@@ -31,7 +31,7 @@
                                 <div class="MSName">{{day.menu.menuSecundario}}</div>
                             </div>
                             <div class="menuInfo MPCount">
-                                Totales: {{day.menu.users?.length | number}}
+                                Totales: {{day.menu.users?.length || 0 | number}}
                             </div>
                         </div>
                         

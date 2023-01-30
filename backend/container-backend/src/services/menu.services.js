@@ -1,6 +1,52 @@
+const { v4: uuidv4 } = require('uuid')
 const db = require('../models')
 const User = db.User
 const Menu = db.Menu
+
+exports.createMenu = (menuPrincipal, menuSecundario, date) => {
+    if (!menuPrincipal) {
+        return {
+            isError: true,
+            name: "missingData",
+            message: "Name es requerido"
+        }
+    }
+    if (!date) {
+        return {
+            isError: true,
+            name: "missingData",
+            message: "Fecha es requerido"
+        }
+    }
+    const dataDate = new Date(date)
+
+    if (+dataDate <= +new Date()) {
+        return {
+            isError: true,
+            name: "invalidDate"
+        }
+    }
+    
+    const menuData = {
+        _id: uuidv4(),
+        menuPrincipal,
+        menuSecundario,
+        date: dataDate
+    }
+
+    return Menu.create(menuData).then(data => {
+        return {
+            isError: false,
+            data
+        }
+    }).catch(error => {
+        console.log(error)
+        return {
+            isError: true,
+            name: "noDataError"
+        }
+    })
+}
 
 exports.getAllMenu = () => {
     return Menu.findAll({
@@ -10,7 +56,6 @@ exports.getAllMenu = () => {
 
 exports.getUsersOfMenu = (id) => {
     if (!id) {
-        console.error(new Error('Id no encontrada'))
         return {
             isError: true,
             name: 'missingData',
@@ -22,28 +67,24 @@ exports.getUsersOfMenu = (id) => {
         include: { model: User }
     }).then(data => {
         if (!data) {
-            console.error(new Error('Menu no encontrado'))
             return { isError: true, name: 'notFound', message: 'Menu no encontrado' }
         }
         return { data, isError: false }
     }).catch(() => {
-        console.error(new Error('Error recuperando los datos'))
         return { isError: true, name: 'notDataError' }
     })
 }
 
 exports.getMenuById = (id) => {
     if (!id) {
-        console.error(new Error('Id no encontrada'))
         return {
             isError: true,
             name: 'missingData',
             message: 'Id es requerida'
         }
     }
-    return Menu.findByPk(id).then(data => {
+    return Menu.findByPk(id, { include: { model: User } }).then(data => {
         if (!data) {
-            console.error(new Error('Menu no encontrado'))
             return {
                 isError: true,
                 name: 'notFound',
@@ -52,7 +93,6 @@ exports.getMenuById = (id) => {
         }
         return { data, isError: false }
     }).catch(() => {
-        console.error(new Error('Error recuperando los datos'))
         return {
             isError: true,
             name: 'notDataError'
@@ -62,24 +102,20 @@ exports.getMenuById = (id) => {
 
 exports.getMenuByDate = (date) => {
     if (!date) {
-        console.error(new Error('date no encontrada'))
         return { isError: true, name: 'missingData', message: 'Fecha es requerido' }
     }
     return Menu.findOne({ where: { date } }).then(data => {
         if (!data) {
-            console.error(new Error('Menu no encontrado'))
             return { isError: true, name: 'notFound', message: 'Menu no encontrado' }
         }
         return { data, isError: false }
     }).catch(() => {
-        console.error(new Error('Error recuperando los datos'))
         return { isError: true, name: 'notDataError' }
     })
 }
 
 exports.updateMenu = (menu) => {
     if (!menu._id) {
-        console.error(new Error('Id no encontrada'))
         return {
             isError: true,
             name: 'missingData',
@@ -92,7 +128,6 @@ exports.updateMenu = (menu) => {
         }
         return { isError: true, name: 'dataNotUpdated' }
     }).catch(() => {
-        console.error(new Error('Error recuperando los datos'))
         return {
             isError: true,
             name: 'notDataError'
@@ -102,7 +137,6 @@ exports.updateMenu = (menu) => {
 
 exports.deleteMenu = (id) => {
     if (!id) {
-        console.error(new Error('Id no encontrada'))
         return {
             isError: true,
             name: 'missingData',
@@ -113,7 +147,6 @@ exports.deleteMenu = (id) => {
         if (num == 1) return { isError: false }
         return { isError: true, name: 'dataNoDeleted' } 
     }).catch(() => {
-        console.error(new Error('Error recuperando los datos'))
         return {
             isError: true,
             name: 'notDataError'

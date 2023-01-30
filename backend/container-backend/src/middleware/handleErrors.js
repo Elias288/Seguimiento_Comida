@@ -13,6 +13,7 @@ const ERROR_HANDLERS = {
 
     unauthorized: (res, error) => res.status(401).send({ error: error.name, message: "No está autorizado" }),
     accessDenied: (res, error) => res.status(401).send({ error: error.name, message: "Acceso denegado" }),
+    emailNotVerified: (res, error) => res.status(401).send({ error: error.name, message: "Email no verificado" }),
     dataNoDeleted: (res, error) => res.status(401).send({ error: error.name, message: "No fue posible eliminar" }),
 
     notFound: (res, error) => res.status(404).send({ error: error.name, message: error.message }),

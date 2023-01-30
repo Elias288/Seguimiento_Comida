@@ -18,41 +18,50 @@ export class UserService {
     public create(userData: User): Observable<any>  {
         const headers = { 'Content-Type': 'application/json' }
         const body = JSON.stringify(userData)
-        return this.http.post(`${environment.apiUrl}/user`, body, { 'headers': headers })
+        return this.http.post(`${environment.ENDPOINT}/api/user`, body, { 'headers': headers })
     }
     
     public login(email: String, password: String): Observable<Object> {
         const headers = { 'Content-Type': 'application/json' }
         const body = { email, password }
-        return this.http.post(`${environment.apiUrl}/user/login`, body, { 'headers': headers })
+        return this.http.post(`${environment.ENDPOINT}/api/user/login`, body, { 'headers': headers })
     }
     
     public getMe(jwt: String) {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
-        return this.http.get(`${environment.apiUrl}/user/me`, { 'headers': headers })
+        return this.http.get(`${environment.ENDPOINT}/api/user/me`, { 'headers': headers })
+    }
+
+    public getUserById(jwt: String, userId: string) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        return this.http.get(`${environment.ENDPOINT}/api/user/id/${userId}`, { 'headers': headers })
     }
 
     public getAll(jwt: string) {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
-        return this.http.get(`${environment.apiUrl}/user`, { 'headers': headers })
+        return this.http.get(`${environment.ENDPOINT}/api/user`, { 'headers': headers })
     }
 
     public addRole(jwt: string, userId: string, roles: string) {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
         const body = { userId, roles }
-        return this.http.put(`${environment.apiUrl}/user/addRoles`, body, { 'headers': headers })
+        return this.http.put(`${environment.ENDPOINT}/api/user/addRoles`, body, { 'headers': headers })
     }
     
     public addToMenu(jwt: string, menuId: string, selectedMenu: string) {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
         const body = { menuId, selectedMenu }
-        return this.http.post(`${environment.apiUrl}/user/menu`, body, { 'headers': headers })
+        return this.http.post(`${environment.ENDPOINT}/api/user/menu`, body, { 'headers': headers })
     }
 
     public removeToMenu(jwt: string, menuId: string) {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
-        const body = { menuId }
-        return this.http.delete(`${environment.apiUrl}/user/menu/` + menuId, { 'headers': headers })   
+        return this.http.delete(`${environment.ENDPOINT}/api/user/menu/${menuId}`, { 'headers': headers })   
+    }
+
+    public deleteUser(jwt: string, userId: string) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
+        return this.http.delete(`${environment.ENDPOINT}/api/user/${userId}`, { 'headers': headers })   
     }
 
     public logout(): void {

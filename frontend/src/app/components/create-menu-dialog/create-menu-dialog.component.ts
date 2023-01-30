@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { MenuService } from 'src/app/services/menu/menu.service';
+import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
 import { Menu } from 'src/app/utils/menu.inteface';
 
 @Component({
@@ -21,6 +22,7 @@ export class CreateMenuDialogComponent implements OnInit {
         private menuService: MenuService,
         private authService: AuthService,
         private _snackBar: MatSnackBar,
+        public socketIoService: SocketIoService,
     ) {
         if (data.date != 0) this.fecha = new Date(parseInt(data.date as string, 10))
     }
@@ -45,13 +47,9 @@ export class CreateMenuDialogComponent implements OnInit {
         if (this.menuData.invalid) {
             this.menuData.markAllAsTouched()
         } else {
-            this.menuService.create(menu, this.authService.token).subscribe({
-                next: () => this._snackBar.open('Menu creado exitosamente', 'close', { duration: 5000 }),
-                error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
-                complete: () => {
-                   this.dialogRef.close(true)
-                }
-            })
+            this.socketIoService.newMenu(`Bearer ${this.authService.token}`, menu)
+            this._snackBar.open('Menu creado exitosamente', 'close', { duration: 5000 }),
+            this.dialogRef.close(true)
         }
     }
 }

@@ -1,6 +1,7 @@
 import { Input, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
 import { AngularHelpsComponent } from './pages/angular-helps/angular-helps.component';
 import { CreateUserComponent } from './pages/create-user/create-user.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -36,8 +37,14 @@ const routes: Routes = [
     },
     {
         path: 'users',
-        title: "Crear usuario",
+        title: "Listar usuario",
         component: UsuariosComponent,
+        canActivate: [CanAccesService]
+    },
+    {
+        path: 'perfil/:userId',
+        title: "My perfil",
+        component: PerfilComponent,
         canActivate: [CanAccesService]
     },
     {

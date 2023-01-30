@@ -1,5 +1,3 @@
-const { sequelize, Sequelize } = require(".");
-
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define("user", {
         _id: {
@@ -17,6 +15,11 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
             unique: true
+        },
+        emailVerified: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
         },
         password: {
             type: Sequelize.STRING,
