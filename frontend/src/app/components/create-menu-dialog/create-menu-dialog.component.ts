@@ -47,7 +47,7 @@ export class CreateMenuDialogComponent implements OnInit {
         if (this.menuData.invalid) {
             this.menuData.markAllAsTouched()
         } else {
-            this.socketIoService.newMenu(menu, `Bearer ${this.authService.token}`)
+            this.socketIoService.newMenu(`Bearer ${this.authService.token}`, menu)
             this._snackBar.open('Menu creado exitosamente', 'close', { duration: 5000 }),
             this.dialogRef.close(true)
         }

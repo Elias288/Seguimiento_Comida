@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { MenuService } from 'src/app/services/menu/menu.service';
+import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { Menu } from 'src/app/utils/menu.inteface';
 import { User } from 'src/app/utils/user.interface';
@@ -41,7 +42,28 @@ export class MenuDialogComponent implements OnInit {
         private authService: AuthService,
         private _snackBar: MatSnackBar,
         public dialog: MatDialog,
-    ) {  }
+        public socketIoService: SocketIoService,
+    ) {
+        this.socketIoService.addedMenu(() => {
+            this._snackBar.open('Agregado al menu', 'close', { duration: 5000 })
+            this.dialogRef.close(true)
+        })
+
+        this.socketIoService.deletedToMenu(() => {
+            this._snackBar.open('Eliminado del menu', 'close', { duration: 5000 })
+            this.dialogRef.close(true)
+        })
+
+        this.socketIoService.deletedMenu(() => {
+            this._snackBar.open('Menu eliminado exitosamente', 'close', { duration: 5000 })
+            this.dialogRef.close(true)
+        })
+
+        this.socketIoService.updatedMenu(() => {
+            this._snackBar.open('Menu actualizado', 'close', { duration: 5000 })
+            this.dialogRef.close(true)
+        })
+    }
 
     ngOnInit(): void {
         this.day = this.data.day
@@ -97,18 +119,7 @@ export class MenuDialogComponent implements OnInit {
         const dialogref = this.openConfirmCancelDialog(message)
         dialogref.afterClosed().subscribe(result => {
             if (result) {
-                this.menuService.deleteMenu(this.data.day.menu._id, this.authService.token).subscribe({
-                    next:(v: any) => {
-                        this._snackBar.open(v.message, 'close', { duration: 5000 })
-                    },
-                    error: (e) => {
-                        this._snackBar.open(e.error.message, 'close', { duration: 5000 })
-                        this.dialogRef.close(false)
-                    },
-                    complete: () => {
-                        this.dialogRef.close(true)
-                    }
-                })
+                this.socketIoService.deleteMenu(`Bearer ${this.authService.token}`, this.data.day.menu._id)
             }
         })
     }
@@ -118,19 +129,7 @@ export class MenuDialogComponent implements OnInit {
         .afterClosed().subscribe(result => {
             if (result) {
                 const menu: Menu = { _id: this.data.day.menu._id, ...this.menuData.value }
-                
-                this.menuService.updateMenu(this.authService.token, menu).subscribe({
-                    next:(v: any) => {
-                        this._snackBar.open(v.message, 'close', { duration: 5000 })
-                    },
-                    error: (e) => {
-                        this._snackBar.open(e.error.message, 'close', { duration: 5000 })
-                        this.dialogRef.close(false)
-                    },
-                    complete: () => {
-                        this.dialogRef.close(true)
-                    }
-                })
+                this.socketIoService.updateMenu(`Bearer ${this.authService.token}`, menu)
             }
         })
     }
@@ -139,11 +138,7 @@ export class MenuDialogComponent implements OnInit {
         this.openConfirmCancelDialog('Agregarse al menu?')
         .afterClosed().subscribe(result => {
             if (result) {
-                this.userService.addToMenu(this.authService.token, this.menu._id, value).subscribe({
-                    next: (v: any) => this._snackBar.open(v.message, 'close', { duration: 5000 }),
-                    error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
-                    complete: () => this.dialogRef.close(true)
-                })
+                this.socketIoService.addToMenu(`Bearer ${this.authService.token}`, this.menu._id, value)
             }
         })
     }
@@ -152,11 +147,7 @@ export class MenuDialogComponent implements OnInit {
         this.openConfirmCancelDialog('Seguro que se quiere dar de baja del menu?')
         .afterClosed().subscribe(result => {
             if (result) {
-                this.userService.removeToMenu(this.authService.token, menuId).subscribe({
-                    next: (v: any) => this._snackBar.open(v.message, 'close', { duration: 5000 }),
-                    error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
-                    complete: () => this.dialogRef.close(true)
-                })
+                this.socketIoService.dropToMenu(`Bearer ${this.authService.token}`, menuId)
             }
         })
     }

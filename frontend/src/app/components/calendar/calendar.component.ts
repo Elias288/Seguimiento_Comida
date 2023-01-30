@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { MenuService } from 'src/app/services/menu/menu.service';
 import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
 import { Menu } from 'src/app/utils/menu.inteface';
 import { CreateMenuDialogComponent } from '../create-menu-dialog/create-menu-dialog.component';
@@ -41,11 +40,10 @@ export class CalendarComponent implements OnInit{
     firstDayOfMonth!: number
 
     constructor (
-        private menuService: MenuService,
         private authService: AuthService,
-        private router: Router,
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
+        private _snackBar: MatSnackBar,
     ) {
         this.date = new Date()
         this.currYear = this.date.getFullYear()
@@ -61,7 +59,7 @@ export class CalendarComponent implements OnInit{
             }
         })
 
-        socketIoService.loadMenues((menu: Array<Menu>): void => {
+        socketIoService.loadMenues((menu: Array<Menu>) => {
             this.menues = menu
             this.constructCalendar()
         })
@@ -69,7 +67,11 @@ export class CalendarComponent implements OnInit{
         socketIoService.onNewMenu((menu: Menu) => {
             this.menues.push(menu)
             this.constructCalendar()
-        })        
+        })
+        
+        socketIoService.webSocketError((data: any) => {
+            this._snackBar.open(data.message, 'close', { duration: 5000 })
+        })
     }
 
     ngOnInit(): void {

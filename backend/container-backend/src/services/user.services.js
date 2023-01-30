@@ -113,7 +113,7 @@ exports.updateUser = (id, user) => {
 exports.enterToMenu = async (menuId, selectedMenu, userId) => {
     if (selectedMenu != 'MP' && selectedMenu != 'MS') {
         console.error(new Error("invalidData"))
-        return next({ name: "invalidData", message: 'Error en el menu seleccionado' })
+        return { name: "invalidData", message: 'Error en el menu seleccionado' }
     }
 
     const user = await User.findByPk(userId)
@@ -136,9 +136,12 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
             message: 'Menu no encontrado'
         }
     }
-    if (hoursBetweenDates < 12) {
+    if (hoursBetweenDates <= 0) {
         console.error(new Error("outOfTime"))
-        return next({ name: "outOfTime" })
+        return { 
+            isError: true,
+            name: "outOfTime"
+        }
     }
 
     await user.addMenus(menu, { through: { selectedMenu } })

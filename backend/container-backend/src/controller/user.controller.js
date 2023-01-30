@@ -249,7 +249,8 @@ exports.addToMenu = (req, res, next) => {
             console.error(new Error(data.name))
             return next(data)
         }
-        return res.status(200).send(data.message)
+        
+        return res.status(200).send(data)
     })
 }
 
@@ -272,7 +273,7 @@ exports.deleteToMenu = (req, res, next) => {
             return next(data)
         }
 
-        return res.status(200).send(data.message)
+        return res.status(200).send(data)
     })
 }
 
