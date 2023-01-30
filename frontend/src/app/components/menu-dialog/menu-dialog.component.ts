@@ -3,9 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { MenuService } from 'src/app/services/menu/menu.service';
 import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
-import { UserService } from 'src/app/services/user/user.service';
 import { Menu } from 'src/app/utils/menu.inteface';
 import { User } from 'src/app/utils/user.interface';
 import { ConfirmCancelDialogComponent } from '../confirm-cancel-dialog/confirm-cancel-dialog.component';
@@ -20,8 +18,8 @@ export class MenuDialogComponent implements OnInit {
     day!: any                           // TODA LA INFORMACIÓN DEL DIA
     menu!: Menu                         // TODA LA INFORMACIÓN DEL MENU
     completeDate!: Date                 // FECHA COMPLETA DEL MENU
-    roles!: Array<string>               // ROL DEL USUARIO LOGUEADO
     hasRoles: boolean = false
+    isAdmin: boolean = false
     myId!: string                       // ID DEL USUARIO LOGUEADO
     usersInMenu!: Array<User>           // USUARIOS EN EL MENU
     mySelection!: string | undefined    // SI EL USUARIO YA ESTÁ EN EL MENU, CUAL MENU ESTÁ SELECCIONADO
@@ -37,8 +35,6 @@ export class MenuDialogComponent implements OnInit {
     constructor(
         public dialogRef: MatDialogRef<MenuDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private menuService: MenuService,
-        private userService: UserService,
         private authService: AuthService,
         private _snackBar: MatSnackBar,
         public dialog: MatDialog,
@@ -69,8 +65,6 @@ export class MenuDialogComponent implements OnInit {
         this.day = this.data.day
         this.menu = this.day.menu
         this.completeDate = this.data.completeDate
-        this.roles = this.data.roles
-        this.hasRoles = this.data.roles.includes('ADMIN') || this.data.roles.includes('COCINERO')
         if (this.menu.users) {
             this.usersInMenu = this.menu.users
             this.dataSource = [{ 
@@ -83,6 +77,8 @@ export class MenuDialogComponent implements OnInit {
         this.authService.getUser().subscribe({
             next: (v) => {
                 this.myId = v._id
+                this.hasRoles = v.roles.length >= 1
+                this.isAdmin = v.roles.includes('ADMIN') || v.roles.includes('COCINERO')
                 this.mySelection = this.menu.users?.length == 0 || !this.menu.users?.find(user => user._id == this.myId) 
                     ? undefined 
                     : this.usersInMenu.find(user => user._id == this.myId)?.Menu_User?.selectedMenu

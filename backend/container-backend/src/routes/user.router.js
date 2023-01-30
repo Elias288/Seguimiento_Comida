@@ -7,9 +7,6 @@ userRouter.use(bodyParser.urlencoded({ extended: true }))
 
 userRouter.post('/', userControler.create)
 userRouter.post('/login', userControler.login)
-userRouter.post('/menu', verifyToken, userControler.addToMenu)
-
-userRouter.delete('/menu/:menuId', verifyToken, userControler.deleteToMenu)
 userRouter.delete('/:userId', verifyToken, userControler.delete)
 
 userRouter.put('/', verifyToken, userControler.update)

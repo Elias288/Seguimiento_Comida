@@ -187,7 +187,7 @@ exports.update = (req, res, next) => {
     })
 }
 
-exports.addRole = (req, res, next) => {
+exports.addRole = async (req, res, next) => {
     const { roles, userId } = req.body
     const { tokenData } = req
 
@@ -195,7 +195,9 @@ exports.addRole = (req, res, next) => {
         console.error(new Error('tokenNotProvidedError'))
         return next({ name: "tokenNotProvidedError" })
     }
-    if (!tokenData.roles.includes(ROLES[0])) {
+    const data = await userServices.getUserById(tokenData.id),
+    user = data.data.dataValues
+    if (!user.roles.includes(ROLES[0])) {
         console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }
@@ -213,9 +215,9 @@ exports.addRole = (req, res, next) => {
         newRoles = roles.split(",")
     } else newRoles = []
 
-    const user = { roles: newRoles }
+    const userData = { roles: newRoles }
 
-    return userServices.updateUser(userId, user).then(data => {
+    return userServices.updateUser(userId, userData).then(data => {
         if (data.isError) {
             console.error(new Error(data.name))
             return next(data)
@@ -224,60 +226,7 @@ exports.addRole = (req, res, next) => {
     })
 }
 
-exports.addToMenu = (req, res, next) => {
-    const { menuId, selectedMenu } = req.body
-    const { tokenData } = req
-    
-    if (!tokenData) {
-        console.error(new Error('missingData'))
-        return next({ name: "Token ir required" })
-    }
-    if (!(tokenData.roles.includes(ROLES[0]) || tokenData.roles.includes(ROLES[1]))) {
-        console.error(new Error('unauthorized'))
-        return next({ name: "unauthorized" })
-    }
-    if (!selectedMenu) {
-        console.error(new Error('missingData'))
-        return next({
-            name: "missingData",
-            message: "selectedMenu es requerido"
-        })
-    }
-    
-    userServices.enterToMenu(menuId, selectedMenu, tokenData.id).then(data => {
-        if (data.isError) {
-            console.error(new Error(data.name))
-            return next(data)
-        }
-        
-        return res.status(200).send(data)
-    })
-}
-
-exports.deleteToMenu = (req, res, next) => {
-    const { menuId } = req.params
-    const { tokenData } = req
-
-    if (!tokenData) {
-        console.error(new Error('tokenNotProvidedError'))
-        return next({ name: "tokenNotProvidedError" })
-    }
-    if (!menuId) {
-        console.error(new Error('missingData'))
-        return next({ name: "MenuId is required" })
-    }
-
-    userServices.dropToMenu(menuId, tokenData.id).then(data => {
-        if (data.isError) {
-            console.error(new Error(data.name))
-            return next(data)
-        }
-
-        return res.status(200).send(data)
-    })
-}
-
-exports.delete = (req, res, next) => {
+exports.delete = async (req, res, next) => {
     const { tokenData } = req
     const { userId } = req.params
 
@@ -292,7 +241,9 @@ exports.delete = (req, res, next) => {
             message: 'Id es requerida'
         })
     }
-    if (!(tokenData.roles.includes(ROLES[0]) || tokenData.id == userId)){
+    const data = await userServices.getUserById(tokenData.id),
+    user = data.data.dataValues
+    if (!(user.roles.includes(ROLES[0]) || tokenData.id == userId)){
         console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }

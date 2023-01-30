@@ -18,14 +18,16 @@ module.exports = (io) => {
         }
         emitMenues()
 
-        socket.on('client:newMenu', (data) => {
+        socket.on('client:newMenu', async (data) => {
             const { token, menu } = data
             const tokenData = verifyToken(token)
             if (!tokenData) {
                 console.error(new Error('tokenNotProvidedError'))
                 return socket.emit('server:error', 'Token es necesario')
             }
-            if (!checkRoles(tokenData)) {
+            const userData = await userServices.getUserById(tokenData.id),
+            user = userData.data.dataValues
+            if (!checkRoles(user)) {
                 console.error(new Error('unauthorized'))
                 return socket.emit('server:error', 'No tiene la autorización necesaria')
             }
@@ -40,14 +42,16 @@ module.exports = (io) => {
             })
         })
 
-        socket.on('client:deleteMenu', (data) => {
+        socket.on('client:deleteMenu', async (data) => {
             const { token, menuId } = data
             const tokenData = verifyToken(token)
             if (!tokenData) {
                 console.error(new Error('tokenNotProvidedError'))
                 return socket.emit('server:error', 'Token es necesario')
             }
-            if (!checkRoles(tokenData)) {
+            const userData = await userServices.getUserById(tokenData.id),
+            user = userData.data.dataValues
+            if (!checkRoles(user)) {
                 console.error(new Error('unauthorized'))
                 return socket.emit('server:error', 'No tiene la autorización necesaria')
             }
@@ -63,14 +67,16 @@ module.exports = (io) => {
             })
         })
 
-        socket.on('client:updateMenu', (data) => {
+        socket.on('client:updateMenu', async (data) => {
             const { token, menu } = data
             const tokenData = verifyToken(token)
             if (!tokenData) {
                 console.error(new Error('tokenNotProvidedError'))
                 return socket.emit('server:error', 'Token es necesario')
             }
-            if (!checkRoles(tokenData)) {
+            const userData = await userServices.getUserById(tokenData.id),
+            user = userData.data.dataValues
+            if (!checkRoles(user)) {
                 console.error(new Error('unauthorized'))
                 return socket.emit('server:error', 'No tiene la autorización necesaria')
             }
@@ -86,14 +92,16 @@ module.exports = (io) => {
             })
         })
 
-        socket.on('client:addToMenu', (data) => {
+        socket.on('client:addToMenu', async (data) => {
             const { token, menuId, selectedMenu } = data
             const tokenData = verifyToken(token)
             if (!tokenData) {
                 console.error(new Error('tokenNotProvidedError'))
                 return socket.emit('server:error', 'Token es necesario')
             }
-            if (!(tokenData.roles.includes(ROLES[0]) || tokenData.roles.includes(ROLES[1]))) {
+            const userData = await userServices.getUserById(tokenData.id),
+            user = userData.data.dataValues
+            if (user.roles.length == 0) {
                 console.error(new Error('unauthorized'))
                 return socket.emit('server:error', 'No tiene la autorización necesaria')
             }
@@ -110,14 +118,16 @@ module.exports = (io) => {
             })
         })
 
-        socket.on('client:deleteToMenu', (data) => {
+        socket.on('client:deleteToMenu', async (data) => {
             const { token, menuId } = data
             const tokenData = verifyToken(token)
             if (!tokenData) {
                 console.error(new Error('tokenNotProvidedError'))
                 return socket.emit('server:error', 'Token es necesario')
             }
-            if (!(tokenData.roles.includes(ROLES[0]) || tokenData.roles.includes(ROLES[1]))) {
+            const userData = await userServices.getUserById(tokenData.id),
+            user = userData.data.dataValues
+            if (!(user.roles.includes(ROLES[0]) || user.roles.includes(ROLES[1]))) {
                 console.error(new Error('unauthorized'))
                 return socket.emit('server:error', 'No tiene la autorización necesaria')
             }
@@ -155,6 +165,6 @@ verifyToken = (token) => {
     }
 }
 
-checkRoles = (token) => {
-    return token.roles.includes(ROLES[2]) || token.roles.includes(ROLES[0])
+checkRoles = (user) => {
+    return user.roles.includes(ROLES[2]) || user.roles.includes(ROLES[0])
 }

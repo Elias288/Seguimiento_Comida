@@ -9,7 +9,7 @@
                     id="menuPrincipal"
                     type="text"
                     formControlName="menuPrincipal"
-                    [readonly]="!roles.includes('COCINERO') && !roles.includes('ADMIN')"></textarea>
+                    [readonly]="!hasRoles"></textarea>
             </mat-form-field>
         
             <mat-form-field appearance="fill">
@@ -18,7 +18,7 @@
                     id="menuSecundario"
                     type="text"
                     formControlName="menuSecundario"
-                    [readonly]="!roles.includes('COCINERO') && !roles.includes('ADMIN')"></textarea>
+                    [readonly]="!hasRoles"></textarea>
             </mat-form-field>
         
             <mat-form-field appearance="fill">
@@ -27,54 +27,20 @@
                     [matDatepicker]="picker"
                     formControlName="date"
                     id="fecha" value="fecha"
-                    [readonly]="!roles.includes('COCINERO') && !roles.includes('ADMIN')">
+                    [readonly]="!hasRoles">
                 <mat-hint>MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
         </div>
     </div>
-    
-    <!-- <div mat-dialog-actions align="end" *ngIf="hasRoles">
-        <button mat-raised-button class="btnEdit" (click)="updateMenu()" >Editar</button>
-        <button mat-raised-button color="warn" class="btnDelete" (click)="deleteMenu()">Borrar</button>
-    </div>
-    
-    <div mat-dialog-actions align="center" class="dialogActions">
-        <mat-button-toggle-group class="dialogActions-mat-button-group" #group="matButtonToggleGroup" (change)="addtoMenu(group.value)" [value]="mySelection">
-            <mat-button-toggle 
-                class="btnAddToMenuP" 
-                value="MP" 
-                aria-label="Text align left"
-                [disabled]="mySelection == 'MP'">
-                Agregarse al Menu Principal
-            </mat-button-toggle>
-            <mat-button-toggle 
-                class="btnAddToMenuS" 
-                value="MS" 
-                aria-label="Text align center"
-                *ngIf="menu.menuSecundario"
-                [disabled]="mySelection == 'MS'">
-                Agregarse al Menu Secundario
-            </mat-button-toggle>
-        </mat-button-toggle-group>
-    
-        <button
-            mat-raised-button
-            color="warn"
-            class="btnDown"
-            [disabled]="mySelection == undefined"
-            (click)="deleteToMenu(menu._id)">
-            Darse de baja
-        </button>
-    </div> -->
     <div mat-dialog-actions class="dialogActions">
-        <div class="privateActions" *ngIf="hasRoles">
+        <div class="privateActions" *ngIf="isAdmin">
             <button mat-raised-button class="btnEdit" (click)="updateMenu()" >Editar</button>
             <button mat-raised-button color="warn" class="btnDelete" (click)="deleteMenu()">Borrar</button>
         </div>
         
-        <div class="publicActions">
+        <div class="publicActions" *ngIf="hasRoles">
             <mat-button-toggle-group 
                 class="dialogActions-mat-button-group" 
                 #group="matButtonToggleGroup" 
