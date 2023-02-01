@@ -169,7 +169,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
     const user = await User.findByPk(userId)
     const menu = await Menu.findByPk(menuId)
 
-    const msBetweenDates = Math.abs(menu.date.getTime() - new Date().getTime());
+    const msBetweenDates = menu.date.getTime() - new Date().getTime();
     const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
 
     if (!user) {
