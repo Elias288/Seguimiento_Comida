@@ -3,7 +3,7 @@ const db = require('../models')
 const User = db.User
 const Menu = db.Menu
 
-exports.createMenu = (menuPrincipal, menuSecundario, date) => {
+exports.createMenu = async (menuPrincipal, menuSecundario, date) => {
     if (!menuPrincipal) {
         return {
             isError: true,
@@ -32,6 +32,15 @@ exports.createMenu = (menuPrincipal, menuSecundario, date) => {
         menuPrincipal,
         menuSecundario,
         date: dataDate
+    }
+
+    const menu = await Menu.findOne({ where: { date } })
+    if (menu) {
+        return {
+            isError: true,
+            name: "alreadyCreated",
+            message: "Solo es posible registrar un menu por fecha"
+        }
     }
 
     return Menu.create(menuData).then(data => {

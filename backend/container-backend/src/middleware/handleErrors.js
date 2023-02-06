@@ -10,6 +10,7 @@ const ERROR_HANDLERS = {
     invalidUserData: (res, error) => res.status(400).send({ error: error.name, message: "Usuario o contraseña invalida" }),
     invalidData: (res, error) => res.status(400).send({ error: error.name, message: error.message }),
     outOfTime: (res, error) => res.status(400).send({ error: error.name, message: "Ya no es posible agendarse" }),
+    alreadyCreated: (res, error) => res.status(400).send({ error: error.name, message: error.message }),
 
     unauthorized: (res, error) => res.status(401).send({ error: error.name, message: "No está autorizado" }),
     accessDenied: (res, error) => res.status(401).send({ error: error.name, message: "Acceso denegado" }),

@@ -8,8 +8,8 @@ metadata:
   annotations:
     io.kubernetes.cri-o.ContainerType/backendnode: container
     io.kubernetes.cri-o.ContainerType/db: container
-    io.kubernetes.cri-o.SandboxID/backendnode: 9358bcc09179a0dd1dbb822ba4fd3a82055269e5a63587146146a21f00708b8
-    io.kubernetes.cri-o.SandboxID/db: 9358bcc09179a0dd1dbb822ba4fd3a82055269e5a63587146146a21f00708b8
+    io.kubernetes.cri-o.SandboxID/backendnode: fa92e6ce08d3afc28db0eeb331ad36b504f29a78427dec1231608a55d861b63
+    io.kubernetes.cri-o.SandboxID/db: fa92e6ce08d3afc28db0eeb331ad36b504f29a78427dec1231608a55d861b63
     io.kubernetes.cri-o.TTY/backendnode: "false"
     io.kubernetes.cri-o.TTY/db: "false"
     io.podman.annotations.autoremove/backendnode: "FALSE"
@@ -20,9 +20,9 @@ metadata:
     io.podman.annotations.privileged/db: "FALSE"
     io.podman.annotations.publish-all/backendnode: "FALSE"
     io.podman.annotations.publish-all/db: "FALSE"
-    org.opencontainers.image.base.digest/backendnode: sha256:bf58bc6bfd2b90441ebc12ba8fe217886899d32404de99350c889140
+    org.opencontainers.image.base.digest/backendnode: sha256:5a1874cc858479330f4c72a190a4203400d7c8bb317ba4171c481c21
     org.opencontainers.image.base.name/backendnode: docker.io/library/node:18
-  creationTimestamp: "2023-01-17T16:49:20Z"
+  creationTimestamp: "2023-02-06T22:31:14Z"
   labels:
     app: mypod
   name: my_pod
@@ -50,12 +50,12 @@ spec:
         - CAP_AUDIT_WRITE
     volumeMounts:
     - mountPath: /var/lib/mysql
-      name: 2a40b6b95c714ee2b50761f102753f9550f83bf3dd11f2a14f1eaae18ef09ad9-pvc
+      name: 469c91d5400d7c7f6e92237a0cddba5f954ddca339d68484f50ac6ac75d6457b-pvc
   - args:
     - npm
     - start
     env:
-    - name: NODE_DOCKER_PORT
+    - name: PORT
       value: "3000"
     image: localhost/backend-container:latest
     name: backendnode
@@ -70,8 +70,8 @@ spec:
   hostname: my_pod
   restartPolicy: Never
   volumes:
-  - name: 2a40b6b95c714ee2b50761f102753f9550f83bf3dd11f2a14f1eaae18ef09ad9-pvc
+  - name: 469c91d5400d7c7f6e92237a0cddba5f954ddca339d68484f50ac6ac75d6457b-pvc
     persistentVolumeClaim:
-      claimName: 2a40b6b95c714ee2b50761f102753f9550f83bf3dd11f2a14f1eaae18ef09ad9
+      claimName: 469c91d5400d7c7f6e92237a0cddba5f954ddca339d68484f50ac6ac75d6457b
 status: {}
 
