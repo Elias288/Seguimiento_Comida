@@ -18,8 +18,6 @@ export class ConfirmationComponent {
         private router: Router,
     ) { 
         this.activatedRoute.params.subscribe((params) => {
-            console.log(params['token']);
-            
             userService.confirmEmail(params['token']).subscribe({
                 next: () => {
                     setTimeout(() => {

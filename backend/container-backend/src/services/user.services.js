@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
 const { v4: uuidv4 } = require('uuid')
 
-exports.createUser = (name, surName, email, password, roles) => {
+exports.createUser = async (name, surName, email, password, roles) => {
     const hashedPassword = bcrypt.hashSync(password, 8);
 
     const userData = {
@@ -17,13 +17,24 @@ exports.createUser = (name, surName, email, password, roles) => {
         surName,
         email,
         password: hashedPassword,
-        roles
+        roles,
+        emailVerified: 0,
+    }
+
+    const user = await User.findOne({ where: { email } })
+    if (user){
+        return {
+            isError: true,
+            name: "alreadyCreated",
+            message: "Usuario ya creado"
+        }
     }
 
     return User.create(userData)
     .then((user) => {
         return { isError: false, data: sendConfirmationEmail(user) }
-    }).catch(() => {
+    }).catch((err) => {
+        console.log(err);
         return {
             isError: true,
             name: 'notDataError'
@@ -167,9 +178,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
 
     const user = await User.findByPk(userId)
     const menu = await Menu.findByPk(menuId)
-
-    const msBetweenDates = Math.abs(menu.date.getTime() - new Date().getTime());
-    const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
+    const menu_user = await Menu_User.findAndCountAll({ where: { menuId } })
 
     if (!user) {
         return {
@@ -185,11 +194,22 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
             message: 'Menu no encontrado'
         }
     }
+
+    const msBetweenDates = menu.date.getTime() - new Date().getTime();
+    const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
     if (hoursBetweenDates <= 0) {
         console.error(new Error("outOfTime"))
         return { 
             isError: true,
             name: "outOfTime"
+        }
+    }
+
+    if (menu_user.count > 12) {
+        console.error(new Error("outOfTime"))
+        return { 
+            isError: true,
+            name: "amountExceeded"
         }
     }
 

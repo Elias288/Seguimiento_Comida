@@ -7,6 +7,7 @@ export interface User {
     password2: string
     roles: string[]
     Menu_User: Menu_User | undefined
+    emailVerified: number | undefined
 }
 
 interface Menu_User {

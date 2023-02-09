@@ -4,17 +4,16 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             primaryKey: true
         },
+        email: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
         name: {
             type: Sequelize.STRING,
             allowNull: false,
         },
         surName: {
             type: Sequelize.STRING
-        },
-        email: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            unique: true
         },
         emailVerified: {
             type: Sequelize.BOOLEAN,
