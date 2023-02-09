@@ -38,8 +38,8 @@ export class UsersTableComponent implements OnInit{
 
         this.columsDefinitions = [
             { def: 'name', label: 'name', hide: true },
-            { def: 'email', label: 'email', hide: true },
             { def: 'surname', label: 'surname', hide: true },
+            { def: 'email', label: 'email', hide: true },
             { def: 'roles', label: 'roles', hide: true },
             { def: 'actions', label: 'actions', hide: this.hasActions},
         ]
