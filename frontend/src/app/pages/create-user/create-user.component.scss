@@ -1,33 +1,23 @@
 $tabletSize: 450px;
 $pcSize: 850px;
 
-.container {
+.create-user {
+    background-color: #eeeeee;
+    width: 100%;
+    padding: 2rem 0;
+    box-sizing: border-box;
+
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 
-    width: 100%;
-    height: 100vh;
-    margin-bottom: 2rem;
-
-    padding: 0 .5rem 3rem;
-    box-sizing: border-box;
-
-    .title {
-        padding: .5rem 0;
-        text-align: center;
-    }
-
-    @media screen and (min-width: $tabletSize) {
-        padding: 0;
-    }
-}
-
-.container-content {
-    padding-bottom: 3rem;
-
-    @media screen and (min-width: $tabletSize) {
+    &-card {
         max-width: 400px;
+    }
+
+    @media screen and (min-width: $tabletSize) {
+        height: 100vh;
     }
 }
 

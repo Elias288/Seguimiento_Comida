@@ -1,39 +1,45 @@
-<div class="container">
-    <div class="title">
-        <h1>Trazabilidad de Almuerzos</h1>
-    </div>
-    <div class="container-content">
-        <h2>Login</h2>
-        <form [formGroup]="loginForm" class="form" novalidate>
-            <mat-form-field appearance="fill">
-                <mat-label for="email">Email</mat-label>
-                <input id="email" matInput type="text" formControlName="email">
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label for="password">Password</mat-label>
-                <input matInput 
-                    id="password" 
-                    [type]="hide ? 'password' : 'text'" 
-                    formControlName="password">
-                <button mat-icon-button matSuffix 
-                    (click)="hide = !hide" 
-                    [attr.aria-label]="'Hide password'" 
-                    [attr.aria-pressed]="hide">
-                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
-            </mat-form-field>
+<div class="login">
+    <h1>Trazabilidad de Almuerzos</h1>
 
-            <button mat-raised-button
-                type="submit" 
-                [disabled]="!loginForm.valid" 
-                (click)="onSubmit()" 
-                color="primary"
-                autofocus>
-                Entrar
-            </button>
-        </form>
-        <div class="btnCreateUser">
-            <a href="/create/user">Crear Usuario</a>
-        </div>
-    </div>
+    <mat-card class="login-card">
+        <mat-card-header>
+            <h2>Login</h2>
+        </mat-card-header>
+        
+        <mat-card-content>
+            <form [formGroup]="loginForm" class="form" novalidate>
+                <mat-form-field appearance="fill">
+                    <mat-label for="email">Email</mat-label>
+                    <input id="email" matInput type="text" formControlName="email">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label for="password">Password</mat-label>
+                    <input matInput 
+                        id="password" 
+                        [type]="hide ? 'password' : 'text'" 
+                        formControlName="password">
+                    <button mat-icon-button matSuffix 
+                        (click)="hide = !hide" 
+                        [attr.aria-label]="'Hide password'" 
+                        [attr.aria-pressed]="hide"
+                        tabindex="-1">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+        
+                <button mat-raised-button
+                    type="submit" 
+                    [disabled]="!loginForm.valid" 
+                    (click)="onSubmit()" 
+                    color="primary"
+                    autofocus>
+                    Entrar
+                </button>
+            </form>
+            
+            <div class="btnCreateUser">
+                <a href="/create/user">Crear Usuario</a>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>
