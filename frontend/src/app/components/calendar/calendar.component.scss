@@ -131,10 +131,15 @@ header {
         color: #fff;
         padding: 10px 15px;
 
-        & div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        & * {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            max-width: 90%;
         }
         
         &.principalMenu {

@@ -3,7 +3,7 @@ $pcSize: 850px;
 
 .container {
     // min-width: 360px;
-    height: 90vh;
+    height: 80vh;
 
     @media screen and (min-width: $pcSize) { 
         display: grid;

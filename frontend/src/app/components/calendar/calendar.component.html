@@ -25,13 +25,16 @@
                         
                         <div *ngIf="day.menu" class="menu" (click)="openDialog(day)">
                             <div class="menuInfo principalMenu">
-                                <div class="MPName">{{day.menu.menuPrincipal}}</div>
+                                <p class="MPName">{{day.menu.menuPrincipal}}</p>
+                                <p>{{day.cantMP || 0 | number}}</p>
                             </div>
                             <div class="menuInfo secodaryMenu" *ngIf="day.menu.menuSecundario">
-                                <div class="MSName">{{day.menu.menuSecundario}}</div>
+                                <p class="MSName">{{day.menu.menuSecundario}}</p>
+                                <p>{{day.cantMS || 0 | number}}</p>
                             </div>
                             <div class="menuInfo MPCount">
-                                Totales: {{day.menu.users?.length || 0 | number}}
+                                <p>Totales: </p>
+                                <p>{{day.menu.users && day.menu.users.length || 0 | number}}</p>
                             </div>
                         </div>
                         

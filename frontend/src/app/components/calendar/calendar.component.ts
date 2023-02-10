@@ -10,6 +10,8 @@ import { MenuDialogComponent } from '../menu-dialog/menu-dialog.component';
 interface Day {
     numberDay: number
     status: string
+    cantMP: number
+    cantMS: number
     menu: Menu | undefined
     isWeekend: boolean
     validToAdd: boolean
@@ -103,6 +105,8 @@ export class CalendarComponent implements OnInit{
             this.numbersDay.push({
                 numberDay: day,
                 status: 'inactive',
+                cantMP: 0,
+                cantMS: 0,
                 menu: undefined,
                 isWeekend: false,
                 validToAdd: false
@@ -125,9 +129,12 @@ export class CalendarComponent implements OnInit{
                 numberDay: i,
                 status: isToday ? 'today': '',
                 menu,
+                cantMP: menu?.users?.filter(user => user.Menu_User?.selectedMenu == 'MP').length || 0,
+                cantMS: menu?.users?.filter(user => user.Menu_User?.selectedMenu == 'MS').length || 0,
                 isWeekend: day == 0 || day == 6,
                 validToAdd
             })
+            
         }
 
         for(let i = this.lastDayOfMonth; i < 6; i++) {
@@ -135,6 +142,8 @@ export class CalendarComponent implements OnInit{
             this.numbersDay.push({
                 numberDay: day,
                 status: 'inactive',
+                cantMP: 0,
+                cantMS: 0,
                 menu: undefined,
                 isWeekend: false,
                 validToAdd: false
