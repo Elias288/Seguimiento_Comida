@@ -114,7 +114,7 @@ export class CalendarComponent implements OnInit{
 
             const isToday = i === this.date.getDate() 
                 && this.currMonth === new Date().getMonth() 
-                && this.currYear === new Date().getFullYear() ? 'today' : 'notToday'
+                && this.currYear === new Date().getFullYear()
 
             const day = new Date(this.currYear, this.currMonth, i).getDay()
             const tomorrow = new Date()
@@ -123,7 +123,7 @@ export class CalendarComponent implements OnInit{
 
             this.numbersDay.push({
                 numberDay: i,
-                status: isToday,
+                status: isToday ? 'today': '',
                 menu,
                 isWeekend: day == 0 || day == 6,
                 validToAdd
