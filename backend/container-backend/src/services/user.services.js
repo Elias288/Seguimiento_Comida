@@ -33,8 +33,7 @@ exports.createUser = async (name, surName, email, password, roles) => {
     return User.create(userData)
     .then((user) => {
         return { isError: false, data: sendConfirmationEmail(user) }
-    }).catch((err) => {
-        console.log(err);
+    }).catch(() => {
         return {
             isError: true,
             name: 'notDataError'
@@ -84,10 +83,10 @@ exports.validateEmail = (token) => {
             }
         })
     } catch (error) {
-        console.error(new Error(error.name))
         return {
             isError: true,
-            name: error.name
+            name: error.name,
+            message: "Error de servidor"
         }
     }
 }
@@ -98,7 +97,6 @@ exports.getAll = () => {
 
 exports.getUserById = (id) => {
     if (!id) {
-        console.error(new Error('Id no encontrada'))
         return {
             isError: true,
             name: 'missingData',
@@ -128,11 +126,18 @@ exports.getUserByEmail = (email) => {
     }
     return User.findOne({ where: { email } }).then(data => {
         if (!data) {
-            return { isError: true, name: 'userNotFound' }
+            return {
+                isError: true,
+                name: 'userNotFound' 
+            }
         }
         return { data, isError: false }
     }).catch(() => {
-        return { isError: true, name: 'notDataError' }
+        return {
+            isError: true,
+            name: 'notDataError',
+            message: "Error de servidor"
+        }
     })
 }
 
@@ -172,7 +177,6 @@ exports.updateUser = (id, user) => {
 
 exports.enterToMenu = async (menuId, selectedMenu, userId) => {
     if (selectedMenu != 'MP' && selectedMenu != 'MS') {
-        console.error(new Error("invalidData"))
         return { name: "invalidData", message: 'Error en el menu seleccionado' }
     }
 
@@ -198,26 +202,34 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
     const msBetweenDates = menu.date.getTime() - new Date().getTime();
     const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
     if (hoursBetweenDates <= 0) {
-        console.error(new Error("outOfTime"))
         return { 
             isError: true,
-            name: "outOfTime"
+            name: "outOfTime",
+            message: "Ya no es posible agendarse, fuera de fecha"
         }
     }
 
     if (menu_user.count > 12) {
-        console.error(new Error("outOfTime"))
         return { 
             isError: true,
-            name: "amountExceeded"
+            name: "amountExceeded",
+            message: 'Ya no es posible agendarse, cantidad de comensales excedida'
         }
     }
 
-    await user.addMenus(menu, { through: { selectedMenu } })
-
-    return {
-        isError: false,
-        message: 'Agregado correctamente',
+    try {
+        await user.addMenus(menu, { through: { selectedMenu } })
+    
+        return {
+            isError: false,
+            message: 'Agregado correctamente',
+        }
+    } catch (error) {
+        return { 
+            isError: true,
+            name: "noDataError",
+            message: 'Error de servidor'
+        }
     }
 }
 
@@ -240,18 +252,26 @@ exports.dropToMenu = async (menuId, userId) => {
         }
     }
 
-    await Menu_User.destroy({
-        where: {
-            [Op.and]: [
-                { menuId },
-                { userId }
-            ]
+    try {
+        await Menu_User.destroy({
+            where: {
+                [Op.and]: [
+                    { menuId },
+                    { userId }
+                ]
+            }
+        })
+    
+        return {
+            isError: false,
+            message: 'Eliminado correctamente',
         }
-    })
-
-    return {
-        isError: false,
-        message: 'Eliminado correctamente',
+    } catch (error) {
+        return { 
+            isError: true,
+            name: "noDataError",
+            message: 'Error de servidor'
+        }
     }
 }
 
@@ -262,7 +282,8 @@ exports.deleteUser = (id) => {
     }).catch(() => {
         return {
             isError: true,
-            name: 'notDataError'
+            name: 'notDataError',
+            message: "Error de servidor"
         }
     })
 }

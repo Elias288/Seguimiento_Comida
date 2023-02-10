@@ -11,21 +11,18 @@ exports.create = (req, res, next) => {
     const { name, surName, email, password, password2} = req.body 
     
     if (!name) {
-        console.error(new Error('missingData'))
         return next({
             name: 'missingData',
             message: "Name es requerido"
         })
     }
     if (!email) {
-        console.error(new Error('missingData'))
         return next({
             name: "missingData",
             message: "Email es requerido"
         })
     }
     if (!password) {
-        console.error(new Error('missingData'))
         return next({
             name: "missingData",
             message: "Password es requerido"
@@ -47,7 +44,6 @@ exports.confirmEmail = (req, res, next) => {
     const { token } = req.params
 
     if (!token) {
-        console.error(new Error('tokenNotProvidedError'))
         return next({ name: "tokenNotProvidedError" })
     }
 
@@ -65,7 +61,6 @@ exports.findOneById = async (req, res, next) => {
     const { id } = req.params
 
     if (!tokenData) {
-        console.error(new Error('tokenNotProvidedError'))
         return next({ name: "tokenNotProvidedError" })
     }
     const data = await userServices.getUserById(tokenData.id)
@@ -88,7 +83,6 @@ exports.findOneByEmail = async (req, res, next) => {
     const { email } = req.params
 
     if (!tokenData) {
-        console.error(new Error('tokenNotProvidedError'))
         return next({ name: "tokenNotProvidedError" })
     }
     const data = await userServices.getUserById(tokenData.id)
@@ -111,7 +105,6 @@ exports.findAll = (req, res, next) => {
     const { tokenData } = req
 
     if (!tokenData) {
-        console.error(new Error('tokenNotProvidedError'))
         return next({ name: "tokenNotProvidedError" })
     }
     
@@ -133,14 +126,12 @@ exports.login = (req, res, next) => {
     const { email, password } = req.body
 
     if (!email) {
-        console.error(new Error('missingData'))
         return next({
             name: "missingData",
             message: "Email es requerido"
         })
     }
     if (!password) {
-        console.error(new Error('missingData'))
         return next({
             name: "missingData",
             message: "Password es requerido"
@@ -160,7 +151,6 @@ exports.getMe = (req, res, next) => {
     const { tokenData } = req
 
     if (!tokenData) {
-        console.error(new Error('tokenNotProvidedError'))
         return next({ name: "tokenNotProvidedError" })
     }
 
@@ -180,7 +170,6 @@ exports.update = (req, res, next) => {
     const { tokenData } = req
     
     if (!tokenData) {
-        console.error(new Error('tokenNotProvidedError'))
         return next({ name: "tokenNotProvidedError" })
     }
     if (!tokenData.id) {
@@ -207,21 +196,17 @@ exports.addRole = async (req, res, next) => {
     const { tokenData } = req
 
     if (!tokenData){
-        console.error(new Error('tokenNotProvidedError'))
         return next({ name: "tokenNotProvidedError" })
     }
     const data = await userServices.getUserById(tokenData.id),
     user = data.data.dataValues
     if (!user.roles.includes(ROLES[0])) {
-        console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }
     if (!userId) {
-        console.error(new Error('missingData'))
         return next({ name: "missingData", message: "userId es requerido" })
     }
     if (roles == null || roles == undefined) {
-        console.error(new Error('missingData'))
         return next({ name: "missingData", message: "roles es requerido" })
     }
 
@@ -246,11 +231,9 @@ exports.delete = async (req, res, next) => {
     const { userId } = req.params
 
     if (!tokenData) {
-        console.error(new Error('tokenNotProvidedError'))
         return next({ name: "tokenNotProvidedError" })
     }
     if (!userId) {
-        console.error(new Error('missingData'))
         return next({
             name: 'missingData',
             message: 'Id es requerida'
@@ -259,7 +242,6 @@ exports.delete = async (req, res, next) => {
     const data = await userServices.getUserById(tokenData.id),
     user = data.data.dataValues
     if (!(user.roles.includes(ROLES[0]) || tokenData.id == userId)){
-        console.error(new Error('unauthorized'))
         return next({ name: "unauthorized" })
     }
 

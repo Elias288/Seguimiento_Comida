@@ -23,7 +23,8 @@ exports.createMenu = async (menuPrincipal, menuSecundario, date) => {
     if (+dataDate <= +new Date()) {
         return {
             isError: true,
-            name: "invalidDate"
+            name: "invalidDate",
+            message: "Error de servidor"
         }
     }
     
@@ -48,11 +49,11 @@ exports.createMenu = async (menuPrincipal, menuSecundario, date) => {
             isError: false,
             data
         }
-    }).catch(error => {
-        console.log(error)
+    }).catch((s) => {
         return {
             isError: true,
-            name: "noDataError"
+            name: "noDataError",
+            message: "Error de servidor"
         }
     })
 }
@@ -80,7 +81,11 @@ exports.getUsersOfMenu = (id) => {
         }
         return { data, isError: false }
     }).catch(() => {
-        return { isError: true, name: 'notDataError' }
+        return {
+            isError: true,
+            name: 'notDataError',
+            message: "Error de servidor"
+        }
     })
 }
 
@@ -104,7 +109,8 @@ exports.getMenuById = (id) => {
     }).catch(() => {
         return {
             isError: true,
-            name: 'notDataError'
+            name: 'notDataError',
+            message: "Error de servidor"
         }
     })
 }
@@ -119,7 +125,11 @@ exports.getMenuByDate = (date) => {
         }
         return { data, isError: false }
     }).catch(() => {
-        return { isError: true, name: 'notDataError' }
+        return { 
+            isError: true,
+            name: 'notDataError',
+            message: "Error de servidor"
+        }
     })
 }
 
@@ -139,7 +149,8 @@ exports.updateMenu = (menu) => {
     }).catch(() => {
         return {
             isError: true,
-            name: 'notDataError'
+            name: 'notDataError',
+            message: "Error de servidor"
         }
     })
 }
@@ -158,7 +169,8 @@ exports.deleteMenu = (id) => {
     }).catch(() => {
         return {
             isError: true,
-            name: 'notDataError'
+            name: 'notDataError',
+            message: 'Error de servidor'
         }
     })
 }

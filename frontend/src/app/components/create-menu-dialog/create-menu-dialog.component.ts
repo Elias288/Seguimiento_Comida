@@ -25,6 +25,11 @@ export class CreateMenuDialogComponent implements OnInit {
         public socketIoService: SocketIoService,
     ) {
         if (data.date != 0) this.fecha = new Date(parseInt(data.date as string, 10))
+
+        this.socketIoService.onNewMenu(()=> {
+            this._snackBar.open('Menu creado exitosamente', 'close', { duration: 5000 }),
+            this.dialogRef.close(true)
+        })
     }
 
     ngOnInit(): void {
@@ -48,8 +53,6 @@ export class CreateMenuDialogComponent implements OnInit {
             this.menuData.markAllAsTouched()
         } else {
             this.socketIoService.newMenu(`Bearer ${this.authService.token}`, menu)
-            this._snackBar.open('Menu creado exitosamente', 'close', { duration: 5000 }),
-            this.dialogRef.close(true)
         }
     }
 }
