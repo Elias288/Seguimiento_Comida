@@ -179,9 +179,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
 
     const user = await User.findByPk(userId)
     const menu = await Menu.findByPk(menuId)
-
-    const msBetweenDates = menu.date.getTime() - new Date().getTime();
-    const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
+    const menu_user = await Menu_User.findAndCountAll({ where: { menuId } })
 
     if (!user) {
         return {
@@ -197,11 +195,22 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
             message: 'Menu no encontrado'
         }
     }
+
+    const msBetweenDates = menu.date.getTime() - new Date().getTime();
+    const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
     if (hoursBetweenDates <= 0) {
         console.error(new Error("outOfTime"))
         return { 
             isError: true,
             name: "outOfTime"
+        }
+    }
+
+    if (menu_user.count > 12) {
+        console.error(new Error("outOfTime"))
+        return { 
+            isError: true,
+            name: "amountExceeded"
         }
     }
 

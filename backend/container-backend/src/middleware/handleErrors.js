@@ -10,7 +10,8 @@ const ERROR_HANDLERS = {
     invalidDate: (res, error) => res.status(400).send({ error: error.name, message: "Fecha erronea" }),
     invalidUserData: (res, error) => res.status(400).send({ error: error.name, message: "Usuario o contraseña invalida" }),
     invalidData: (res, error) => res.status(400).send({ error: error.name, message: error.message }),
-    outOfTime: (res, error) => res.status(400).send({ error: error.name, message: "Ya no es posible agendarse" }),
+    outOfTime: (res, error) => res.status(400).send({ error: error.name, message: "Ya no es posible agendarse, fuera de fecha" }),
+    amountExceeded: (res, error) => res.status(400).send({ error: error.name, message: "Ya no es posible agendarse, cantidad excedida" }),
     alreadyCreated: (res, error) => res.status(400).send({ error: error.name, message: error.message }),
 
     unauthorized: (res, error) => res.status(401).send({ error: error.name, message: "No está autorizado" }),

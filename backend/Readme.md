@@ -5,18 +5,27 @@ El backend se carga en un pod con un contenedor de MYSQL y un contenedor con Nod
 ## Estructura .env
 
 > DB_HOST=localhost
+> 
 > DB_USER=
+> 
 > DB_PASSWORD=
+> 
 > DB_NAME=Pcomida_db
+> 
 > DB_PORT=3306
 > 
 > SECRET=
+> 
 > PORT=8080
 > 
 > MAIL_HOST=smtp.gmail.com
+> 
 > MAIL_PORT=465
+> 
 > MAIL_USERNAME=
+> 
 > MAIL_PASSWORD=
+> 
 > MAIL_ADMIN_ADDRESS=
 > 
 > APIGETWAY_URL=
