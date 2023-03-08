@@ -1,33 +1,31 @@
 module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define("user", {
+    const Notification = sequelize.define("notification", {
         _id: {
             type: Sequelize.STRING,
             primaryKey: true
-        },
-        email: {
-            type: Sequelize.STRING,
-            allowNull: false,
         },
         name: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        surName: {
+        message: {
             type: Sequelize.STRING
         },
-        emailVerified: {
-            type: Sequelize.BOOLEAN,
-            defaultValue: false,
-            allowNull: false
-        },
-        password: {
+        emisor: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        rol: {
+        receptor: {
             type: Sequelize.STRING
+        },
+        receptorRole: {
+            type: Sequelize.STRING
+        },
+        active: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: true
         }
     })
 
-    return User
+    return Notification
 }

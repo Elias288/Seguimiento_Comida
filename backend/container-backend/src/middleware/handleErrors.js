@@ -5,6 +5,7 @@ const ERROR_HANDLERS = {
     missingData: (res, error) => res.status(404).send({ error: error.name, message: error.message }),
     passwordValidationError: (res, error) => res.status(400).send({ error: error.name, message: "Contraseñas no coinciden" }),
     tokenNotProvidedError: (res, error) => res.status(400).send({ error: error.name, message: "Token es requerido" }),
+    TokenExpiredError: (res, error) => res.status(400).send({error: error.name, message: "Su token ha expirado"}),
     dataNotUpdated: (res, error) => res.status(400).send({ error: error.name, message: "No se pudo actualizar" }),
     invalidDate: (res, error) => res.status(400).send({ error: error.name, message: "Fecha erronea" }),
     invalidUserData: (res, error) => res.status(400).send({ error: error.name, message: "Usuario o contraseña invalida" }),

@@ -27,6 +27,7 @@ db.sequelize = sequelize
 
 db.User = require("./user.model.js")(sequelize, Sequelize)
 db.Menu = require("./menu.model.js")(sequelize, Sequelize)
+db.Notification = require("./notification.model.js")(sequelize, Sequelize)
 
 db.Menu_User = sequelize.define('Menu_User', {
     selectedMenu: { type: Sequelize.STRING }
@@ -39,5 +40,12 @@ db.User.hasMany(db.Menu_User);
 db.Menu_User.belongsTo(db.User);
 db.Menu.hasMany(db.Menu_User);
 db.Menu_User.belongsTo(db.Menu);
+
+db.User.hasOne(db.Notification, {
+    foreignKey: 'emisor'
+})
+db.Notification.belongsTo(db.User, {
+    foreignKey: 'emisor'
+})
 
 module.exports = db

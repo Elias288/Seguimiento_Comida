@@ -20,7 +20,7 @@ import { ConfirmCancelDialogComponent } from './components/confirm-cancel-dialog
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { UsersTableComponent } from './components/users-table/users-table.component';
 import { RolesFormComponent } from './components/roles-form/roles-form.component';
-import { PerfilComponent } from './components/perfil/perfil.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
 
 @NgModule({

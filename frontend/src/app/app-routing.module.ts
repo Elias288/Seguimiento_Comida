@@ -1,7 +1,7 @@
 import { Input, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { PerfilComponent } from './components/perfil/perfil.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 import { AngularHelpsComponent } from './pages/angular-helps/angular-helps.component';
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
 import { CreateUserComponent } from './pages/create-user/create-user.component';

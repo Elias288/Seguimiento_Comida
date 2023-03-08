@@ -34,7 +34,7 @@ export class UsuariosComponent implements OnInit {
                 this.authService.getUser().subscribe({
                     next: (v) => {
                         this.myId = v._id
-                        this.admin = v.roles.includes('ADMIN')
+                        this.admin = v.rol == 0
                     }
                 })
             }
@@ -72,7 +72,7 @@ export class UsuariosComponent implements OnInit {
                     data: {
                         jwt: this.authService.token,
                         userId: user._id,
-                        roles: user.roles
+                        rol: user.rol
                     }
                 })
 

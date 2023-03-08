@@ -40,22 +40,22 @@ export class MenuDialogComponent implements OnInit {
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
     ) {
-        this.socketIoService.addedMenu(() => {
+        this.socketIoService.getAddedMenu(() => {
             this._snackBar.open('Agregado al menu', 'close', { duration: 5000 })
             this.dialogRef.close(true)
         })
 
-        this.socketIoService.deletedToMenu(() => {
+        this.socketIoService.getDeletedToMenu(() => {
             this._snackBar.open('Eliminado del menu', 'close', { duration: 5000 })
             this.dialogRef.close(true)
         })
 
-        this.socketIoService.deletedMenu(() => {
+        this.socketIoService.getDeletedMenu(() => {
             this._snackBar.open('Menu eliminado exitosamente', 'close', { duration: 5000 })
             this.dialogRef.close(true)
         })
 
-        this.socketIoService.updatedMenu(() => {
+        this.socketIoService.getUpdatedMenu(() => {
             this._snackBar.open('Menu actualizado', 'close', { duration: 5000 })
             this.dialogRef.close(true)
         })
@@ -77,8 +77,8 @@ export class MenuDialogComponent implements OnInit {
         this.authService.getUser().subscribe({
             next: (v) => {
                 this.myId = v._id
-                this.hasRoles = v.roles.length >= 1
-                this.isAdmin = v.roles.includes('ADMIN') || v.roles.includes('COCINERO')
+                this.hasRoles = v.rol != 3
+                this.isAdmin = v.rol < 2
                 this.mySelection = this.menu.users?.length == 0 || !this.menu.users?.find(user => user._id == this.myId) 
                     ? undefined 
                     : this.usersInMenu.find(user => user._id == this.myId)?.Menu_User?.selectedMenu

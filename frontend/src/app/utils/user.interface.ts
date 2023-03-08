@@ -5,7 +5,7 @@ export interface User {
     email: string
     password: string
     password2: string
-    roles: string[]
+    rol: string
     Menu_User: Menu_User | undefined
     emailVerified: number | undefined
 }

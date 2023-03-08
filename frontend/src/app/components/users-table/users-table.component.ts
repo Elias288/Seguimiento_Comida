@@ -39,8 +39,7 @@ export class UsersTableComponent implements OnInit{
         this.columsDefinitions = [
             { def: 'name', label: 'name', hide: true },
             { def: 'email', label: 'email', hide: true },
-            { def: 'surname', label: 'surname', hide: true },
-            { def: 'roles', label: 'roles', hide: true },
+            { def: 'rol', label: 'rol', hide: true },
             { def: 'actions', label: 'actions', hide: this.hasActions},
         ]
     }
@@ -53,6 +52,13 @@ export class UsersTableComponent implements OnInit{
                     if(a._id == this.myId) return -1
                     return 0
                 })
+                const ROLES = [
+                    'ADMIN',     
+                    'COCINERO',  
+                    'COMENSAL',  
+                    ''           
+                ]
+                this.usuarios.map(u => u.rol = ROLES[parseInt(u.rol)])
             },
             error: (e) => {
                 console.error(e);

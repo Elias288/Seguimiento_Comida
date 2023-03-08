@@ -30,7 +30,7 @@ export class NavBarComponent implements OnInit{
                     next: (v: User) => {
                         this.userName = v.name
                         this.myId = v._id
-                        this.hasRoles = v.roles.includes('COCINERO') || v.roles.includes('ADMIN')
+                        this.hasRoles = v.rol.includes('COCINERO') || v.rol.includes('ADMIN')
                     },
                     error: (e) => {
                         window.localStorage.removeItem('jwt')

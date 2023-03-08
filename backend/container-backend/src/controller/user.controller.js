@@ -1,11 +1,11 @@
 var bcrypt = require('bcryptjs')
 const userServices = require('../services/user.services')
 
-const ROLES = [
-    'ADMIN',
-    'COMENSAL',
-    'COCINERO'
-]
+//'All'         0
+//'ADMIN',      1
+//'COCINERO'    2
+//'COMENSAL',   3
+//''            4
 
 exports.create = (req, res, next) => {
     const { name, surName, email, password, password2} = req.body 
@@ -34,7 +34,7 @@ exports.create = (req, res, next) => {
 
     if (password !== password2) return { isError: true, name: "passwordValidationError" }
 
-    return userServices.createUser(name, surName, email, password, []).then(data => {
+    return userServices.createUser(name, surName, email, password, "").then(data => {
         if (data.isError){
             console.error(new Error(data.name))
             return next(data)
@@ -169,9 +169,9 @@ exports.getMe = (req, res, next) => {
             console.error(new Error(data.name))
             return next(data)
         }
-        const { _id, name, surName, email, roles } = data.data.dataValues
+        const { _id, name, surName, email, rol } = data.data.dataValues
     
-        return res.status(200).send({ _id, name, surName, email, roles, })
+        return res.status(200).send({ _id, name, surName, email, rol })
     })
 }
 
@@ -203,7 +203,7 @@ exports.update = (req, res, next) => {
 }
 
 exports.addRole = async (req, res, next) => {
-    const { roles, userId } = req.body
+    const { rol, userId } = req.body
     const { tokenData } = req
 
     if (!tokenData){
@@ -212,26 +212,18 @@ exports.addRole = async (req, res, next) => {
     }
     const data = await userServices.getUserById(tokenData.id),
     user = data.data.dataValues
-    if (!user.roles.includes(ROLES[0])) {
-        console.error(new Error('unauthorized'))
+    if (user.rol != 1) {
         return next({ name: "unauthorized" })
     }
     if (!userId) {
         console.error(new Error('missingData'))
         return next({ name: "missingData", message: "userId es requerido" })
     }
-    if (roles == null || roles == undefined) {
-        console.error(new Error('missingData'))
+    if (rol == undefined) {
         return next({ name: "missingData", message: "roles es requerido" })
     }
 
-    let newRoles 
-    if (roles.length > 0) {
-        newRoles = roles.split(",")
-    } else newRoles = []
-
-    const userData = { roles: newRoles }
-
+    const userData = { rol }
     return userServices.updateUser(userId, userData).then(data => {
         if (data.isError) {
             console.error(new Error(data.name))
@@ -258,8 +250,7 @@ exports.delete = async (req, res, next) => {
     }
     const data = await userServices.getUserById(tokenData.id),
     user = data.data.dataValues
-    if (!(user.roles.includes(ROLES[0]) || tokenData.id == userId)){
-        console.error(new Error('unauthorized'))
+    if (!(user.rol == 1 || tokenData.id == userId)){
         return next({ name: "unauthorized" })
     }
 

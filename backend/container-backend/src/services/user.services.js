@@ -37,7 +37,8 @@ exports.createUser = async (name, surName, email, password, roles) => {
         console.log(err);
         return {
             isError: true,
-            name: 'notDataError'
+            name: 'notDataError',
+            message: "Error de servidor"
         }
     })
 }

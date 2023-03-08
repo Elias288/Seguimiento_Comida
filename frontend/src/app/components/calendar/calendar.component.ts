@@ -22,7 +22,7 @@ interface Day {
 })
 export class CalendarComponent implements OnInit{
     menues: Array<Menu> = []
-    roles!: string[]
+    rol!: number
 
     months = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", 
@@ -53,24 +53,22 @@ export class CalendarComponent implements OnInit{
             if (status) {
                 this.authService.getUser().subscribe({
                     next: (v) => {
-                        this.roles = v.roles
+                        this.rol = v.rol
                     }
                 })
             }
         })
 
-        socketIoService.loadMenues((menu: Array<Menu>) => {
+        socketIoService.requestMenues()
+
+        socketIoService.getMenues((menu: Array<Menu>) => {
             this.menues = menu
             this.constructCalendar()
         })
 
-        socketIoService.onNewMenu((menu: Menu) => {
+        socketIoService.getNewMenu((menu: Menu) => {
             this.menues.push(menu)
             this.constructCalendar()
-        })
-        
-        socketIoService.webSocketError((data: any) => {
-            this._snackBar.open(data.message, 'close', { duration: 5000 })
         })
     }
 
@@ -80,7 +78,7 @@ export class CalendarComponent implements OnInit{
     public openDialog(day: Day) {
         const dialogRef = this.dialog.open(MenuDialogComponent, {
             data : {
-                roles: this.roles,
+                rol: this.rol,
                 day,
                 completeDate: new Date(this.currYear, this.currMonth, day.numberDay),
             }

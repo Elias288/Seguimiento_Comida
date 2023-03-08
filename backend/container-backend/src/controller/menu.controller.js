@@ -1,11 +1,5 @@
 const menuServices = require('../services/menu.services')
 
-const ROLES = [
-    'ADMIN',
-    'COMENSAL',
-    'COCINERO'
-]
-
 exports.findAll = async (req, res, next) => {
     return menuServices.getAllMenu().then(data => {
         res.status(200).send(data)
@@ -61,8 +55,4 @@ exports.findOneByDate = (req, res, next) => {
         const menu = data.data
         return res.status(200).send(menu)
     })
-}
-
-checkRoles = (user) => {
-    return user.roles.includes(ROLES[2]) || user.roles.includes(ROLES[0])
 }

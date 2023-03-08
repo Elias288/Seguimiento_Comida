@@ -13,39 +13,21 @@ import { UserService } from 'src/app/services/user/user.service';
 export class RolesFormComponent{
     constructor (
         public dialogRef: MatDialogRef<RolesFormComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: { jwt: string, userId: string, roles: Array<string> },
+        @Inject(MAT_DIALOG_DATA) public data: { jwt: string, userId: string, rol: string },
         private userService: UserService,
         private _snackBar: MatSnackBar,
     ) { }
 
     rolesForm: FormGroup = new FormGroup({
-        admin: new FormControl(this.data.roles.includes('ADMIN')),
-        comensal: new FormControl(this.data.roles.includes('COMENSAL')),
-        cocinero: new FormControl(this.data.roles.includes('COCINERO')),
+        rol: new FormControl(""),
     })
 
-    get admin() {
-        return this.rolesForm.get('admin')
-    }
-
-    get comensal() {
-        return this.rolesForm.get('comensal')
-    }
-
-    get cocinero() {
-        return this.rolesForm.get('cocinero')
+    get rol() {
+        return this.rolesForm.get('rol')?.value || 3
     }
 
     updateRoles() {
-        const roles: Array<string> = []
-        
-        this.admin?.value ? roles.push('ADMIN') : ''
-        this.comensal?.value ? roles.push('COMENSAL') : ''
-        this.cocinero?.value ? roles.push('COCINERO') : ''
-
-        // console.log(this.data);
-        
-        this.userService.addRole(this.data.jwt, this.data.userId, roles.toString()).subscribe({
+        this.userService.addRole(this.data.jwt, this.data.userId, this.rol).subscribe({
             next:(v: any) => {
                 this._snackBar.open(v.message, 'close', { duration: 5000 })
             },

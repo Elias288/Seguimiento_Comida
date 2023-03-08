@@ -10,7 +10,7 @@ userRouter.post('/login', userControler.login)
 userRouter.delete('/:userId', verifyToken, userControler.delete)
 
 userRouter.put('/', verifyToken, userControler.update)
-userRouter.put('/addRoles', verifyToken, userControler.addRole)
+userRouter.put('/addRol', verifyToken, userControler.addRole)
 
 userRouter.get('/', verifyToken, userControler.findAll)
 userRouter.get('/confirm/:token', userControler.confirmEmail)
