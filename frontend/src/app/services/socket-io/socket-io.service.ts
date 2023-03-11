@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io } from 'socket.io-client';
 import { Menu } from 'src/app/utils/menu.inteface';
+import { User } from 'src/app/utils/user.interface';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -13,34 +14,57 @@ export class SocketIoService {
         this.socket = io(environment.ENDPOINT)
     }
 
-    public webSocketError = (callback: any) => {
+    public getWebSocketError = (callback: any) => {
         this.socket.on('server:error', callback)
     }
 
-    public loadMenues = (callback: any) => {
+    public getMenues = (callback: any) => {
         this.socket.on('server:loadMenues', callback)
     }
 
-    public onNewMenu = (callback: any) => {
+    public getNotifications = (callback: any) => {
+        this.socket.on('server:notifications', callback)
+    }
+
+    public getNewNotification = (callback: any) => {
+        this.socket.on('server:newNotification', callback)
+    }
+
+    public getNewMenu = (callback: any) => {
         this.socket.on('server:newMenu', callback);
     }
 
-    public addedMenu = (callback: any) => {
+    public getAddedMenu = (callback: any) => {
         this.socket.on('server:addedMenu', callback)
     }
 
-    public deletedMenu = (callback: any) => {
+    public getDeletedMenu = (callback: any) => {
         this.socket.on('server:deletedMenu', callback)
     }
 
-    public updatedMenu = (callback: any) => {
+    public getUpdatedMenu = (callback: any) => {
         this.socket.on('server:updatedMenu', callback)
     }
 
-    public deletedToMenu = (callback: any) => {
+    public getDeletedToMenu = (callback: any) => {
         this.socket.on('server:deletedToMenu', callback)
     }
 
+    
+
+    public joinToRoom = (userRol: string) => {
+        this.socket.emit('client:joinToRoom', userRol)   
+    }
+
+    public requestMenues = () => {
+        this.socket.emit('client:requestMenues', )
+    }
+    
+    public requestNotifications = (userId: string, userRol: number) => {
+        this.socket.emit('client:requestPersonalNotifications', { userId, userRol })
+
+    }
+    
     public newMenu = (token: string, menu: Menu) => {
         this.socket.emit('client:newMenu', { token, menu })
     }
@@ -59,5 +83,9 @@ export class SocketIoService {
 
     public dropToMenu = (token: string, menuId: string) => {
         this.socket.emit('client:deleteToMenu', { token, menuId })
+    }
+
+    public requestRol = (token: string, emisor: User) => {
+        this.socket.emit('client:requestRol', { token, emisor })
     }
 }
