@@ -51,7 +51,7 @@ module.exports = (io) => {
         socket.on('client:newMenu', async (data) => {
             const { token, menu } = data
             const tokenData = verifyToken(token)
-            if (res.isError){
+            if (tokenData.isError){
                 return socket.emit('server:error', { message: res.message })
             }
             
@@ -74,7 +74,7 @@ module.exports = (io) => {
         socket.on('client:deleteMenu', async (data) => {
             const { token, menuId } = data
             const tokenData = verifyToken(token)
-            if (res.isError){
+            if (tokenData.isError){
                 return socket.emit('server:error', { message: res.message })
             }
             
@@ -98,7 +98,7 @@ module.exports = (io) => {
         socket.on('client:updateMenu', async (data) => {
             const { token, menu } = data
             const tokenData = verifyToken(token)
-            if (res.isError){
+            if (tokenData.isError){
                 return socket.emit('server:error', { message: res.message })
             }
             
@@ -125,7 +125,7 @@ module.exports = (io) => {
         socket.on('client:addToMenu', async (data) => {
             const { token, menuId, selectedMenu } = data
             const tokenData = verifyToken(token)
-            if (res.isError){
+            if (tokenData.isError){
                 return socket.emit('server:error', { message: res.message })
             }
             
@@ -150,7 +150,7 @@ module.exports = (io) => {
         socket.on('client:deleteToMenu', async (data) => {
             const { token, menuId } = data
             const tokenData = verifyToken(token)
-            if (res.isError){
+            if (tokenData.isError){
                 return socket.emit('server:error', { message: res.message })
             }
 
@@ -179,8 +179,8 @@ module.exports = (io) => {
             const { token, emisor } = data
             const name = "requestRol", message = "solicitud de rol", receptorRol = 1
             
-            const res = verifyToken(token)
-            if (res.isError){
+            const tokenData = verifyToken(token)
+            if (tokenData.isError){
                 return socket.emit('server:error', { message: res.message })
             }
 
