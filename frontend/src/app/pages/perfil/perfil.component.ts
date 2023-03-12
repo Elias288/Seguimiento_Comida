@@ -24,6 +24,13 @@ export class PerfilComponent{
     requestRolSended: boolean = false
     hasRole: boolean = false
 
+    ROLES = [
+        'ADMIN',     
+        'COCINERO',  
+        'COMENSAL',  
+        ''           
+    ]
+
     constructor(
         private authService: AuthService,
         private userService: UserService,
@@ -40,13 +47,7 @@ export class PerfilComponent{
                 next: (v) => {
                     const user = v as User
                     this.userInfo = user
-                    const ROLES = [
-                        'ADMIN',     
-                        'COCINERO',  
-                        'COMENSAL',  
-                        ''           
-                    ]
-                    this.rol = ROLES[parseInt(this.userInfo.rol)]
+                    this.rol = this.ROLES[parseInt(this.userInfo.rol)]
                     
                     this.authService.getUser().subscribe({
                         next: (u:User) => {
@@ -90,14 +91,14 @@ export class PerfilComponent{
         })
     }
 
-    public updateUser() {
-        window.alert('update User')
+    public openUpdateUser() {
+        
     }
 
-    public requestRol() {
-        if (this.itsMe) {
-            this.socketIoService.requestRol(`Bearer ${this.authService.token}`, this.userInfo)
-            this.requestRolSended = true
-        }
-    }
+    // public requestRol() {
+    //     if (this.itsMe) {
+    //         this.socketIoService.requestRol(`Bearer ${this.authService.token}`, this.userInfo)
+    //         this.requestRolSended = true
+    //     }
+    // }
 }

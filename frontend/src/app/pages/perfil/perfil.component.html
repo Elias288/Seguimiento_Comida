@@ -11,9 +11,9 @@
     </div>
     <div class="container-actions" *ngIf="itsMe || itsAdmin">
         <button mat-raised-button color="warn" (click)="deleteUser()">Eliminar</button>
-        <!-- <button mat-raised-button (click)="updateUser()">Editar</button> -->
+        <!-- <button mat-raised-button (click)="openUpdateUser()">Editar</button> -->
     </div>
-    <mat-card *ngIf="!hasRole">
+    <!-- <mat-card *ngIf="!hasRole">
         <mat-card-content>
             <mat-card-header>
                 <mat-card-title>Solicitar Rol</mat-card-title>
@@ -23,5 +23,5 @@
                 <p *ngIf="requestRolSended">Solicitud enviada, aguarde a que un Administrador le asigne su rol</p>
             </mat-card-actions>
         </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 </div>
