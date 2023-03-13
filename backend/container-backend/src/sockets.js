@@ -3,10 +3,10 @@ const userServices = require('./services/user.services')
 const notificationServices = require('./services/notification.service')
 const jwt = require('jsonwebtoken')
 
-//'All'         0
-//'ADMIN',      1
-//'COCINERO'    2
-//'COMENSAL',   3
+//'ADMIN',      0
+//'COCINERO'    1
+//'COMENSAL',   2
+//'All'         3
 //''            4
 
 module.exports = (io) => {
@@ -57,7 +57,7 @@ module.exports = (io) => {
             
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (user.rol > 2) {
+            if (user.rol > 1) {
                 return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
 
@@ -80,7 +80,7 @@ module.exports = (io) => {
             
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (user.rol > 2) {
+            if (user.rol > 1) {
                 return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
             menuServices.deleteMenu(menuId).then(async data => {
@@ -104,7 +104,7 @@ module.exports = (io) => {
             
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (user.rol > 2) {
+            if (user.rol > 1) {
                 return socket.emit('server:error', { message: 'No tiene la autorización necesaria' })
             }
             if (menu.menuPrincipal.length >= 255 || menu.menuSecundario.length >= 255){
@@ -156,7 +156,7 @@ module.exports = (io) => {
 
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data?.dataValues
-            if (!(user.rol > 3)) {
+            if (user.rol > 2) {
                 return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
 
@@ -177,7 +177,7 @@ module.exports = (io) => {
             // guardar en BD la notificación para mostrar cuando un admin se conecte
 
             const { token, emisor } = data
-            const name = "requestRol", message = "solicitud de rol", receptorRol = 1
+            const name = "requestRol", message = "solicitud de rol", receptorRol = 0
             
             const tokenData = verifyToken(token)
             if (tokenData.isError){
