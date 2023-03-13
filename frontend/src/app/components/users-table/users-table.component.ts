@@ -20,6 +20,13 @@ export class UsersTableComponent implements OnInit{
     @Input() myId!: string
     @Input() jwt!: string
     @Output() actions: EventEmitter<object> = new EventEmitter<object>()
+    ROLES = [
+        'ADMIN',     
+        'COCINERO',  
+        'COMENSAL',  
+        '',
+        ''           
+    ]
 
     usuarios!: Array<User>
     dataSource!: MatTableDataSource<User>
@@ -52,13 +59,7 @@ export class UsersTableComponent implements OnInit{
                     if(a._id == this.myId) return -1
                     return 0
                 })
-                const ROLES = [
-                    'ADMIN',     
-                    'COCINERO',  
-                    'COMENSAL',  
-                    ''           
-                ]
-                this.usuarios.map(u => u.rol = ROLES[parseInt(u.rol)])
+                this.usuarios.map(u => u.rol = this.ROLES[parseInt(u.rol)])
             },
             error: (e) => {
                 console.error(e);

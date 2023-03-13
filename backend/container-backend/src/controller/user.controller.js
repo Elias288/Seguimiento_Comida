@@ -1,10 +1,10 @@
 var bcrypt = require('bcryptjs')
 const userServices = require('../services/user.services')
 
-//'All'         0
-//'ADMIN',      1
-//'COCINERO'    2
-//'COMENSAL',   3
+//'ADMIN',      0
+//'COCINERO'    1
+//'COMENSAL',   2
+//'All'         3
 //''            4
 
 exports.create = (req, res, next) => {
@@ -34,7 +34,7 @@ exports.create = (req, res, next) => {
 
     if (password !== password2) return { isError: true, name: "passwordValidationError" }
 
-    return userServices.createUser(name, surName, email, password, "").then(data => {
+    return userServices.createUser(name, surName, email, password, 4).then(data => {
         if (data.isError){
             console.error(new Error(data.name))
             return next(data)
@@ -212,7 +212,7 @@ exports.addRole = async (req, res, next) => {
     }
     const data = await userServices.getUserById(tokenData.id),
     user = data.data.dataValues
-    if (user.rol != 1) {
+    if (user.rol != 0) {
         return next({ name: "unauthorized" })
     }
     if (!userId) {
@@ -250,7 +250,7 @@ exports.delete = async (req, res, next) => {
     }
     const data = await userServices.getUserById(tokenData.id),
     user = data.data.dataValues
-    if (!(user.rol == 1 || tokenData.id == userId)){
+    if (!(user.rol == 0 || tokenData.id == userId)){
         return next({ name: "unauthorized" })
     }
 
