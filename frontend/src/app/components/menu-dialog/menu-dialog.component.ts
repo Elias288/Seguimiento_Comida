@@ -40,6 +40,11 @@ export class MenuDialogComponent implements OnInit {
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
     ) {
+        socketIoService.getWebSocketError((error: any) => {
+            this._snackBar.open(error.message, 'close', { duration: 5000 })
+            this.dialogRef.close(true)
+        })
+
         this.socketIoService.getAddedMenu(() => {
             this._snackBar.open('Agregado al menu', 'close', { duration: 5000 })
             this.dialogRef.close(true)
@@ -134,7 +139,7 @@ export class MenuDialogComponent implements OnInit {
         this.openConfirmCancelDialog('Agregarse al menu?')
         .afterClosed().subscribe(result => {
             if (result) {
-                this.socketIoService.addToMenu(`Bearer ${this.authService.token}`, this.menu._id, value)
+                this.socketIoService.addToMenu(`Bearer ${this.authService.token}`, this.menu._id, value, new Date())
             }
         })
     }

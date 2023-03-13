@@ -171,7 +171,7 @@ exports.updateUser = (id, user) => {
     })
 }
 
-exports.enterToMenu = async (menuId, selectedMenu, userId) => {
+exports.enterToMenu = async (menuId, selectedMenu, userId, entryDate) => {
     if (selectedMenu != 'MP' && selectedMenu != 'MS') {
         console.error(new Error("invalidData"))
         return { name: "invalidData", message: 'Error en el menu seleccionado' }
@@ -196,7 +196,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
         }
     }
 
-    const msBetweenDates = menu.date.getTime() - new Date().getTime();
+    const msBetweenDates = menu.date.getTime() - entryDate.getTime();
     const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
     if (hoursBetweenDates <= 0) {
         console.error(new Error("outOfTime"))
@@ -214,7 +214,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
         }
     }
 
-    await user.addMenus(menu, { through: { selectedMenu } })
+    await user.addMenus(menu, { through: { selectedMenu, entryDate } })
 
     return {
         isError: false,
@@ -223,6 +223,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
 }
 
 exports.dropToMenu = async (menuId, userId) => {
+    console.log('drop to menu');
     const user = await User.findByPk(userId)
     const menu = await Menu.findByPk(menuId)
 
