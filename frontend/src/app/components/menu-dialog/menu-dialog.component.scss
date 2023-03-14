@@ -4,40 +4,77 @@ $pcSize: 850px;
 .container {
     // min-width: 360px;
     height: 90vh;
+    max-width: 400px;
 
-    @media screen and (min-width: $pcSize) { 
-        display: grid;
-        grid-template-columns: auto 30%;
-    }
+    // @media screen and (min-width: $pcSize) { 
+    //     display: grid;
+    //     grid-template-columns: auto 30%;
+    // }
 }
 
-.form {
-    margin-bottom: 1rem;
-    box-sizing: border-box;
-    margin-right: 1rem;
+// .menuPrincipal {
+//     background: #008000;
+// }
 
-    & * {
-        width: 100%;
-    }
-}
+// .menuSecundario {
+//     background: #4350bf;
+// }
 
-.title,
-.table {
-    @media screen and (min-width: $pcSize) { 
-        grid-column: 1/3;
-    }
-}
+// .menuPrincipal, .menuSecundario {
+//     max-width: 300px;
+//     color: #fff;
+//     border-radius: 10px;
+//     padding: 5px 10px;
+//     margin-bottom: .5rem;
+// }
 
-.publicActions,
-.dialogActions-mat-button-group {
+// .form {
+//     margin-bottom: 1rem;
+//     box-sizing: border-box;
+//     margin-right: 1rem;
+
+//     & * {
+//         width: 100%;
+//     }
+// }
+
+// .title,
+// .table {
+//     @media screen and (min-width: $pcSize) { 
+//         grid-column: 1/3;
+//     }
+// }
+
+.publicActions {
     width: 100%;
     display: flex;
-    flex-direction: column;   
+    flex-direction: column;
+    margin-bottom: 2rem;
+
+    .options {
+        display: flex;
+        flex-direction: column;
+
+        > * {
+            padding: 10px 0;
+        }
+    }
+
+    .actions {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin: 1rem 0;
+    }
 }
 
 .privateActions {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+
+    button {
+        flex: 1;
+    }
 }

@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
 const { v4: uuidv4 } = require('uuid')
 
-exports.createUser = async (name, surName, email, password, roles) => {
+exports.createUser = async (name, surName, email, password) => {
     const hashedPassword = bcrypt.hashSync(password, 8);
 
     const userData = {
@@ -17,7 +17,7 @@ exports.createUser = async (name, surName, email, password, roles) => {
         surName,
         email,
         password: hashedPassword,
-        roles,
+        rol: -1, // se crea sin rol
         emailVerified: 0,
     }
 
@@ -223,7 +223,6 @@ exports.enterToMenu = async (menuId, selectedMenu, userId, entryDate) => {
 }
 
 exports.dropToMenu = async (menuId, userId) => {
-    console.log('drop to menu');
     const user = await User.findByPk(userId)
     const menu = await Menu.findByPk(menuId)
 

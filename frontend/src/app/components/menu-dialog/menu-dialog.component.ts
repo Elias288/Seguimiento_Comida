@@ -126,13 +126,13 @@ export class MenuDialogComponent implements OnInit {
     }
 
     public updateMenu() {
-        this.openConfirmCancelDialog("¿Seguro que quiere actualizar este menu?")
-        .afterClosed().subscribe(result => {
-            if (result) {
-                const menu: Menu = { _id: this.data.day.menu._id, ...this.menuData.value }
-                this.socketIoService.updateMenu(`Bearer ${this.authService.token}`, menu)
-            }
-        })
+        // this.openConfirmCancelDialog("¿Seguro que quiere actualizar este menu?")
+        // .afterClosed().subscribe(result => {
+        //     if (result) {
+        //         const menu: Menu = { _id: this.data.day.menu._id, ...this.menuData.value }
+        //         this.socketIoService.updateMenu(`Bearer ${this.authService.token}`, menu)
+        //     }
+        // })
     }
 
     public addtoMenu(value: string) {
