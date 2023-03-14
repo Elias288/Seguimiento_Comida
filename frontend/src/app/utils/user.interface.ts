@@ -14,4 +14,5 @@ interface Menu_User {
     selectedMenu: string
     userId: string
     menuId: string
+    entryDate: Date
 }

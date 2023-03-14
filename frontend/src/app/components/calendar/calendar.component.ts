@@ -38,6 +38,7 @@ export class CalendarComponent implements OnInit{
     lastDayOfMonth!: number 
     lastDateOfLastMonth!: number 
     firstDayOfMonth!: number
+    canAddMenus: boolean = false
 
     constructor (
         private authService: AuthService,
@@ -54,6 +55,7 @@ export class CalendarComponent implements OnInit{
                 this.authService.getUser().subscribe({
                     next: (v) => {
                         this.rol = v.rol
+                        this.canAddMenus = v.rol >= 0 && v.rol < 2
                     }
                 })
             }

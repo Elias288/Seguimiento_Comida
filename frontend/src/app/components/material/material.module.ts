@@ -18,6 +18,7 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatMenuModule } from '@angular/material/menu'
 import { MatCardModule } from '@angular/material/card'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatTabsModule } from '@angular/material/tabs';
 
 const materials = [
   MatButtonModule,
@@ -37,6 +38,7 @@ const materials = [
   MatMenuModule,
   MatCardModule,
   MatProgressSpinnerModule,
+  MatTabsModule,
 ]
 
 @NgModule({

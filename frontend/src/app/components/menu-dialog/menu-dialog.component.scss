@@ -2,48 +2,9 @@ $tabletSize: 450px;
 $pcSize: 850px;
 
 .container {
-    // min-width: 360px;
     height: 90vh;
     max-width: 400px;
-
-    // @media screen and (min-width: $pcSize) { 
-    //     display: grid;
-    //     grid-template-columns: auto 30%;
-    // }
 }
-
-// .menuPrincipal {
-//     background: #008000;
-// }
-
-// .menuSecundario {
-//     background: #4350bf;
-// }
-
-// .menuPrincipal, .menuSecundario {
-//     max-width: 300px;
-//     color: #fff;
-//     border-radius: 10px;
-//     padding: 5px 10px;
-//     margin-bottom: .5rem;
-// }
-
-// .form {
-//     margin-bottom: 1rem;
-//     box-sizing: border-box;
-//     margin-right: 1rem;
-
-//     & * {
-//         width: 100%;
-//     }
-// }
-
-// .title,
-// .table {
-//     @media screen and (min-width: $pcSize) { 
-//         grid-column: 1/3;
-//     }
-// }
 
 .publicActions {
     width: 100%;
@@ -77,4 +38,8 @@ $pcSize: 850px;
     button {
         flex: 1;
     }
+}
+
+.mat-tab-group {
+    padding-bottom: 2rem;
 }
