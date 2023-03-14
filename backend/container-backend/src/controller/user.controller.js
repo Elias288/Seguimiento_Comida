@@ -1,11 +1,11 @@
 var bcrypt = require('bcryptjs')
 const userServices = require('../services/user.services')
 
+//''            -1
 //'ADMIN',      0
 //'COCINERO'    1
 //'COMENSAL',   2
 //'All'         3
-//''            4
 
 exports.create = (req, res, next) => {
     const { name, surName, email, password, password2} = req.body 

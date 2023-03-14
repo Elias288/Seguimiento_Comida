@@ -1,4 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,6 +8,7 @@ import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
 import { Menu } from 'src/app/utils/menu.inteface';
 import { User } from 'src/app/utils/user.interface';
 import { ConfirmCancelDialogComponent } from '../confirm-cancel-dialog/confirm-cancel-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'app-menu-dialog',
@@ -18,19 +20,19 @@ export class MenuDialogComponent implements OnInit {
     day!: any                           // TODA LA INFORMACIÓN DEL DIA
     menu!: Menu                         // TODA LA INFORMACIÓN DEL MENU
     completeDate!: Date                 // FECHA COMPLETA DEL MENU
-    hasRoles: boolean = false
-    isAdmin: boolean = false
+    canBeAddedToMenu: boolean = false   // PUEDE AGREGARSE AL MENÚ
+    canManageMenus: boolean = false     // PUEDE ADMINISTAR MENUS
     myId!: string                       // ID DEL USUARIO LOGUEADO
     usersInMenu!: Array<User>           // USUARIOS EN EL MENU
     mySelection!: string | undefined    // SI EL USUARIO YA ESTÁ EN EL MENU, CUAL MENU ESTÁ SELECCIONADO
-    dataSource = [
-        { MP: 0, MS: 0, total: 0 }
-    ]
+    dataCountMenuOption = [{ MP: 0, MS: 0, total: 0 }]
+    displayedCountColumns: Array<string> = [ 'menu_principal', 'menu_secundario', 'total' ]
+    dataComensales: any
+    displayedComensalesColumns: Array<string> = [ 'menu_option', 'hour', 'name', 'surName', 'email' ]
 
     menuData!: FormGroup 
     matButtonToggleGroup!: any 
 
-    displayedColumns: Array<string> = [ 'menu_principal', 'menu_secundario', 'total' ]
 
     constructor(
         public dialogRef: MatDialogRef<MenuDialogComponent>,
@@ -39,7 +41,13 @@ export class MenuDialogComponent implements OnInit {
         private _snackBar: MatSnackBar,
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
+        private _liveAnnouncer: LiveAnnouncer,
     ) {
+        socketIoService.getWebSocketError((error: any) => {
+            this._snackBar.open(error.message, 'close', { duration: 5000 })
+            this.dialogRef.close(true)
+        })
+
         this.socketIoService.getAddedMenu(() => {
             this._snackBar.open('Agregado al menu', 'close', { duration: 5000 })
             this.dialogRef.close(true)
@@ -67,18 +75,32 @@ export class MenuDialogComponent implements OnInit {
         this.completeDate = this.data.completeDate
         if (this.menu.users) {
             this.usersInMenu = this.menu.users
-            this.dataSource = [{ 
+            this.dataCountMenuOption = [{ 
                 MP: this.menu.users.filter(user => user.Menu_User?.selectedMenu == 'MP').length,
                 MS: this.menu.users.filter(user => user.Menu_User?.selectedMenu == 'MS').length,
                 total: this.menu.users.length,
             }]
+            
+            this.dataComensales = new MatTableDataSource(
+                this.menu.users.map(u => {
+                    const date = u.Menu_User?.entryDate && new Date(u.Menu_User.entryDate)
+                    return {
+                        menu_option: u.Menu_User?.selectedMenu,
+                        hour: date?.toLocaleTimeString(),
+                        name: u.name,
+                        surName: u.surName,
+                        email: u.email,
+                    }
+                })
+            );
+            
         }
 
         this.authService.getUser().subscribe({
             next: (v) => {
                 this.myId = v._id
-                this.hasRoles = v.rol != 3
-                this.isAdmin = v.rol < 2
+                this.canBeAddedToMenu = v.rol >= 0
+                this.canManageMenus = v.rol == 0 || v.rol == 1
                 this.mySelection = this.menu.users?.length == 0 || !this.menu.users?.find(user => user._id == this.myId) 
                     ? undefined 
                     : this.usersInMenu.find(user => user._id == this.myId)?.Menu_User?.selectedMenu
@@ -121,20 +143,22 @@ export class MenuDialogComponent implements OnInit {
     }
 
     public updateMenu() {
-        this.openConfirmCancelDialog("¿Seguro que quiere actualizar este menu?")
-        .afterClosed().subscribe(result => {
-            if (result) {
-                const menu: Menu = { _id: this.data.day.menu._id, ...this.menuData.value }
-                this.socketIoService.updateMenu(`Bearer ${this.authService.token}`, menu)
-            }
-        })
+        // this.openConfirmCancelDialog("¿Seguro que quiere actualizar este menu?")
+        // .afterClosed().subscribe(result => {
+        //     if (result) {
+        //         const menu: Menu = { _id: this.data.day.menu._id, ...this.menuData.value }
+        //         this.socketIoService.updateMenu(`Bearer ${this.authService.token}`, menu)
+        //     }
+        // })
     }
 
     public addtoMenu(value: string) {
         this.openConfirmCancelDialog('Agregarse al menu?')
         .afterClosed().subscribe(result => {
             if (result) {
-                this.socketIoService.addToMenu(`Bearer ${this.authService.token}`, this.menu._id, value)
+                this.socketIoService.addToMenu(`Bearer ${this.authService.token}`, this.menu._id, value, new Date())
+            } else {
+                this.dialogRef.close(true) 
             }
         })
     }
@@ -144,6 +168,8 @@ export class MenuDialogComponent implements OnInit {
         .afterClosed().subscribe(result => {
             if (result) {
                 this.socketIoService.dropToMenu(`Bearer ${this.authService.token}`, menuId)
+            } else {
+                this.dialogRef.close(true) 
             }
         })
     }

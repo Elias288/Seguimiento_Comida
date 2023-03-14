@@ -1,5 +1,5 @@
 const dbConfig = require("../config/db.config.js")
-
+// console.log(dbConfig);
 const Sequelize = require("sequelize")
 const sequelize = new Sequelize(
     dbConfig.DB,
@@ -30,7 +30,8 @@ db.Menu = require("./menu.model.js")(sequelize, Sequelize)
 db.Notification = require("./notification.model.js")(sequelize, Sequelize)
 
 db.Menu_User = sequelize.define('Menu_User', {
-    selectedMenu: { type: Sequelize.STRING }
+    selectedMenu: { type: Sequelize.STRING },
+    entryDate: { type: Sequelize.DATE }
 }, { timestamps: false })
 
 db.User.belongsToMany(db.Menu, { through: 'Menu_User' })

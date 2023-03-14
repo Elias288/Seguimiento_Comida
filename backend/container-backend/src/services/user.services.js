@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
 const { v4: uuidv4 } = require('uuid')
 
-exports.createUser = async (name, surName, email, password, roles) => {
+exports.createUser = async (name, surName, email, password) => {
     const hashedPassword = bcrypt.hashSync(password, 8);
 
     const userData = {
@@ -17,7 +17,7 @@ exports.createUser = async (name, surName, email, password, roles) => {
         surName,
         email,
         password: hashedPassword,
-        roles,
+        rol: -1, // se crea sin rol
         emailVerified: 0,
     }
 
@@ -171,7 +171,7 @@ exports.updateUser = (id, user) => {
     })
 }
 
-exports.enterToMenu = async (menuId, selectedMenu, userId) => {
+exports.enterToMenu = async (menuId, selectedMenu, userId, entryDate) => {
     if (selectedMenu != 'MP' && selectedMenu != 'MS') {
         console.error(new Error("invalidData"))
         return { name: "invalidData", message: 'Error en el menu seleccionado' }
@@ -196,7 +196,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
         }
     }
 
-    const msBetweenDates = menu.date.getTime() - new Date().getTime();
+    const msBetweenDates = menu.date.getTime() - entryDate.getTime();
     const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
     if (hoursBetweenDates <= 0) {
         console.error(new Error("outOfTime"))
@@ -214,7 +214,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
         }
     }
 
-    await user.addMenus(menu, { through: { selectedMenu } })
+    await user.addMenus(menu, { through: { selectedMenu, entryDate } })
 
     return {
         isError: false,

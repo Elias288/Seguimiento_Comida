@@ -77,8 +77,8 @@ export class SocketIoService {
         this.socket.emit('client:updateMenu', { token, menu })
     }
 
-    public addToMenu = (token: string, menuId: string, selectedMenu: string) => {
-        this.socket.emit('client:addToMenu', { token, menuId, selectedMenu })
+    public addToMenu = (token: string, menuId: string, selectedMenu: string, entryDate: Date) => {
+        this.socket.emit('client:addToMenu', { token, menuId, selectedMenu, entryDate })
     }
 
     public dropToMenu = (token: string, menuId: string) => {

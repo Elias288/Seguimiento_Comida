@@ -59,7 +59,13 @@ exports.createMenu = async (menuPrincipal, menuSecundario, date) => {
 
 exports.getAllMenu = () => {
     return Menu.findAll({
-        include: { model: User }
+        include: { 
+            model: User,
+            attributes: ['_id', 'name', 'email', 'surName', 'rol'],
+            through: {
+                attributes: ['selectedMenu', 'entryDate']
+            }
+        }
     })
 }
 

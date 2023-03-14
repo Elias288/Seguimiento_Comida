@@ -3,11 +3,11 @@ const userServices = require('./services/user.services')
 const notificationServices = require('./services/notification.service')
 const jwt = require('jsonwebtoken')
 
+//''            -1
 //'ADMIN',      0
 //'COCINERO'    1
 //'COMENSAL',   2
 //'All'         3
-//''            4
 
 module.exports = (io) => {
     io.on('connection', (socket) => {
@@ -57,7 +57,7 @@ module.exports = (io) => {
             
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (user.rol > 1) {
+            if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1) {
                 return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
 
@@ -80,7 +80,7 @@ module.exports = (io) => {
             
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (user.rol > 1) {
+            if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1) {
                 return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
             menuServices.deleteMenu(menuId).then(async data => {
@@ -104,7 +104,7 @@ module.exports = (io) => {
             
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (user.rol > 1) {
+            if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1) {
                 return socket.emit('server:error', { message: 'No tiene la autorización necesaria' })
             }
             if (menu.menuPrincipal.length >= 255 || menu.menuSecundario.length >= 255){
@@ -123,7 +123,7 @@ module.exports = (io) => {
         })
 
         socket.on('client:addToMenu', async (data) => {
-            const { token, menuId, selectedMenu } = data
+            const { token, menuId, selectedMenu, entryDate } = data
             const tokenData = verifyToken(token)
             if (tokenData.isError){
                 return socket.emit('server:error', { message: res.message })
@@ -131,11 +131,11 @@ module.exports = (io) => {
             
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (user.rol > 3) {
+            if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 2) {
                 return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
 
-            userServices.enterToMenu(menuId, selectedMenu, tokenData.id).then(async data => {
+            userServices.enterToMenu(menuId, selectedMenu, tokenData.id, new Date(entryDate)).then(async data => {
                 if (data.isError) {
                     console.error(new Error(data.name))
                     return socket.emit('server:error', { ...data, message: 'Ya no es posible agendarse' })
@@ -156,7 +156,7 @@ module.exports = (io) => {
 
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data?.dataValues
-            if (user.rol > 2) {
+            if (user.rol == null || user.rol == undefined || user.rol == -1 ||  user.rol > 2) {
                 return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
 
