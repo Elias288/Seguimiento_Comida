@@ -9,6 +9,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { CanAccesService } from './services/canAcces/can-acces.service';
+import { HelpsComponent } from './pages/helps/helps.component';
 
 const routes: Routes = [
     {
@@ -53,6 +54,11 @@ const routes: Routes = [
         title: "My perfil",
         component: PerfilComponent,
         canActivate: [CanAccesService]
+    },
+    {
+        path: 'helps',
+        title: "Ayudas",
+        component: HelpsComponent
     },
     {
         path: '**',

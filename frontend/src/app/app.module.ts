@@ -22,6 +22,7 @@ import { UsersTableComponent } from './components/users-table/users-table.compon
 import { RolesFormComponent } from './components/roles-form/roles-form.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
+import { HelpsComponent } from './pages/helps/helps.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { ConfirmationComponent } from './pages/confirmation/confirmation.compone
     RolesFormComponent,
     PerfilComponent,
     ConfirmationComponent,
+    HelpsComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

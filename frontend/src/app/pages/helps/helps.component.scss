@@ -1,0 +1,15 @@
+$tabletSize: 450px;
+$pcSize: 850px;
+
+.container {
+    overflow: scroll;
+    padding: 0 2rem;
+}
+
+img {
+    width: 100%;
+    
+    @media screen and (min-width: $pcSize) {
+        width: 550px;
+    }
+}

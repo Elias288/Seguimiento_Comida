@@ -16,6 +16,7 @@ $pcSize: 850px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        list-style: none;
 
         .toggleBtn {
             display: block;
@@ -24,6 +25,10 @@ $pcSize: 850px;
                 display: none;
             }
         }   
+    }
+
+    @media screen and (min-width: $pcSize) {
+        padding: 0 20px;
     }
 }
 
