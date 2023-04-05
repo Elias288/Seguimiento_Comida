@@ -12,16 +12,44 @@ $pcSize: 850px;
     }
 }
 
-.headerActions {
-    display: flex;
-    justify-content: center;
+.header {
+    @media screen and (min-width: $pcSize) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .headerActions {
+        display: flex;
+        justify-content: space-around;
+    }
 }
 
 .dialogActions {
     justify-content: center;
 }
 
-.publicActions {
+.dialogActions {
+    .formEditMenu {
+        display: flex;
+        flex-direction: column;
+        
+        @media screen and (min-width: $pcSize) {
+            width: 50%;
+        }
+
+        > * {
+            margin-bottom: 1.5rem;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}
+
+.radioActions {
     display: flex;
     flex-direction: column;
     margin-bottom: 2rem;

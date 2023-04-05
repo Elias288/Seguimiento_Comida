@@ -3,19 +3,48 @@
         <div class="header">
             <h1 mat-dialog-title class="title">Información del Menu</h1>
             <div class="headerActions" *ngIf="canManageMenus">
-                <button mat-icon-button color="primary" aria-label="Editar Menú">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button color="warn" aria-label="Borrar Menú" (click)="deleteMenu()">
-                    <mat-icon>delete</mat-icon>
-                </button>
+                <button mat-icon-button color="primary" aria-label="Editar Menú" (click)="toggleUpdateMenu()"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button color="warn" aria-label="Borrar Menú" (click)="deleteMenu()"><mat-icon>delete</mat-icon></button>
             </div>
         </div>
 
         <div mat-dialog-actions class="dialogActions">
-            <div class="publicActions" *ngIf="canBeAddedToMenu">
-                
+            <div [formGroup]="menuData" class="formEditMenu" *ngIf="toggleEditMenu">
+                <mat-form-field appearance="fill">
+                    <mat-label for="menuPrincipal">Menu Principal</mat-label>
+                    <textarea  matInput
+                        id="menuPrincipal"
+                        type="text"
+                        formControlName="menuPrincipal">
+                    </textarea>
+                </mat-form-field>
             
+                <mat-form-field appearance="fill">
+                    <mat-label for="menuSecundario">Menu Secundario</mat-label>
+                    <textarea  matInput
+                        id="menuSecundario"
+                        type="text"
+                        formControlName="menuSecundario"></textarea>
+                </mat-form-field>
+            
+                <mat-form-field appearance="fill">
+                    <mat-label for="fecha">Fecha</mat-label>
+                    <input matInput 
+                        [matDatepicker]="picker"
+                        formControlName="date"
+                        id="fecha" value="fecha">
+                    <mat-hint>DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+
+                <div class="buttons">
+                    <button mat-raised-button color="primary" (click)="updateMenu()">Aceptar</button>
+                    <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
+                </div>
+
+            </div>
+            <div class="radioActions" *ngIf="!toggleEditMenu">
                 <form [formGroup]="registrationForm" class="options">
                     <input type="radio" id="MP" name="menuOption" value="MP" formControlName="menuOption" (change)="addtoMenu('MP')">
                     <label class="MenuPrincipal OptionBox" for="MP">{{menu.menuPrincipal}}</label>
@@ -28,10 +57,6 @@
                     <button mat-raised-button color="warn" class="btnDown" [disabled]="mySelectedMenu == undefined" (click)="deleteToMenu(menu._id)">Darse de baja</button>
                 </div>
             </div>
-            <!-- <div class="privateActions" *ngIf="canBeAddedToMenu">
-                <button mat-raised-button class="btnEdit" (click)="updateMenu()" >Editar</button>
-                <button mat-raised-button color="warn" class="btnDelete" (click)="deleteMenu()">Borrar</button>
-            </div> -->
         </div>  
     </div>
     

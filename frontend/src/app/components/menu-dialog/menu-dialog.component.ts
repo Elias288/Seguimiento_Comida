@@ -32,6 +32,7 @@ export class MenuDialogComponent implements OnInit {
 
     menuData!: FormGroup 
     matButtonToggleGroup!: any 
+    toggleEditMenu: Boolean = false
 
     constructor(
         public dialogRef: MatDialogRef<MenuDialogComponent>,
@@ -45,12 +46,12 @@ export class MenuDialogComponent implements OnInit {
     ) {
         socketIoService.getWebSocketError((error: any) => {
             this._snackBar.open(error.message, 'close', { duration: 5000 })
-            this.dialogRef.close(true)
+            this.onNoClick()
         })
 
         this.socketIoService.getAddedMenu(() => {
             this._snackBar.open('Agregado al menu', 'close', { duration: 5000 })
-            this.dialogRef.close(true)
+            this.onNoClick()
         })
 
         this.socketIoService.getDeletedToMenu(() => {
@@ -92,34 +93,25 @@ export class MenuDialogComponent implements OnInit {
             );
         }
 
-        // this.menuData = new FormGroup ({
-        //     menuPrincipal: new FormControl<string>(this.menu.menuPrincipal, [
-        //         Validators.required,
-        //         Validators.minLength(3),
-        //     ]),
-        //     menuSecundario: new FormControl<string>(this.menu.menuSecundario),
-        //     date: new FormControl(this.completeDate, [
-        //         Validators.required,
-        //     ])
-        // })
+        this.menuData = new FormGroup ({
+            menuPrincipal: new FormControl<string>(this.menu.menuPrincipal, [
+                Validators.required,
+                Validators.minLength(3),
+            ]),
+            menuSecundario: new FormControl<string>(this.menu.menuSecundario),
+            date: new FormControl(this.completeDate, [
+                Validators.required,
+            ])
+        })
+    }
+
+    onNoClick(): void {
+        this.dialogRef.close()
     }
     
     registrationForm = this.fb.group({
         menuOption: [this.mySelectedMenu, [Validators.required]]
     })
-
-
-    // get menuPrincipal() {
-    //     return this.menuData.get('menuPrincipal')
-    // }
-
-    // get menuSecundario() {
-    //     return this.menuData.get('menuSecundario')
-    // }
-
-    // get date() {
-    //     return this.menuData.get('date')
-    // }
 
     public deleteMenu() {
         const message = "¿Seguro que quiere elminar este menu?"
@@ -131,14 +123,20 @@ export class MenuDialogComponent implements OnInit {
         })
     }
 
+    public toggleUpdateMenu() {
+        this.toggleEditMenu = !this.toggleEditMenu
+    }
+    
     public updateMenu() {
-        // this.openConfirmCancelDialog("¿Seguro que quiere actualizar este menu?")
-        // .afterClosed().subscribe(result => {
-        //     if (result) {
-        //         const menu: Menu = { _id: this.data.day.menu._id, ...this.menuData.value }
-        //         this.socketIoService.updateMenu(`Bearer ${this.authService.token}`, menu)
-        //     }
-        // })
+        this.openConfirmCancelDialog("¿Seguro que quiere actualizar este menu?")
+        .afterClosed().subscribe(result => {
+            if (result) {
+                const menu: Menu = { _id: this.data.day.menu._id, ...this.menuData.value }
+                this.socketIoService.updateMenu(`Bearer ${this.authService.token}`, menu)
+            } else {
+                this.onNoClick()
+            }
+        })
     }
 
     public addtoMenu(value: string) {
@@ -147,7 +145,7 @@ export class MenuDialogComponent implements OnInit {
             if (result) {
                 this.socketIoService.addToMenu(`Bearer ${this.authService.token}`, this.menu._id, value, new Date())
             } else {
-                this.dialogRef.close(true) 
+                this.onNoClick()
             }
         })
     }
@@ -158,7 +156,7 @@ export class MenuDialogComponent implements OnInit {
             if (result) {
                 this.socketIoService.dropToMenu(`Bearer ${this.authService.token}`, menuId)
             } else {
-                this.dialogRef.close(true) 
+                this.onNoClick()
             }
         })
     }

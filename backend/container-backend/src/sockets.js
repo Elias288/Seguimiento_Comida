@@ -110,6 +110,12 @@ module.exports = (io) => {
             if (menu.menuPrincipal.length >= 255 || menu.menuSecundario.length >= 255){
                 return socket.emit('server:error', { message: 'Cantidad de caracteres excedido' })
             }
+
+            const menuDate = await menuServices.getMenuByDate(menu.date)
+            if (!menuDate.isError && menuDate._id != menu._id) {
+                return socket.emit('server:error', { message: 'Ya hay un menú registrado en esa fecha' })
+            }
+
             menuServices.updateMenu(menu).then(async data => {
                 if (data.isError) {
                     console.error(new Error(data.name))

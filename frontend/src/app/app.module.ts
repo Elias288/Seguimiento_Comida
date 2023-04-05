@@ -22,6 +22,12 @@ import { UsersTableComponent } from './components/users-table/users-table.compon
 import { RolesFormComponent } from './components/roles-form/roles-form.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';'@angular/material/core';
+import {
+    MAT_MOMENT_DATE_FORMATS,
+    MomentDateAdapter,
+    MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+  } from '@angular/material-moment-adapter';
 
 @NgModule({
   declarations: [
@@ -50,7 +56,16 @@ import { ConfirmationComponent } from './pages/confirmation/confirmation.compone
     AppRoutingModule,
     HttpClientModule,
   ],
-  providers: [CanAccesService],
+  providers: [
+    CanAccesService,
+    {provide: MAT_DATE_LOCALE, useValue: 'es-ES'},
+    {
+        provide: DateAdapter,
+        useClass: MomentDateAdapter,
+        deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
