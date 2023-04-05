@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -17,14 +17,14 @@ import { MatTableDataSource } from '@angular/material/table';
     providers: []
 })
 export class MenuDialogComponent implements OnInit {
-    day!: any                           // TODA LA INFORMACIÓN DEL DIA
-    menu!: Menu                         // TODA LA INFORMACIÓN DEL MENU
-    completeDate!: Date                 // FECHA COMPLETA DEL MENU
-    canBeAddedToMenu: boolean = false   // PUEDE AGREGARSE AL MENÚ
-    canManageMenus: boolean = false     // PUEDE ADMINISTAR MENUS
-    myId!: string                       // ID DEL USUARIO LOGUEADO
-    usersInMenu!: Array<User>           // USUARIOS EN EL MENU
-    mySelection!: string | undefined    // SI EL USUARIO YA ESTÁ EN EL MENU, CUAL MENU ESTÁ SELECCIONADO
+    day: any = this.data.day                                // TODA LA INFORMACIÓN DEL DIA
+    menu: Menu = this.day.menu                              // TODA LA INFORMACIÓN DEL MENU
+    completeDate: Date = this.data.completeDate             // FECHA COMPLETA DEL MENU
+    mySelectedMenu: string = this.data.mySelectedMenu       // MENU DEL USUARIO LOGUEADO
+    canBeAddedToMenu: boolean = this.data.canBeAddedToMenu  // PUEDE AGREGARSE AL MENÚ
+    canManageMenus: boolean = this.data.canManageMenus      // PUEDE ADMINISTAR MENUS
+    usersInMenu!: Array<User>                               // USUARIOS EN EL MENU
+
     dataCountMenuOption = [{ MP: 0, MS: 0, total: 0 }]
     displayedCountColumns: Array<string> = [ 'menu_principal', 'menu_secundario', 'total' ]
     dataComensales: any
@@ -32,7 +32,7 @@ export class MenuDialogComponent implements OnInit {
 
     menuData!: FormGroup 
     matButtonToggleGroup!: any 
-
+    toggleEditMenu: Boolean = false
 
     constructor(
         public dialogRef: MatDialogRef<MenuDialogComponent>,
@@ -42,15 +42,16 @@ export class MenuDialogComponent implements OnInit {
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
         private _liveAnnouncer: LiveAnnouncer,
+        public fb: FormBuilder,
     ) {
         socketIoService.getWebSocketError((error: any) => {
             this._snackBar.open(error.message, 'close', { duration: 5000 })
-            this.dialogRef.close(true)
+            this.onNoClick()
         })
 
         this.socketIoService.getAddedMenu(() => {
             this._snackBar.open('Agregado al menu', 'close', { duration: 5000 })
-            this.dialogRef.close(true)
+            this.onNoClick()
         })
 
         this.socketIoService.getDeletedToMenu(() => {
@@ -70,9 +71,6 @@ export class MenuDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.day = this.data.day
-        this.menu = this.day.menu
-        this.completeDate = this.data.completeDate
         if (this.menu.users) {
             this.usersInMenu = this.menu.users
             this.dataCountMenuOption = [{ 
@@ -93,20 +91,7 @@ export class MenuDialogComponent implements OnInit {
                     }
                 })
             );
-            
         }
-
-        this.authService.getUser().subscribe({
-            next: (v) => {
-                this.myId = v._id
-                this.canBeAddedToMenu = v.rol >= 0
-                this.canManageMenus = v.rol == 0 || v.rol == 1
-                this.mySelection = this.menu.users?.length == 0 || !this.menu.users?.find(user => user._id == this.myId) 
-                    ? undefined 
-                    : this.usersInMenu.find(user => user._id == this.myId)?.Menu_User?.selectedMenu
-            },
-            error: (e) => console.error(e)
-        })
 
         this.menuData = new FormGroup ({
             menuPrincipal: new FormControl<string>(this.menu.menuPrincipal, [
@@ -120,17 +105,13 @@ export class MenuDialogComponent implements OnInit {
         })
     }
 
-    get menuPrincipal() {
-        return this.menuData.get('menuPrincipal')
+    onNoClick(): void {
+        this.dialogRef.close()
     }
-
-    get menuSecundario() {
-        return this.menuData.get('menuSecundario')
-    }
-
-    get date() {
-        return this.menuData.get('date')
-    }
+    
+    registrationForm = this.fb.group({
+        menuOption: [this.mySelectedMenu, [Validators.required]]
+    })
 
     public deleteMenu() {
         const message = "¿Seguro que quiere elminar este menu?"
@@ -142,14 +123,20 @@ export class MenuDialogComponent implements OnInit {
         })
     }
 
+    public toggleUpdateMenu() {
+        this.toggleEditMenu = !this.toggleEditMenu
+    }
+    
     public updateMenu() {
-        // this.openConfirmCancelDialog("¿Seguro que quiere actualizar este menu?")
-        // .afterClosed().subscribe(result => {
-        //     if (result) {
-        //         const menu: Menu = { _id: this.data.day.menu._id, ...this.menuData.value }
-        //         this.socketIoService.updateMenu(`Bearer ${this.authService.token}`, menu)
-        //     }
-        // })
+        this.openConfirmCancelDialog("¿Seguro que quiere actualizar este menu?")
+        .afterClosed().subscribe(result => {
+            if (result) {
+                const menu: Menu = { _id: this.data.day.menu._id, ...this.menuData.value }
+                this.socketIoService.updateMenu(`Bearer ${this.authService.token}`, menu)
+            } else {
+                this.onNoClick()
+            }
+        })
     }
 
     public addtoMenu(value: string) {
@@ -158,7 +145,7 @@ export class MenuDialogComponent implements OnInit {
             if (result) {
                 this.socketIoService.addToMenu(`Bearer ${this.authService.token}`, this.menu._id, value, new Date())
             } else {
-                this.dialogRef.close(true) 
+                this.onNoClick()
             }
         })
     }
@@ -169,7 +156,7 @@ export class MenuDialogComponent implements OnInit {
             if (result) {
                 this.socketIoService.dropToMenu(`Bearer ${this.authService.token}`, menuId)
             } else {
-                this.dialogRef.close(true) 
+                this.onNoClick()
             }
         })
     }
