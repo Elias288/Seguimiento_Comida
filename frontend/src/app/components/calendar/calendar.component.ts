@@ -82,7 +82,7 @@ export class CalendarComponent implements OnInit{
             next: (v) => {
                 this.myId = v._id
                 this.canBeAddedToMenu = v.rol >= 0
-                this.canManageMenus = v.rol >= 0 || v.rol < 2
+                this.canManageMenus = v.rol >= 0 && v.rol < 2
             },
             error: (e) => console.error(e)
         })
