@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
 const { v4: uuidv4 } = require('uuid')
 
-exports.createUser = (name, surName, email, password, roles) => {
+exports.createUser = async (name, surName, email, password) => {
     const hashedPassword = bcrypt.hashSync(password, 8);
 
     const userData = {
@@ -17,17 +17,28 @@ exports.createUser = (name, surName, email, password, roles) => {
         surName,
         email,
         password: hashedPassword,
-        roles,
+        rol: -1, // se crea sin rol
         emailVerified: 0,
+    }
+
+    const user = await User.findOne({ where: { email } })
+    if (user){
+        return {
+            isError: true,
+            name: "alreadyCreated",
+            message: "Usuario ya creado"
+        }
     }
 
     return User.create(userData)
     .then((user) => {
         return { isError: false, data: sendConfirmationEmail(user) }
-    }).catch(() => {
+    }).catch((err) => {
+        console.log(err);
         return {
             isError: true,
-            name: 'notDataError'
+            name: 'notDataError',
+            message: "Error de servidor"
         }
     })
 }
@@ -160,7 +171,7 @@ exports.updateUser = (id, user) => {
     })
 }
 
-exports.enterToMenu = async (menuId, selectedMenu, userId) => {
+exports.enterToMenu = async (menuId, selectedMenu, userId, entryDate) => {
     if (selectedMenu != 'MP' && selectedMenu != 'MS') {
         console.error(new Error("invalidData"))
         return { name: "invalidData", message: 'Error en el menu seleccionado' }
@@ -168,9 +179,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
 
     const user = await User.findByPk(userId)
     const menu = await Menu.findByPk(menuId)
-
-    const msBetweenDates = menu.date.getTime() - new Date().getTime();
-    const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
+    const menu_user = await Menu_User.findAndCountAll({ where: { menuId } })
 
     if (!user) {
         return {
@@ -186,6 +195,9 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
             message: 'Menu no encontrado'
         }
     }
+
+    const msBetweenDates = menu.date.getTime() - entryDate.getTime();
+    const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
     if (hoursBetweenDates <= 0) {
         console.error(new Error("outOfTime"))
         return { 
@@ -194,7 +206,15 @@ exports.enterToMenu = async (menuId, selectedMenu, userId) => {
         }
     }
 
-    await user.addMenus(menu, { through: { selectedMenu } })
+    if (menu_user.count > 12) {
+        console.error(new Error("outOfTime"))
+        return { 
+            isError: true,
+            name: "amountExceeded"
+        }
+    }
+
+    await user.addMenus(menu, { through: { selectedMenu, entryDate } })
 
     return {
         isError: false,

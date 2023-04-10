@@ -1,0 +1,214 @@
+<div class="container">
+    <mat-toolbar class="indexNavbar">
+        <button 
+            mat-icon-button class="example-icon"
+            aria-label="Example icon-button with menu icon"
+            class="toggleBtnMenu"
+            (click)="toggleMenu()">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <span>Pagina de ayudas</span>
+    </mat-toolbar>
+
+    <div class="content">
+        <div class="indice" [class.is-open]="isMenuOpen">
+            <ul>
+                <li>
+                    <a mat-button (click)="toggleMenu()" href="/helps#introduccion">Introducción</a>
+                </li>
+                <li>
+                    <a mat-button (click)="toggleMenu()" href="/helps#roles">Roles de usuarios</a>
+                </li>
+                <li>
+                    <a mat-button (click)="toggleMenu()" href="/helps#menu">Menú</a>
+                    <ul>
+                        <li>
+                            <a mat-button (click)="toggleMenu()" href="/helps#crearMenu">Crear Menú</a>
+                        </li>
+                        <li>
+                            <a mat-button (click)="toggleMenu()" href="/helps#editarMenu">Editar Menú</a>
+                        </li>
+                        <li>
+                            <a mat-button (click)="toggleMenu()" href="/helps#eliminarMenu">Eliminar Menú</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a mat-button (click)="toggleMenu()" href="/helps#agregarseAMenu">Agregarse a Menú</a>
+                </li>
+                <li>
+                    <a mat-button (click)="toggleMenu()" href="/helps#quitarseDeMenu">Quitarse de Menú</a>
+                </li>
+            </ul>
+        </div>
+    
+        <div class="sections">
+            <section class="introduccion" id="introduccion">
+                <h2>Introducción</h2>
+                
+                <p><strong>"Seguimiento de comidas - sofka"</strong> es una aplicación web que busca simplificar, automatizar y prevenir errores en la trazabilidad de los almuerzos en la empresa, ademas de ofrecer una forma de llevar un control más estricto de las mismas.</p>
+                <p>Está aplicación web ofrece un calendario y distintas funciones con las cuales los usuarios puedan interactuar de tal forma que permita llevar un registro de los almuerzos que la empresa necesita. Permitiendo saber los menus de los almuerzos programados, cuantos comensales se registran y especificamente que menu (principal o secundario) se necesitan para el día.</p>
+                <p>Permite ademas limitar de forma tecnica cuantos comensales se pueden registrar por menú del día, y los horarios para registrar o para agregarse a un menú, ofreciendo a los cocineros fiabilidad de saber cuantos menús serán necesarios.</p>
+                <mat-card class="matCard">
+                    <mat-card-header></mat-card-header>
+                    <img mat-card-image src="assets/images/pagina_inicio.png" alt="Pagina de inicio">
+                    <mat-card-content>
+                        <p>Calendario inicial donde se muestran los menues.</p>
+                    </mat-card-content>
+                </mat-card>
+            </section>
+            
+            <section class="roles" id="roles">
+                <h2>Roles de usuarios</h2>
+            
+                <p>Para mantener un control de lo que se puede y no se puede hacer en la aplicación, los usuarios cuentan con roles, teniendo asi limitada las acciones por el rol que tienen asignado. Estos roles se comportan de forma jerarquica, los usuarios con roles más arriba pueden hacer lo que los roles de abajo, además de sus propias caracteristicas</p>
+                <p>Estos roles son:</p>
+        
+                <ul>
+                    <li>
+                        <strong>Administrador:</strong><p>Los usuarios con este rol tienen absoluto control de la aplicación web, pueden realizar todas las acciones de los otros roles y pueden asignar los roles de los demás usuarios.</p>
+                    </li>
+                    <li>
+                        <strong>Cocinero:</strong><p>Los usuarios con este rol pueden dar de alta, modificar y eliminar menús.</p>
+                    </li>
+                    <li>
+                        <strong>Comensal:</strong><p>Los usuarios con este rol simplemente pueden registrarse o darse de baja de los menús creados por los cocineros.</p>
+                    </li>
+                </ul>
+            </section>
+        
+            <section class="menu" id="menu">
+                <h2>Menú</h2>
+        
+                <div class="sectionContent">
+                    <div>
+                        <p>Los menús son la parte más importante de esta aplicación, cada menú estará conformado por un menú principal (obligatiorio), un menú secundario (opcional), la fecha en la que será servido y una lista de usuarios que solicitaron uno de los menús, si el menú cuenta con las 2 opciones un usuario podrá elegir uno, en el caso contrario solamente el que este registrado.</p>
+                        <p>En el calendario de la pagina principal cada menú mostrará las opciones de menú registrados y la cantidad total de comensales sea cual sea su opción. Para ver las cantidades especificas de cada opcion es necesario abrir el menú e ir a la opción de "Cantidades".</p>
+                        <p>En la pestaña de "Comensales" se podrá ver información del comensal que permita llevar una trazabilidad, como que opción de menú eligio y a que hora lo hizo.</p>
+                    </div>
+                    <mat-card class="matCard">
+                          <mat-card-header></mat-card-header>
+                        <img mat-card-image src="assets/images/menu_dialog.png" alt="Menu">
+                        <mat-card-content>
+                            <p>Panel de información de menú</p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+        
+                <section class="crearMenu" id="crearMenu">
+                    <h3>Crear Menú</h3>
+                    <div>
+                        <p>Para crear un menú es necesario tener el rol de cocinero o superior. Al contar con este rol en el calendario para cada día se mostrarán la opcion de "Agregar Menú" o también en la barra superior.</p>
+                        <p>Al hacer click aparecerá un dialog donde se registrará un menu principal (obligatorio), un menú secundario (opcional) y la fecha en la que será servido.</p>
+
+                        <mat-card class="matCard large">
+                            <mat-card-header></mat-card-header>
+                            <img mat-card-image src="assets/images/Agregar_menu.png" alt="Agregar menu">
+                            <mat-card-content>
+                                <p>Botón que teniendo el rol necesario aparecerá en cada día hábil.</p>
+                            </mat-card-content>
+                        </mat-card>
+    
+                        <mat-card class="matCard large">
+                            <mat-card-header></mat-card-header>
+                            <img mat-card-image src="assets/images/Agregar_menu_dialog.png" alt="Dialog de agregar menú">
+                            <mat-card-content>
+                                <p>Formulario para la creación de menues.</p>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </section>
+                    
+            
+                <section class="editarMenu" id="editarMenu">
+                    <h3>Modificar Menú</h3>
+                    <div>
+                        <p>Teniendo el rol de cocinero o superior, la abrir un menú aparecerá la opción de editar menú.</p>
+                        <p>Al hacer click se desplegara un formulario como el siguiente que permitirá editar las opciones de menú y la fecha. Al hacer click en el botón de aceptar aparecerá un dialogo de confirmación y se modificará el menú.</p>
+
+                        <mat-card class="matCard">
+                            <mat-card-header></mat-card-header>
+                            <img mat-card-image src="assets/images/Editar-Borrar.png" alt="Botones de editar y borrar menú">
+                            <mat-card-content>
+                                <p>Opciones exclusivas de los roles que pueden administrar menues, como cocineros y administradores.</p>
+                            </mat-card-content>
+                        </mat-card>
+                        <mat-card class="matCard">
+                            <mat-card-header></mat-card-header>
+                            <img mat-card-image src="assets/images/Editar_menu.png" alt="Fromulario de modificación de menú">
+                            <mat-card-content>
+                                <p>Formulario para edición de menues. Al cambiar de fecha es necesario que no haya un menú antes en esa misma fecha o devolverá un mensaje de error.</p>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </section>
+            
+                <section class="eliminarMenu" id="eliminarMenu">
+                    <h3>Eliminar Menú</h3>
+                    <div>
+                        <p>Teniendo el rol de cocinero o superior, la abrir un menú aparecerá la opción de borrar menú, que eliminará el menú con todo su contenido a todos.</p>
+                        <mat-card class="matCard">
+                            <mat-card-header></mat-card-header>
+                            <img mat-card-image src="assets/images/Borrar-Editar.png" alt="Botones de borrar y editar menú">
+                            <mat-card-content>
+                                <p>Opciones exclusivas de los roles que pueden administrar menues, como cocineros y administradores.</p>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </section>
+            </section>
+            
+            <section class="agregarseAMenu" id="agregarseAMenu">
+                <h2>Agregarse a un Menú</h2>
+                <div>
+                    <p>Teniendo al menos un rol cualquiera que sea, aparecerán las opciónes de menú que estén disponibles.</p>
+                    <p>Si no se está agregado al menú aparecerá el botón de darse de baja desabilitado y los botones con un borde oscuro.</p>
+                    <p>Al hacer click en una de las opciones aparecerá un dialogo de confirmación y se dara de alta, apareciendo en la información del menú en la parte inferior la cantidad de comensales en cada menú y en la pestaña de comensales la información de hora y usuario que se agregó.</p>
+
+                    <mat-card class="matCard">
+                        <mat-card-header></mat-card-header>
+                        <img mat-card-image src="assets/images/Sumarse_a_menú_1.png" alt="Opciones de menú">
+                        <mat-card-content>
+                            <p>Opciones de menú.</p>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card class="matCard">
+                        <mat-card-header></mat-card-header>
+                        <img mat-card-image src="assets/images/Darse_de_baja.png" alt="Opciones de menú">
+                        <mat-card-content>
+                            <p>Menú seleccionado.</p>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card class="matCard">
+                        <mat-card-header></mat-card-header>
+                        <img mat-card-image src="assets/images/Cantidades.png" alt="Cantidades">
+                        <mat-card-content>
+                            <p>Cantidad de usuario por menú.</p>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card class="matCard">
+                        <mat-card-header></mat-card-header>
+                        <img mat-card-image src="assets/images/Comensales.png" alt="Comensales">
+                        <mat-card-content>
+                            <p>Lista de comensales con información.</p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </section>
+            
+            <section class="quitarseDeMenu" id="quitarseDeMenu">
+                <h2>Quitarse de un Menú</h2>
+                <div>
+                    <p>Teniendo al menos un rol cualquiera que sea y estando sumado a un menú, se puede dar de baja simplemente apretando el botón de darse de baja en el menú.</p>
+                    <mat-card class="matCard">
+                        <mat-card-header></mat-card-header>
+                        <img mat-card-image src="assets/images/Darse_de_baja.png" alt="Opciones de menú">
+                        <mat-card-content>
+                            <p>Menú seleccionado con botón de darse de baja habilitado.</p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

@@ -3,9 +3,13 @@
         <h3>Agregar Roles al usuario</h3>
     </div>
     <form novalidate [formGroup]="rolesForm">
-        <mat-checkbox formControlName="admin">ADMIN</mat-checkbox>
-        <mat-checkbox formControlName="comensal">COMENSAL</mat-checkbox>
-        <mat-checkbox formControlName="cocinero">COCINERO</mat-checkbox>
+
+        <mat-radio-group aria-label="Select an option" formControlName="rol" class="radioRoles">
+            <mat-radio-button value="0">Admin</mat-radio-button>
+            <mat-radio-button value="1">Cocinero</mat-radio-button>
+            <mat-radio-button value="2">Comensal</mat-radio-button>
+            <mat-radio-button value="-1">Sin rol</mat-radio-button>
+          </mat-radio-group>
 
         <button mat-raised-button color="primary" (click)="updateRoles()">Aceptar</button>
     </form>

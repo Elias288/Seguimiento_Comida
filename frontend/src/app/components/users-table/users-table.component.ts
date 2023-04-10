@@ -20,6 +20,13 @@ export class UsersTableComponent implements OnInit{
     @Input() myId!: string
     @Input() jwt!: string
     @Output() actions: EventEmitter<object> = new EventEmitter<object>()
+    ROLES = [
+        'ADMIN',     
+        'COCINERO',  
+        'COMENSAL',  
+        '',
+        ''           
+    ]
 
     usuarios!: Array<User>
     dataSource!: MatTableDataSource<User>
@@ -39,8 +46,7 @@ export class UsersTableComponent implements OnInit{
         this.columsDefinitions = [
             { def: 'name', label: 'name', hide: true },
             { def: 'email', label: 'email', hide: true },
-            { def: 'surname', label: 'surname', hide: true },
-            { def: 'roles', label: 'roles', hide: true },
+            { def: 'rol', label: 'rol', hide: true },
             { def: 'actions', label: 'actions', hide: this.hasActions},
         ]
     }
@@ -53,6 +59,7 @@ export class UsersTableComponent implements OnInit{
                     if(a._id == this.myId) return -1
                     return 0
                 })
+                this.usuarios.map(u => u.rol = this.ROLES[parseInt(u.rol)])
             },
             error: (e) => {
                 console.error(e);

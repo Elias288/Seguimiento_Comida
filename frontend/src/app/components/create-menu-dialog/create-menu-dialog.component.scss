@@ -7,8 +7,11 @@
     box-sizing: border-box;
 
     .title {
-        padding: .5rem 0;
-        text-align: center;
+        padding: .5rem 0; 
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        width: 100%;
     }
 }
 
@@ -28,10 +31,6 @@ form {
 
 /* TABLET */
 @media screen and (min-width: 450px) {
-    // .container {
-    //     padding: 0;
-    // }
-
     .createMenu * {
         max-width: 400px;
     }

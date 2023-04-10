@@ -1,35 +1,64 @@
 const menuServices = require('./services/menu.services')
 const userServices = require('./services/user.services')
+const notificationServices = require('./services/notification.service')
 const jwt = require('jsonwebtoken')
 
-const ROLES = [
-    'ADMIN',
-    'COMENSAL',
-    'COCINERO'
-]
+//''            -1
+//'ADMIN',      0
+//'COCINERO'    1
+//'COMENSAL',   2
+//'All'         3
 
 module.exports = (io) => {
     io.on('connection', (socket) => {
         // console.log('new user connected:', socket.id);
 
+        socket.on('client:joinToRoom', (userRol) => {
+            socket.join(userRol)
+        })
+
         const emitMenues = async () => {
             const menues = await menuServices.getAllMenu()
             socket.emit('server:loadMenues', menues)
         }
-        emitMenues()
+
+        const emitNewNotificacion = (userId, userRol, message) => {
+            if (userId != "") {
+                return
+            }
+
+            io.to(userRol).emit('server:newNotification', message)
+        }
+        
+        socket.on('client:requestMenues', () => {
+            emitMenues()
+        })
+
+        socket.on('client:requestPersonalNotifications', async (data) => {
+            const { userId, userRol } = data
+
+            const userNotificaciones = await notificationServices.getByReceptor(userId)
+            const rolNotificaciones = await notificationServices.getByReceptorRole(userRol)
+            const emisorNotification = await notificationServices.getByEmisor(userId)
+            // console.log(userId, userNotificaciones.length, rolNotificaciones.length, emisorNotification.length);
+            
+
+            const notifications = userNotificaciones.concat(rolNotificaciones).concat(emisorNotification)
+
+            socket.emit('server:notifications', notifications)
+        })
 
         socket.on('client:newMenu', async (data) => {
             const { token, menu } = data
             const tokenData = verifyToken(token)
-            if (!tokenData) {
-                console.error(new Error('tokenNotProvidedError'))
-                return socket.emit('server:error', 'Token es necesario')
+            if (tokenData.isError){
+                return socket.emit('server:error', { message: res.message })
             }
+            
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (!checkRoles(user)) {
-                console.error(new Error('unauthorized'))
-                return socket.emit('server:error', 'No tiene la autorización necesaria')
+            if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1) {
+                return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
 
             const { menuPrincipal, menuSecundario, date } = menu
@@ -45,15 +74,14 @@ module.exports = (io) => {
         socket.on('client:deleteMenu', async (data) => {
             const { token, menuId } = data
             const tokenData = verifyToken(token)
-            if (!tokenData) {
-                console.error(new Error('tokenNotProvidedError'))
-                return socket.emit('server:error', 'Token es necesario')
+            if (tokenData.isError){
+                return socket.emit('server:error', { message: res.message })
             }
+            
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (!checkRoles(user)) {
-                console.error(new Error('unauthorized'))
-                return socket.emit('server:error', 'No tiene la autorización necesaria')
+            if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1) {
+                return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
             menuServices.deleteMenu(menuId).then(async data => {
                 if (data.isError) {
@@ -70,16 +98,24 @@ module.exports = (io) => {
         socket.on('client:updateMenu', async (data) => {
             const { token, menu } = data
             const tokenData = verifyToken(token)
-            if (!tokenData) {
-                console.error(new Error('tokenNotProvidedError'))
-                return socket.emit('server:error', 'Token es necesario')
+            if (tokenData.isError){
+                return socket.emit('server:error', { message: res.message })
             }
+            
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (!checkRoles(user)) {
-                console.error(new Error('unauthorized'))
-                return socket.emit('server:error', 'No tiene la autorización necesaria')
+            if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1) {
+                return socket.emit('server:error', { message: 'No tiene la autorización necesaria' })
             }
+            if (menu.menuPrincipal.length >= 255 || menu.menuSecundario.length >= 255){
+                return socket.emit('server:error', { message: 'Cantidad de caracteres excedido' })
+            }
+
+            const menuDate = await menuServices.getMenuByDate(menu.date)
+            if (!menuDate.isError && menuDate._id != menu._id) {
+                return socket.emit('server:error', { message: 'Ya hay un menú registrado en esa fecha' })
+            }
+
             menuServices.updateMenu(menu).then(async data => {
                 if (data.isError) {
                     console.error(new Error(data.name))
@@ -93,20 +129,19 @@ module.exports = (io) => {
         })
 
         socket.on('client:addToMenu', async (data) => {
-            const { token, menuId, selectedMenu } = data
+            const { token, menuId, selectedMenu, entryDate } = data
             const tokenData = verifyToken(token)
-            if (!tokenData) {
-                console.error(new Error('tokenNotProvidedError'))
-                return socket.emit('server:error', 'Token es necesario')
+            if (tokenData.isError){
+                return socket.emit('server:error', { message: res.message })
             }
+            
             const userData = await userServices.getUserById(tokenData.id),
             user = userData.data.dataValues
-            if (user.roles.length == 0) {
-                console.error(new Error('unauthorized'))
-                return socket.emit('server:error', 'No tiene la autorización necesaria')
+            if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 2) {
+                return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
 
-            userServices.enterToMenu(menuId, selectedMenu, tokenData.id).then(async data => {
+            userServices.enterToMenu(menuId, selectedMenu, tokenData.id, new Date(entryDate)).then(async data => {
                 if (data.isError) {
                     console.error(new Error(data.name))
                     return socket.emit('server:error', { ...data, message: 'Ya no es posible agendarse' })
@@ -121,15 +156,14 @@ module.exports = (io) => {
         socket.on('client:deleteToMenu', async (data) => {
             const { token, menuId } = data
             const tokenData = verifyToken(token)
-            if (!tokenData) {
-                console.error(new Error('tokenNotProvidedError'))
-                return socket.emit('server:error', 'Token es necesario')
+            if (tokenData.isError){
+                return socket.emit('server:error', { message: res.message })
             }
+
             const userData = await userServices.getUserById(tokenData.id),
-            user = userData.data.dataValues
-            if (!(user.roles.includes(ROLES[0]) || user.roles.includes(ROLES[1]))) {
-                console.error(new Error('unauthorized'))
-                return socket.emit('server:error', 'No tiene la autorización necesaria')
+            user = userData.data?.dataValues
+            if (user.rol == null || user.rol == undefined || user.rol == -1 ||  user.rol > 2) {
+                return socket.emit('server:error', { message: 'No tiene la autorización necesaria'})
             }
 
             userServices.dropToMenu(menuId, tokenData.id).then(async data => {
@@ -143,17 +177,42 @@ module.exports = (io) => {
                 io.emit('server:loadMenues', menues)
             })
         })
+
+        socket.on('client:requestRol', async (data) => {
+            // notificar a administradores la solicitud de rol
+            // guardar en BD la notificación para mostrar cuando un admin se conecte
+
+            const { token, emisor } = data
+            const name = "requestRol", message = "solicitud de rol", receptorRol = 0
+            
+            const tokenData = verifyToken(token)
+            if (tokenData.isError){
+                return socket.emit('server:error', { message: res.message })
+            }
+
+            const creationResult = await notificationServices.createNotification(name, message, emisor._id, "", receptorRol)
+            if (creationResult.isError) {
+                console.error(new Error(creationResult.name))
+                return socket.emit('server:error', creationResult)
+            }
+
+            emitNewNotificacion("", "ADMIN", creationResult.notification)
+        })
     })
 }
 
 verifyToken = (token) => {
     if (!token) {
-        console.error(new Error('tokenNotProvidedError'))
-        return socket.emit('server:error','Token es requerido')
+        return {
+            isError: true,
+            message: 'Token es necesario'
+        }
     }
     if (!token.toLowerCase().startsWith('bearer')) {
-        console.error(new Error('accessDenied'))
-        return socket.emit('server:error', 'Acceso denegado')
+        return {
+            isError: true,
+            message: 'Acceso denegado'
+        }
     }
 
     try {
@@ -161,10 +220,9 @@ verifyToken = (token) => {
         return jwt.verify(subToken, process.env.SECRET)
     } catch (error) {
         console.error(new Error(error.name))
-        return socket.emit('server:error', error)
+        return {
+            isError: true,
+            error
+        }
     }
-}
-
-checkRoles = (user) => {
-    return user.roles.includes(ROLES[2]) || user.roles.includes(ROLES[0])
 }

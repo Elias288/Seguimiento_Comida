@@ -6,4 +6,6 @@ import { MatSidenav } from '@angular/material/sidenav';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent{}
+export class AppComponent{
+    title = "Seguimiento comida"
+}
