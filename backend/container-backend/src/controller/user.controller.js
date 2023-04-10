@@ -1,5 +1,8 @@
 var bcrypt = require('bcryptjs')
 const userServices = require('../services/user.services')
+const Joi = require("joi");
+const { tryCatch } = require('../services/tryCatch');
+const AppError = require('../middleware/AppError');
 
 //''            -1
 //'ADMIN',      0
@@ -7,41 +10,26 @@ const userServices = require('../services/user.services')
 //'COMENSAL',   2
 //'All'         3
 
-exports.create = (req, res, next) => {
+const createUserSchema = Joi.object({
+    name: Joi.string().required(),
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+    repeat_password: Joi.ref('password')
+})
+
+exports.create = tryCatch(async (req, res) => {
     const { name, surName, email, password, password2} = req.body 
+
+    const {error} = createUserSchema.validate({ name, email, password, repeat_password: password2 })
+    if (error) throw error
+
+    const data = await userServices.createUser(name, surName, email, password)
+    if (data.isError) {
+        throw new AppError(data.errorCode, data.details, data.status)
+    }
     
-    if (!name) {
-        console.error(new Error('missingData'))
-        return next({
-            name: 'missingData',
-            message: "Name es requerido"
-        })
-    }
-    if (!email) {
-        console.error(new Error('missingData'))
-        return next({
-            name: "missingData",
-            message: "Email es requerido"
-        })
-    }
-    if (!password) {
-        console.error(new Error('missingData'))
-        return next({
-            name: "missingData",
-            message: "Password es requerido"
-        })
-    }
-
-    if (password !== password2) return { isError: true, name: "passwordValidationError" }
-
-    return userServices.createUser(name, surName, email, password, 4).then(data => {
-        if (data.isError){
-            console.error(new Error(data.name))
-            return next(data)
-        }
-        return res.status(200).send({ message: 'Usuario creado exitosamente', user: data.user })
-    })
-}
+    return res.status(200).send({ message: 'Usuario creado exitosamente', user: data.user })
+})
 
 exports.confirmEmail = (req, res, next) => {
     const { token } = req.params

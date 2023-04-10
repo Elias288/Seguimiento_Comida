@@ -7,6 +7,7 @@ const Menu_User = db.Menu_User
 var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
 const { v4: uuidv4 } = require('uuid')
+const { ALREADY_CREATE, SERVER_ERROR } = require("../middleware/errorCodes")
 
 exports.createUser = async (name, surName, email, password) => {
     const hashedPassword = bcrypt.hashSync(password, 8);
@@ -25,20 +26,21 @@ exports.createUser = async (name, surName, email, password) => {
     if (user){
         return {
             isError: true,
-            name: "alreadyCreated",
-            message: "Usuario ya creado"
+            errorCode: ALREADY_CREATE,
+            details: "Usuario ya creado",
+            status: 400
         }
     }
 
-    return User.create(userData)
-    .then((user) => {
+    return User.create(userData).then((user) => {
+        if (process.env.DEV) return { isError: false } 
         return { isError: false, data: sendConfirmationEmail(user) }
     }).catch((err) => {
-        console.log(err);
         return {
             isError: true,
-            name: 'notDataError',
-            message: "Error de servidor"
+            errorCode: SERVER_ERROR,
+            details: "Error de servidor" + err,
+            status: 500
         }
     })
 }
@@ -103,7 +105,7 @@ exports.getUserById = (id) => {
         return {
             isError: true,
             name: 'missingData',
-            message: 'Id es requerida'
+            details: 'Id es requerida'
         }
     }
     return User.findByPk(id).then(data => {
@@ -111,7 +113,7 @@ exports.getUserById = (id) => {
             return {
                 isError: true,
                 name: 'notFound',
-                message: 'User no encontrado'
+                details: 'User no encontrado'
             }
         }
         return { data, isError: false }
@@ -125,7 +127,7 @@ exports.getUserById = (id) => {
 
 exports.getUserByEmail = (email) => {
     if (!email) {
-        return { isError: true, name: 'missingData', message: 'Email es requerido' }
+        return { isError: true, name: 'missingData', details: 'Email es requerido' }
     }
     return User.findOne({ where: { email } }).then(data => {
         if (!data) {
@@ -140,7 +142,7 @@ exports.getUserByEmail = (email) => {
 exports.login = async (email, password) => {
     const data = await this.getUserByEmail(email)
     if (data.isError) {
-        return { isError: true, name: data.name, message: data.message }
+        return { isError: true, name: data.name, details: data.details }
     }
     const user = data.data
     
@@ -174,7 +176,7 @@ exports.updateUser = (id, user) => {
 exports.enterToMenu = async (menuId, selectedMenu, userId, entryDate) => {
     if (selectedMenu != 'MP' && selectedMenu != 'MS') {
         console.error(new Error("invalidData"))
-        return { name: "invalidData", message: 'Error en el menu seleccionado' }
+        return { name: "invalidData", details: 'Error en el menu seleccionado' }
     }
 
     const user = await User.findByPk(userId)
@@ -185,14 +187,14 @@ exports.enterToMenu = async (menuId, selectedMenu, userId, entryDate) => {
         return {
             isError: true,
             name: 'notFound',
-            message: 'User no encontrado'
+            details: 'User no encontrado'
         }
     }
     if (!menu) {
         return {
             isError: true,
             name: 'notFound',
-            message: 'Menu no encontrado'
+            details: 'Menu no encontrado'
         }
     }
 
@@ -218,7 +220,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId, entryDate) => {
 
     return {
         isError: false,
-        message: 'Agregado correctamente',
+        details: 'Agregado correctamente',
     }
 }
 
@@ -230,14 +232,14 @@ exports.dropToMenu = async (menuId, userId) => {
         return {
             isError: true,
             name: 'notFound',
-            message: 'User no encontrado'
+            details: 'User no encontrado'
         }
     }
     if (!menu) {
         return {
             isError: true,
             name: 'notFound',
-            message: 'Menu no encontrado'
+            details: 'Menu no encontrado'
         }
     }
 
@@ -252,7 +254,7 @@ exports.dropToMenu = async (menuId, userId) => {
 
     return {
         isError: false,
-        message: 'Eliminado correctamente',
+        details: 'Eliminado correctamente',
     }
 }
 

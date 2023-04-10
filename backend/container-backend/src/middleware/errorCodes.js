@@ -1,0 +1,2 @@
+exports.ALREADY_CREATE = 300
+exports.SERVER_ERROR = 301
