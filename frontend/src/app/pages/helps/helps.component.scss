@@ -1,15 +1,154 @@
 $tabletSize: 450px;
 $pcSize: 850px;
+$navbarHeight: 60px;
 
-.container {
-    overflow: scroll;
-    padding: 0 2rem;
+// .container {
+// }
+
+h2, h3 {
+    font-family: Georgia, arial, serif; font-size: 38px;
 }
 
-img {
+h2:hover, h3:hover {
+    color: #92864d; text-decoration: none;
+}
+
+p {
     width: 100%;
-    
+    font-family: 'Inder', sans-serif; 
+    line-height: 28px; 
+    margin-bottom: 15px; 
+    color: #666;
+}
+
+.indexNavbar {
+    height: $navbarHeight;
+
+    .toggleBtnMenu {
+        @media screen and (min-width: $pcSize) {
+            display: none;
+        }
+    }
+}
+
+.indice {
+    padding: 0 .5rem;
+    margin: 0 10px;
+    border-right: 2px solid #bebebe;
+    background: rgba(255, 255, 255, 0.855);
+    z-index: 10;
+
+    @media screen and (max-width: $pcSize) {
+        display: none;
+        padding: 0;
+        margin: 0;
+        border: none;
+
+        &.is-open {
+            display: block;
+            position: absolute;
+            width: 100%;
+            background: rgb(255 255 255 / 95%);
+            margin: 0;
+            height: calc(100% - $navbarHeight * 2);
+        }
+    }
+
+    ul {
+        list-style: none;
+
+        @media screen and (min-width: $pcSize) {
+            width: max-content;
+        }
+
+        li {
+            a {
+                width: 100%;
+                padding: 1.3rem 2rem;
+                display: block;
+                height: auto;
+            }
+        }
+    }
+}
+
+
+.content {
     @media screen and (min-width: $pcSize) {
-        width: 550px;
+        display: flex;
+    }
+}
+
+.sections {
+    height: calc(100vh - $navbarHeight * 2);
+    overflow: scroll;
+
+    section {
+        padding: 0 1rem;
+        margin-bottom: 5rem;
+
+        > div {
+            @media screen and (min-width: $pcSize) {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: flex-start;
+            }
+        }
+
+        .matCard {
+            @media screen and (min-width: $pcSize) {
+                max-width: 30%;
+            }
+        }
+    }
+
+    .matCard .cardImages {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        @media screen and (min-width: $pcSize) {
+            flex-direction: row;
+        }
+    }
+
+    .introduccion {
+        @media screen and (min-width: $pcSize) {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .matCard {
+            @media screen and (min-width: $pcSize) {
+                max-width: 50%;
+            }
+        }
+    }
+    .menu {
+        .sectionContent{
+            display: flex;
+            flex-wrap: wrap;
+            @media screen and (min-width: $pcSize) {
+                flex-wrap: nowrap;
+            }
+            
+            .matCard {
+                width: 100%;
+                box-sizing: border-box;
+                
+                @media screen and (min-width: $pcSize) {
+                    margin-left: 5rem;
+                    max-width: 30%;
+                }
+            }
+
+        }
+        
+        section {
+            margin-top: 5rem;
+        }
     }
 }

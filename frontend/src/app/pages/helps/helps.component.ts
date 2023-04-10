@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-// import { logo } from 'assets/images/pagina_inicio.png'
+import { Component } from '@angular/core'
+import { Router } from '@angular/router'
 
 @Component({
     selector: 'app-helps',
@@ -7,5 +7,18 @@ import { Component } from '@angular/core';
     styleUrls: ['./helps.component.scss']
 })
 export class HelpsComponent {
-    // logo = logo
+    isMenuOpen: Boolean = false
+    
+    constructor(
+        private router: Router,
+    ){}
+
+    public toggleMenu() {
+        this.isMenuOpen = !this.isMenuOpen
+    }
+
+    public goToSection(section: string) {
+        this.toggleMenu()
+        this.router.navigate(['/helps'], { fragment: section })
+    }
 }

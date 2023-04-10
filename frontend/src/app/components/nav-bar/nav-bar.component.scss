@@ -63,7 +63,7 @@ $pcSize: 850px;
             top: #{$navbarHeight + 2};
             width: 100%;
             height: calc(100vh - #{$navbarHeight + 2});
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.95);
             z-index: 10;
         }
     }
