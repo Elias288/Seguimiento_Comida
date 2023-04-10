@@ -2,9 +2,9 @@
     <div class="body">
         <div class="header">
             <h1 mat-dialog-title class="title">Información del Menu</h1>
-            <div class="headerActions" *ngIf="canManageMenus">
-                <button mat-icon-button color="primary" aria-label="Editar Menú" (click)="toggleUpdateMenu()"><mat-icon>edit</mat-icon></button>
-                <button mat-icon-button color="warn" aria-label="Borrar Menú" (click)="deleteMenu()"><mat-icon>delete</mat-icon></button>
+            <div class="headerActions">
+                <button mat-icon-button color="primary" aria-label="Editar Menú" (click)="toggleUpdateMenu()" *ngIf="canManageMenus"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button color="warn" aria-label="Borrar Menú" (click)="deleteMenu()" *ngIf="canManageMenus"><mat-icon>delete</mat-icon></button>
                 <a mat-icon-button href="/helps#menu"><mat-icon>question_mark</mat-icon></a>
             </div>
         </div>
