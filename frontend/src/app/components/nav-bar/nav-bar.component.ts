@@ -86,6 +86,11 @@ export class NavBarComponent implements OnInit{
         this.router.navigate([`/perfil/${this.myId}`])
     }
 
+    public goToHelps() {
+        this.toggleMenu()
+        this.router.navigate(['/helps'])
+    }
+
     public logout() {
         this.authService.logout()
     }

@@ -22,6 +22,7 @@ import { UsersTableComponent } from './components/users-table/users-table.compon
 import { RolesFormComponent } from './components/roles-form/roles-form.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
+import { HelpsComponent } from './pages/helps/helps.component';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';'@angular/material/core';
 import {
     MAT_MOMENT_DATE_FORMATS,
@@ -47,6 +48,7 @@ import {
     RolesFormComponent,
     PerfilComponent,
     ConfirmationComponent,
+    HelpsComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
