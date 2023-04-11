@@ -27,7 +27,7 @@ export class CreateMenuDialogComponent implements OnInit {
         if (data.date != 0) this.fecha = new Date(parseInt(data.date as string, 10))
 
         socketIoService.getWebSocketError((error: any) => {
-            this._snackBar.open(error.message, 'close', { duration: 5000 })
+            this._snackBar.open(error.errorMessage, 'close', { duration: 5000 })
             this.dialogRef.close(true)
         })
 

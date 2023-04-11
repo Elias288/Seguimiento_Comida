@@ -29,6 +29,8 @@ DB_PASSWORD=
 DB_NAME=Pcomida_db
 DB_PORT=3306
 
+DEV=TRUE
+
 SECRET= #cadena de encriptacion de contraseñas 
 PORT=8080 #backend port
 

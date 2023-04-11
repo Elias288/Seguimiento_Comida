@@ -45,7 +45,7 @@ export class MenuDialogComponent implements OnInit {
         public fb: FormBuilder,
     ) {
         socketIoService.getWebSocketError((error: any) => {
-            this._snackBar.open(error.message, 'close', { duration: 5000 })
+            this._snackBar.open(error.errorMessage, 'close', { duration: 5000 })
             this.onNoClick()
         })
 
