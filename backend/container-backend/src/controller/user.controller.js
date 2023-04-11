@@ -12,10 +12,12 @@ var jwt = require('jsonwebtoken')
 //'COMENSAL',   2
 //'All'         3
 
+const validEmails = ['com', 'net', 'co', 'uy']
+
 const createUserSchema = Joi.object({
     name: Joi.string(),
     email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'co', 'uy'] } }).required(),
+        .email({ minDomainSegments: 2, tlds: { allow: validEmails } }).required(),
 
     password: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
@@ -28,7 +30,7 @@ const createUserSchema = Joi.object({
 
 const loginUserSchema = Joi.object({
     email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+        .email({ minDomainSegments: 2, tlds: { allow: validEmails } }).required(),
     password: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
 })
