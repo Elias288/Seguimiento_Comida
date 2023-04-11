@@ -2,7 +2,7 @@ const AppError = require("./AppError");
 const { DEFAULT_ERROR } = require("./errorCodes");
 
 const handleSocketErrors = (error, socket) => {
-    console.log(`[${new Date()}]`, error);
+    console.error(`[${new Date()}]`, error);
 
     if (error instanceof AppError) {
         return socket.emit('server:error', { errorCode: error.errorCode, errorMessage: error.message })

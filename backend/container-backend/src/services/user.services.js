@@ -267,7 +267,7 @@ exports.enterToMenu = async (menuId, selectedMenu, userId, entryDate) => {
     }
 }
 
-exports.dropToMenu = async (menuId, userId) => {
+exports.dropToMenu = async (menuId, userId, dropDate) => {
     const user = await User.findByPk(userId)
     const menu = await Menu.findByPk(menuId)
 
@@ -286,6 +286,17 @@ exports.dropToMenu = async (menuId, userId) => {
             name: 'notFound',
             details: 'Menu no encontrado',
             statusCode: 404,
+        }
+    }
+
+    const msBetweenDates = menu.date.getTime() - dropDate.getTime();
+    const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
+    if (hoursBetweenDates <= 0) {
+        return { 
+            isError: true,
+            errorCode: INVALID_DATA,
+            details: 'Ya no es posible cambiar el registro',
+            statusCode: 400,
         }
     }
 

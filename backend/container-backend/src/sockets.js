@@ -133,7 +133,7 @@ module.exports = (io) => {
                 const menuData = await menuServices.updateMenu(menu)
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
     
-                console.log(`[${new Date()}] Menú: [${menu._id}] updated`)
+                console.log(`[${new Date()}] Menú: [${menu._id}] updated by [${tokenData.email}]`)
                 socket.emit('server:updatedMenu', true)
                 const menues = await menuServices.getAllMenu()
                 io.emit('server:loadMenues', menues)
@@ -172,7 +172,7 @@ module.exports = (io) => {
 
         socket.on('client:deleteToMenu', async (data) => {
             try {
-                const { token, menuId } = data
+                const { token, menuId, dropDate } = data
                 
                 const tokenData = verifyToken(token)
                 if (tokenData.isError)
@@ -184,7 +184,7 @@ module.exports = (io) => {
                     throw new AppError(UNAUTHORIZED, 'No tiene la autorización necesaria', 400)
                 }
     
-                const menuData = await userServices.dropToMenu(menuId, tokenData.id)
+                const menuData = await userServices.dropToMenu(menuId, tokenData.id, new Date(dropDate))
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
                 console.log(`[${new Date()}] User: [${user.email}] drop to menú [${menuId}]`)
