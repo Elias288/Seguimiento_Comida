@@ -1,58 +1,45 @@
+const AppError = require('../middleware/AppError')
 const menuServices = require('../services/menu.services')
+const { tryCatch } = require('../services/tryCatch')
 
-exports.findAll = async (req, res, next) => {
-    return menuServices.getAllMenu().then(data => {
-        res.status(200).send(data)
-    }).catch(error => {
-        next(error)
-    })
-}
+exports.findAll = tryCatch(async (req, res) => {
+    const data = await menuServices.getAllMenu()
+    res.status(200).send(data)
+})
 
-exports.findUsersByMenu = (req, res, next) => {
+exports.findUsersByMenu = tryCatch(async (req, res) => {
     const { menuId } = req.params
     
-    return menuServices.getUsersOfMenu(menuId).then(data => {
-        if (data.isError) {
-            console.error(new Error(data.name))
-            return next(data)
+    const data = await menuServices.getUsersOfMenu(menuId)
+    if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
+
+    const menu = data.data
+    const users = menu.users.map(user => {
+        return {
+            _id: user._id,
+            name: user.name,
+            surName: user.surName,
+            email: user.email,
+            selectedMenu: user.Menu_User.selectedMenu
         }
-        const menu = data.data
-        const users = menu.users.map(user => {
-            return {
-                _id: user._id,
-                name: user.name,
-                surName: user.surName,
-                email: user.email,
-                selectedMenu: user.Menu_User.selectedMenu
-            }
-        })
-        return res.status(200).send(users)
-
     })
-}
+    return res.status(200).send(users)
+})
 
-exports.findOneById = (req, res, next) => {
+exports.findOneById = tryCatch(async (req, res) => {
     const { menuId } = req.params
     
-    return menuServices.getMenuById(menuId).then(data => {
-        if (data.isError) {
-            console.error(new Error(data.name))
-            return next(data)
-        }
-        const menu = data.data
-        return res.status(200).send(menu)
-    })
-}
+    const data = await menuServices.getMenuById(menuId)
+    if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
+    const menu = data.data
+    return res.status(200).send(menu)
+})
 
-exports.findOneByDate = (req, res, next) => {
+exports.findOneByDate = tryCatch(async (req, res) => {
     const { date } = req.params
     
-    return menuServices.getMenuByDate(date).then(data => {
-        if (data.isError) {
-            console.error(new Error(data.name))
-            return next(data)
-        }
-        const menu = data.data
-        return res.status(200).send(menu)
-    })
-}
+    const data = await menuServices.getMenuByDate(date)
+    if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
+    const menu = data.data
+    return res.status(200).send(menu)
+})
