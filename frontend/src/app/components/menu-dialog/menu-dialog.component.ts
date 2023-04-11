@@ -45,7 +45,7 @@ export class MenuDialogComponent implements OnInit {
         public fb: FormBuilder,
     ) {
         socketIoService.getWebSocketError((error: any) => {
-            this._snackBar.open(error.message, 'close', { duration: 5000 })
+            this._snackBar.open(error.errorMessage, 'close', { duration: 5000 })
             this.onNoClick()
         })
 
@@ -154,7 +154,7 @@ export class MenuDialogComponent implements OnInit {
         this.openConfirmCancelDialog('Seguro que se quiere dar de baja del menu?')
         .afterClosed().subscribe(result => {
             if (result) {
-                this.socketIoService.dropToMenu(`Bearer ${this.authService.token}`, menuId)
+                this.socketIoService.dropToMenu(`Bearer ${this.authService.token}`, menuId, new Date())
             } else {
                 this.onNoClick()
             }

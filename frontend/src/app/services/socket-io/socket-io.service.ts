@@ -81,8 +81,8 @@ export class SocketIoService {
         this.socket.emit('client:addToMenu', { token, menuId, selectedMenu, entryDate })
     }
 
-    public dropToMenu = (token: string, menuId: string) => {
-        this.socket.emit('client:deleteToMenu', { token, menuId })
+    public dropToMenu = (token: string, menuId: string, dropDate: Date) => {
+        this.socket.emit('client:deleteToMenu', { token, menuId, dropDate })
     }
 
     public requestRol = (token: string, emisor: User) => {
