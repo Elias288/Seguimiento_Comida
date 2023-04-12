@@ -2,8 +2,13 @@ $tabletSize: 450px;
 $pcSize: 850px;
 $navbarHeight: 60px;
 
-// .container {
-// }
+.loading {
+    width: 100%;
+    height: calc(100vh - #{$navbarHeight + 2});
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 h2, h3 {
     font-family: Georgia, arial, serif; font-size: 38px;

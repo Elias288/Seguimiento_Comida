@@ -1,5 +1,9 @@
 <div class="container">
-    <div class="container-content">
+    <div class="loading" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+    </div>
+    
+    <div class="container-content" *ngIf="!loading">
         <header>
             <p class="current-date">{{currentDate}}</p>
             <div class="icons">
@@ -20,7 +24,7 @@
                     <li><strong>Sabado</strong></li>
                 </ul>
                 <ul class="days">
-                    <li *ngFor="let day of numbersDay" class="{{day.status}}">
+                    <li *ngFor="let day of numbersDay" [class.inactive]="day.status === 'inactive'" [class.today]="day.status === 'today'">
                         <p>{{day.numberDay}}</p>
                         
                         <div *ngIf="day.menu" class="menu" (click)="openDialog(day)">

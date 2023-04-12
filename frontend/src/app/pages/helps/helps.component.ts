@@ -8,10 +8,19 @@ import { Router } from '@angular/router'
 })
 export class HelpsComponent {
     isMenuOpen: Boolean = false
+    loading: boolean = true
     
     constructor(
         private router: Router,
-    ){}
+    ){
+        setTimeout(() => {
+            this.toggleLoading()
+        }, 500);
+    }
+
+    toggleLoading() {
+        this.loading = !this.loading
+    }
 
     public toggleMenu() {
         this.isMenuOpen = !this.isMenuOpen

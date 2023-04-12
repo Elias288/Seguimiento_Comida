@@ -26,8 +26,6 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-        
-
         this.loginForm = new FormGroup({
             email: new FormControl("", [
                 Validators.required,
@@ -43,7 +41,7 @@ export class LoginComponent implements OnInit {
 
     onSubmit(): void {
         this.authService.login(this.loginForm.controls['email'].value, this.loginForm.controls['password'].value).subscribe({
-            error: (e) => this._snackBar.open(e.error.message, 'close', { duration: 5000 }),
+            error: (e) => this._snackBar.open(e.error.errorMessage, 'close', { duration: 5000 }),
             complete: () => this.router.navigate(['home'])
         })
     }
