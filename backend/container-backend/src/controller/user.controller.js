@@ -1,6 +1,10 @@
 var bcrypt = require('bcryptjs')
 const userServices = require('../services/user.services')
+
 const Joi = require("joi");
+const { joiPasswordExtendCore } = require('joi-password');
+const joiPassword = Joi.extend(joiPasswordExtendCore);
+
 const { tryCatch } = require('../services/tryCatch');
 const AppError = require('../middleware/AppError');
 const { TOKEN_NO_PROVIDED, MISSING_DATA, UNAUTHORIZED } = require('../middleware/errorCodes');
@@ -19,8 +23,23 @@ const createUserSchema = Joi.object({
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: validEmails } }).required(),
 
-    password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+    password: joiPassword
+        .string()
+        .minOfSpecialCharacters(1)
+        .minOfLowercase(1)
+        .minOfUppercase(1)
+        .minOfNumeric(2)
+        .noWhiteSpaces()
+        .onlyLatinCharacters()
+        .messages({
+            'password.minOfUppercase': '{#label} debe contener al menos {#min} mayúsculas',
+            'password.minOfSpecialCharacters': '{#label} debe contener al menos {#min} caracter especial',
+            'password.minOfLowercase': '{#label} debe contener al menos {#min} minúsculas',
+            'password.minOfNumeric': '{#label} debe contener al menos {#min} números',
+            'password.noWhiteSpaces': '{#label} no debe contener espacios',
+            'password.onlyLatinCharacters': '{#label} debe contener solo caracteres latínos',
+        })
+        .required(),
     repeat_password: Joi.ref('password'),
 
     access_token: [
@@ -31,8 +50,23 @@ const createUserSchema = Joi.object({
 const loginUserSchema = Joi.object({
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: validEmails } }).required(),
-    password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+        password: joiPassword
+        .string()
+        .minOfSpecialCharacters(1)
+        .minOfLowercase(1)
+        .minOfUppercase(1)
+        .minOfNumeric(2)
+        .noWhiteSpaces()
+        .onlyLatinCharacters()
+        .messages({
+            'password.minOfUppercase': '{#label} debe contener al menos {#min} mayúsculas',
+            'password.minOfSpecialCharacters': '{#label} debe contener al menos {#min} caracter especial',
+            'password.minOfLowercase': '{#label} debe contener al menos {#min} minúsculas',
+            'password.minOfNumeric': '{#label} debe contener al menos {#min} números',
+            'password.noWhiteSpaces': '{#label} no debe contener espacios',
+            'password.onlyLatinCharacters': '{#label} debe contener solo caracteres latínos',
+        })
+        .required(),
 })
 
 exports.create = tryCatch(async (req, res) => {
