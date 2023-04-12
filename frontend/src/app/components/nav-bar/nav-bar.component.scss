@@ -2,15 +2,17 @@ $navbarHeight: 60px;
 $tabletSize: 450px;
 $pcSize: 850px;
 
+$background_color_1:#252525;
+$color_1_hover: #454545;
+
+$background_blue:#050531;
+$background_blue_hover: #070746;
+$color_orange: #ff9431;
+
 .navBar {
-    background: #252525;
+    background: $background_blue;
     color: #fff;
     height: $navbarHeight;
-
-    a {
-        text-decoration: none;
-        color: #454545;
-    }
 
     ul {
         display: flex;
@@ -33,19 +35,20 @@ $pcSize: 850px;
 }
 
 .home {
-    a {
-        padding: 0 20px;
-        text-decoration: none;
-        height: $navbarHeight;
-        line-height: $navbarHeight;
-        display: block;
-        text-transform: uppercase;
-        text-align: center;
-        box-sizing: border-box;
+    height: $navbarHeight;
+    padding: 5px 10px;
+    box-sizing: border-box;
 
-        &:hover {
-            background: #454545;
-            color: #fff;
+    @media screen and (min-width: $pcSize) {
+        padding: 10px 0;
+    }
+
+    a {
+        height: 100%;
+        display: block;
+
+        .sofkaLogo {
+            height: 100%;
         }
     }
 }
@@ -53,11 +56,13 @@ $pcSize: 850px;
 .menu {
     display: flex;
     align-items: center;
-
+    min-width: 700px;
+    
     @media screen and (max-width: $pcSize) {
         display: none;
-
+        
         &.is-open {
+            min-width: auto;
             display: block;
             position: absolute;
             top: #{$navbarHeight + 2};
@@ -75,7 +80,7 @@ $pcSize: 850px;
         padding: 0 20px;
         text-decoration: none;
         text-transform: uppercase;
-        color: #454545;
+        color: $color_orange;
         width: 100%;
         text-align: center;
         border-radius: 0;
@@ -83,8 +88,8 @@ $pcSize: 850px;
             display: flex;
 
         &:hover {
-            background: #454545;
-            color: #fff;
+            background: $background_blue_hover;
+            color: #ff7e06;
         }
 
         .warn {
@@ -92,6 +97,7 @@ $pcSize: 850px;
         }
 
         @media screen and (min-width: $pcSize) {
+            color: #cacaca;
             width: fit-content;
         }
     }

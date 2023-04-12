@@ -12,10 +12,12 @@ var jwt = require('jsonwebtoken')
 //'COMENSAL',   2
 //'All'         3
 
+const validEmails = ['com', 'net', 'co', 'uy']
+
 const createUserSchema = Joi.object({
     name: Joi.string(),
     email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'co', 'uy'] } }).required(),
+        .email({ minDomainSegments: 2, tlds: { allow: validEmails } }).required(),
 
     password: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
@@ -28,7 +30,7 @@ const createUserSchema = Joi.object({
 
 const loginUserSchema = Joi.object({
     email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+        .email({ minDomainSegments: 2, tlds: { allow: validEmails } }).required(),
     password: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
 })
@@ -42,7 +44,7 @@ exports.create = tryCatch(async (req, res) => {
     const data = await userServices.createUser(name, surName, email, password)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
     
-    console.log(`[${new Date()}]`, 'User:', data.user.email, 'created')
+    console.log(`[${new Date()}] Usuario: [${email}] creado`)
     return res.status(200).send({ message: 'Usuario creado exitosamente' })
 })
 
@@ -55,7 +57,7 @@ exports.confirmEmail = tryCatch(async (req, res) => {
     const data = await userServices.validateEmail(id)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
 
-    console.log(`[${new Date()}]`, 'User:', email, 'confirmed')
+    console.log(`[${new Date()}] Usuario: [${email}] confirmado`)
     return res.status(200).send({message: 'Email verificado'})
 })
 
@@ -119,7 +121,7 @@ exports.update = tryCatch(async (req, res) => {
     const data = await userServices.updateUser(tokenData.id, user)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
 
-    console.log(`[${new Date()}] User: [${email}] updated`)
+    console.log(`[${new Date()}] Usuario: [${email}] actualizado`)
     return res.status(200).send({ message: 'Usuario actualizado' })
 })
 
@@ -140,7 +142,7 @@ exports.addRole = tryCatch(async (req, res) => {
     const data = await userServices.updateUser(userId, userData)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
     
-    console.log(`[${new Date()}] User: [${userById}] rol change`)
+    console.log(`[${new Date()}] Usuario: [${tokenData.email}] rol cambiado`)
     return res.status(200).send({ message: 'Usuario actualizado' })
 })
 
@@ -158,6 +160,6 @@ exports.delete = tryCatch(async (req, res) => {
     const data = await userServices.deleteUser(userId)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
 
-    console.log(`[${new Date()}] User: [${userId}] deleted by [${userById.email}]`)
+    console.log(`[${new Date()}] Usuario: [${userId}] borrado por [${tokenData.email}]`)
     return res.status(200).send({ message: 'Usuario eliminado' })
 })

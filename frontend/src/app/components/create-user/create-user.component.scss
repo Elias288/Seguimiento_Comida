@@ -1,33 +1,22 @@
 $tabletSize: 450px;
 $pcSize: 850px;
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+$background_color_2:#050531;
+$background_2_hover: #070746;
+$color_2_hover: #ff9431;
 
-    width: 100%;
-    height: 100vh;
-    margin-bottom: 2rem;
+.container-title {
+    background: $background_color_2;
+    padding: 1rem 0 .5rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
 
-    padding: 0 .5rem 3rem;
-    box-sizing: border-box;
-
-    .title {
-        padding: .5rem 0;
+    h2 {
+        color: $color_2_hover;
+        font-family: 'Enriqueta', arial, serif; line-height: 1.25;
+        margin: 0 0 10px;
+        font-weight: bold;
         text-align: center;
-    }
-
-    @media screen and (min-width: $tabletSize) {
-        padding: 0;
-    }
-}
-
-.container-content {
-    padding-bottom: 3rem;
-
-    @media screen and (min-width: $tabletSize) {
-        max-width: 400px;
     }
 }
 

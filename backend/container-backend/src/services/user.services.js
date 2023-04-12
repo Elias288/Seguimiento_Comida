@@ -27,7 +27,7 @@ exports.createUser = async (name, surName, email, password) => {
         return {
             isError: true,
             errorCode: ALREADY_CREATE,
-            details: `Usuario ya creado [${user.email}]`,
+            details: `Correo [${user.email}] ya registrado`,
             statusCode: 400,
         }
     }

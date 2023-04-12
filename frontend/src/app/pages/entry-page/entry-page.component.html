@@ -1,0 +1,10 @@
+<div class="title">
+    <img src="assets/images/logo-sofka-blanco.png" alt="Logo Sofka" class="sofkaLogo">
+    <h1>Trazabilidad de Almuerzos</h1>
+</div>
+<div class="container">
+    <mat-card class="card">
+        <app-login *ngIf="routePaht"/>
+        <app-create-user *ngIf="!routePaht"/>
+    </mat-card>
+</div>

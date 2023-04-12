@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AngularHelpsComponent } from './angular-helps.component';
+import { EntryPageComponent } from './entry-page.component';
 
-describe('AngularHelpsComponent', () => {
-  let component: AngularHelpsComponent;
-  let fixture: ComponentFixture<AngularHelpsComponent>;
+describe('EntryPageComponent', () => {
+  let component: EntryPageComponent;
+  let fixture: ComponentFixture<EntryPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AngularHelpsComponent ]
+      declarations: [ EntryPageComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AngularHelpsComponent);
+    fixture = TestBed.createComponent(EntryPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
