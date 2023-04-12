@@ -21,9 +21,10 @@ export class MenuDialogComponent implements OnInit {
     menu: Menu = this.day.menu                              // TODA LA INFORMACIÓN DEL MENU
     completeDate: Date = this.data.completeDate             // FECHA COMPLETA DEL MENU
     mySelectedMenu: string = this.data.mySelectedMenu       // MENU DEL USUARIO LOGUEADO
+    usersInMenu!: Array<User>                               // USUARIOS EN EL MENU
+    
     canBeAddedToMenu: boolean = this.data.canBeAddedToMenu  // PUEDE AGREGARSE AL MENÚ
     canManageMenus: boolean = this.data.canManageMenus      // PUEDE ADMINISTAR MENUS
-    usersInMenu!: Array<User>                               // USUARIOS EN EL MENU
 
     dataCountMenuOption = [{ MP: 0, MS: 0, total: 0 }]
     displayedCountColumns: Array<string> = [ 'menu_principal', 'menu_secundario', 'total' ]

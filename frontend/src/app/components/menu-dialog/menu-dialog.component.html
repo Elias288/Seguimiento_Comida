@@ -10,7 +10,7 @@
         </div>
 
         <div mat-dialog-actions class="dialogActions">
-            <div [formGroup]="menuData" class="formEditMenu" *ngIf="toggleEditMenu">
+            <div [formGroup]="menuData" class="canManageMenus" *ngIf="canManageMenus && toggleEditMenu">
                 <mat-form-field appearance="fill">
                     <mat-label for="menuPrincipal">Menu Principal</mat-label>
                     <textarea  matInput
@@ -45,7 +45,7 @@
                 </div>
 
             </div>
-            <div class="radioActions" *ngIf="!toggleEditMenu">
+            <div class="canBeAddedToMenu" *ngIf="canBeAddedToMenu && !toggleEditMenu">
                 <form [formGroup]="registrationForm" class="options">
                     <input type="radio" id="MP" name="menuOption" value="MP" formControlName="menuOption" (change)="addtoMenu('MP')">
                     <label class="MenuPrincipal OptionBox" for="MP">{{menu.menuPrincipal}}</label>
@@ -57,6 +57,20 @@
                 <div class="actions">
                     <button mat-raised-button color="warn" class="btnDown" [disabled]="mySelectedMenu == undefined" (click)="deleteToMenu(menu._id)">Darse de baja</button>
                 </div>
+            </div>
+
+            <div class="noRole" *ngIf="!canBeAddedToMenu && !canManageMenus">
+                <div class="menues">
+                    <ul>
+                        <li class="menuPrincipal">{{menu.menuPrincipal}}</li>
+                        <li class="menuSecundario" *ngIf="menu.menuSecundario">{{menu.menuSecundario}}</li>
+                    </ul>
+                </div>
+                <mat-card class="card">
+                    <mat-card-content >
+                        No tienes <strong>Rol</strong> para interactuar con el menú.<br> Contactate con un administrador para solicitar un rol.
+                    </mat-card-content>
+                </mat-card>
             </div>
         </div>  
     </div>

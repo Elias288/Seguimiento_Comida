@@ -72,8 +72,10 @@ const loginUserSchema = Joi.object({
 exports.create = tryCatch(async (req, res) => {
     const { name, surName, email, password, password2} = req.body 
 
-    const {error} = createUserSchema.validate({ name, email, password, repeat_password: password2 })
-    if (error) throw error
+    if (!process.env.DEV) {
+        const {error} = createUserSchema.validate({ name, email, password, repeat_password: password2 })
+        if (error) throw error
+    }
 
     const data = await userServices.createUser(name, surName, email, password)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
@@ -125,8 +127,10 @@ exports.findAll = tryCatch(async (req, res) => {
 exports.login = tryCatch(async (req, res) => {
     const { email, password } = req.body
 
-    const {error} = loginUserSchema.validate({ email, password })
-    if (error) throw error
+    if (!process.env.DEV) {
+        const {error} = loginUserSchema.validate({ email, password })
+        if (error) throw error
+    }
 
     const data = await userServices.login(email, password)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
