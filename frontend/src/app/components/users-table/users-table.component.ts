@@ -49,14 +49,10 @@ export class UsersTableComponent implements OnInit{
             { def: 'rol', label: 'rol', hide: true },
             { def: 'actions', label: 'actions', hide: this.hasActions},
         ]
-
-        this.toggleLoading()
-        // setTimeout(() => {
-        // }, 1000);
     }
 
     toggleLoading() {
-        this.loading = !this.loading
+        this.loading = false
     }
 
     public updateUsers() {
@@ -67,6 +63,10 @@ export class UsersTableComponent implements OnInit{
                     return a._id == this.myId ? -1 : 0
                 })
                 this.usuarios.map(u => u.rol = this.ROLES[parseInt(u.rol)])
+
+                this.toggleLoading()
+                // setTimeout(() => {
+                // }, 1000);
             },
             error: (e) => {
                 console.error(e);
