@@ -34,7 +34,7 @@ export class NavBarComponent implements OnInit{
                     next: (v: User) => {
                         this.userName = v.name
                         this.myId = v._id
-                        this.hasRoles = parseInt(v.rol) < 2
+                        this.hasRoles = parseInt(v.rol) >= 0 && parseInt(v.rol) < 2
 
                         socketIoService.getNotifications((data: any) => {
                             const notifications = data.filter(({emisor}: Notification) => emisor != v._id)

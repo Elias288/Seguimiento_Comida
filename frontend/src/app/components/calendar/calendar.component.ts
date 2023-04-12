@@ -102,24 +102,21 @@ export class CalendarComponent implements OnInit {
     }
 
     public openDialog(day: Day) {
-        if(this.canBeAddedToMenu || this.canBeAddedToMenu) {
-            const dialogRef = this.dialog.open(MenuDialogComponent, {
-                data : {
-                    rol: this.rol,
-                    day,
-                    completeDate: new Date(this.currYear, this.currMonth, day.numberDay),
-                    mySelectedMenu: day?.menu?.users?.find(user => user._id == this.myId)?.Menu_User?.selectedMenu,
-                    canBeAddedToMenu: this.canBeAddedToMenu,
-                    canManageMenus: this.canManageMenus,
-                },
-                width: "100%",
-                height: "90%",
-            });
-    
-            dialogRef.afterClosed().subscribe(result => {
-                if (result) this.constructCalendar()
-            })
-        }
+        const dialogRef = this.dialog.open(MenuDialogComponent, {
+            data : {
+                day,
+                completeDate: new Date(this.currYear, this.currMonth, day.numberDay),
+                mySelectedMenu: day?.menu?.users?.find(user => user._id == this.myId)?.Menu_User?.selectedMenu,
+                canBeAddedToMenu: this.canBeAddedToMenu,
+                canManageMenus: this.canManageMenus,
+            },
+            width: "100%",
+            height: "90%",
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) this.constructCalendar()
+        })
     }
 
     public constructCalendar() {

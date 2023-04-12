@@ -84,7 +84,6 @@ export class PerfilComponent{
                         if(this.myId == this.perfilId) {
                             this.authService.logout()
                         }
-                        this.router.navigate(['home'])
                     },
                 })
             }

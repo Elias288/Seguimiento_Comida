@@ -56,6 +56,7 @@ $color_orange: #ff9431;
 .menu {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     min-width: 700px;
     
     @media screen and (max-width: $pcSize) {
@@ -65,7 +66,8 @@ $color_orange: #ff9431;
             min-width: auto;
             display: block;
             position: absolute;
-            top: #{$navbarHeight + 2};
+            // top: #{$navbarHeight + 2};
+            top: $navbarHeight;
             width: 100%;
             height: calc(100vh - #{$navbarHeight + 2});
             background-color: rgba(255, 255, 255, 0.95);
