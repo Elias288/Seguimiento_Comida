@@ -24,8 +24,8 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        roles: {
-            type: Sequelize.JSON
+        rol: {
+            type: Sequelize.STRING
         }
     })
 

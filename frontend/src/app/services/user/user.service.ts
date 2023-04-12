@@ -42,10 +42,10 @@ export class UserService {
         return this.http.get(`${environment.ENDPOINT}/api/user`, { 'headers': headers })
     }
 
-    public addRole(jwt: string, userId: string, roles: string) {
+    public addRole(jwt: string, userId: string, rol: string) {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
-        const body = { userId, roles }
-        return this.http.put(`${environment.ENDPOINT}/api/user/addRoles`, body, { 'headers': headers })
+        const body = { userId, rol }
+        return this.http.put(`${environment.ENDPOINT}/api/user/addRol`, body, { 'headers': headers })
     }
 
     public confirmEmail(jwt: string) {

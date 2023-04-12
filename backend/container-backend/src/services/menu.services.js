@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid')
 const db = require('../models')
+const { MISSING_DATA, INFO_NOT_FOUND, SERVER_ERROR, INVALID_DATA } = require('../middleware/errorCodes')
 const User = db.User
 const Menu = db.Menu
 
@@ -8,14 +9,18 @@ exports.createMenu = async (menuPrincipal, menuSecundario, date) => {
         return {
             isError: true,
             name: "missingData",
-            message: "Name es requerido"
+            errorCode: MISSING_DATA,
+            details: "Name es requerido",
+            statusCode: 404,
         }
     }
     if (!date) {
         return {
             isError: true,
             name: "missingData",
-            message: "Fecha es requerido"
+            errorCode: MISSING_DATA,
+            details: "Fecha es requerido",
+            statusCode: 404,
         }
     }
     const dataDate = new Date(date)
@@ -23,7 +28,10 @@ exports.createMenu = async (menuPrincipal, menuSecundario, date) => {
     if (+dataDate <= +new Date()) {
         return {
             isError: true,
-            name: "invalidDate"
+            name: "invalidDate",
+            errorCode: INVALID_DATA,
+            details: 'Fecha erronea',
+            statusCode: 404,
         }
     }
     
@@ -38,8 +46,9 @@ exports.createMenu = async (menuPrincipal, menuSecundario, date) => {
     if (menu) {
         return {
             isError: true,
-            name: "alreadyCreated",
-            message: "Solo es posible registrar un menu por fecha"
+            errorCode: ALREADY_CREATE,
+            details: "Solo es posible registrar un menu por fecha",
+            statusCode: 400
         }
     }
 
@@ -48,18 +57,25 @@ exports.createMenu = async (menuPrincipal, menuSecundario, date) => {
             isError: false,
             data
         }
-    }).catch(error => {
-        console.log(error)
+    }).catch((err) => {
         return {
             isError: true,
-            name: "noDataError"
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500
         }
     })
 }
 
 exports.getAllMenu = () => {
     return Menu.findAll({
-        include: { model: User }
+        include: { 
+            model: User,
+            attributes: ['_id', 'name', 'email', 'surName', 'rol'],
+            through: {
+                attributes: ['selectedMenu', 'entryDate']
+            }
+        }
     })
 }
 
@@ -67,20 +83,32 @@ exports.getUsersOfMenu = (id) => {
     if (!id) {
         return {
             isError: true,
-            name: 'missingData',
-            message: 'Id es requerida'
+            errorCode: MISSING_DATA,
+            details: 'Id es requerida []',
+            statusCode: 404,
         }
     }
+
     return Menu.findOne({ 
         where: { _id: id },
         include: { model: User }
     }).then(data => {
         if (!data) {
-            return { isError: true, name: 'notFound', message: 'Menu no encontrado' }
+            return {
+                isError: true,
+                errorCode: INFO_NOT_FOUND,
+                details: `Menu no encontrado [${id}]`,
+                statusCode: 404,
+            }
         }
         return { data, isError: false }
-    }).catch(() => {
-        return { isError: true, name: 'notDataError' }
+    }).catch((err) => {
+        return {
+            isError: true,
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500,
+        }
     })
 }
 
@@ -88,38 +116,57 @@ exports.getMenuById = (id) => {
     if (!id) {
         return {
             isError: true,
-            name: 'missingData',
-            message: 'Id es requerida'
+            errorCode: MISSING_DATA,
+            details: 'Id es requerida []',
+            statusCode: 404,
         }
     }
     return Menu.findByPk(id, { include: { model: User } }).then(data => {
         if (!data) {
             return {
                 isError: true,
-                name: 'notFound',
-                message: 'Menu no encontrado'
+                errorCode: INFO_NOT_FOUND,
+                details: `Menu no encontrado [${id}]`,
+                statusCode: 404,
             }
         }
         return { data, isError: false }
-    }).catch(() => {
+    }).catch((err) => {
         return {
             isError: true,
-            name: 'notDataError'
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500
         }
     })
 }
 
 exports.getMenuByDate = (date) => {
     if (!date) {
-        return { isError: true, name: 'missingData', message: 'Fecha es requerido' }
+        return {
+            isError: true,
+            errorCode: MISSING_DATA,
+            details: 'Fecha es requerida',
+            statusCode: 404,
+        }
     }
     return Menu.findOne({ where: { date } }).then(data => {
         if (!data) {
-            return { isError: true, name: 'notFound', message: 'Menu no encontrado' }
+            return { 
+                isError: true,
+                errorCode: INFO_NOT_FOUND,
+                details: `Menu no encontrado [${date}]`,
+                statusCode: 404, 
+            }
         }
         return { data, isError: false }
-    }).catch(() => {
-        return { isError: true, name: 'notDataError' }
+    }).catch((err) => {
+        return {
+            isError: true,
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500 
+        }
     })
 }
 
@@ -127,19 +174,27 @@ exports.updateMenu = (menu) => {
     if (!menu._id) {
         return {
             isError: true,
-            name: 'missingData',
-            message: 'Id es requerida'
+            errorCode: MISSING_DATA,
+            details: 'Id es requerida',
+            statusCode: 404,
         }
     }
     return Menu.update(menu, { where: { _id: menu._id } }).then(num => {
         if (num == 1) {
             return { isError: false }
         }
-        return { isError: true, name: 'dataNotUpdated' }
-    }).catch(() => {
+        return { 
+            isError: true, 
+            errorCode: SERVER_ERROR,
+            details: "No se pudo actualizar",
+            statusCode: 400,
+        }
+    }).catch((err) => {
         return {
             isError: true,
-            name: 'notDataError'
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500
         }
     })
 }
@@ -148,17 +203,25 @@ exports.deleteMenu = (id) => {
     if (!id) {
         return {
             isError: true,
-            name: 'missingData',
-            message: 'Id es requerida'
+            errorCode: MISSING_DATA,
+            details: 'Id es requerida',
+            statusCode: 404,
         }
     }
     return Menu.destroy({ where: { _id: id }}).then(num => {
         if (num == 1) return { isError: false }
-        return { isError: true, name: 'dataNoDeleted' } 
-    }).catch(() => {
+        return { 
+            isError: true,
+            errorCode: SERVER_ERROR,
+            details: "No fue posible eliminar",
+            statusCode: 401,
+        } 
+    }).catch((err) => {
         return {
             isError: true,
-            name: 'notDataError'
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500
         }
     })
 }

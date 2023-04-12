@@ -1,7 +1,7 @@
 import { Input, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { PerfilComponent } from './components/perfil/perfil.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 import { AngularHelpsComponent } from './pages/angular-helps/angular-helps.component';
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
 import { CreateUserComponent } from './pages/create-user/create-user.component';
@@ -9,6 +9,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { CanAccesService } from './services/canAcces/can-acces.service';
+import { HelpsComponent } from './pages/helps/helps.component';
 
 const routes: Routes = [
     {
@@ -53,6 +54,11 @@ const routes: Routes = [
         title: "My perfil",
         component: PerfilComponent,
         canActivate: [CanAccesService]
+    },
+    {
+        path: 'helps',
+        title: "Ayudas",
+        component: HelpsComponent
     },
     {
         path: '**',

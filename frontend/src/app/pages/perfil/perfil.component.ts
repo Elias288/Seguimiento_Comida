@@ -3,31 +3,33 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/utils/user.interface';
-import { ConfirmCancelDialogComponent } from '../confirm-cancel-dialog/confirm-cancel-dialog.component';
+import { ConfirmCancelDialogComponent } from '../../components/confirm-cancel-dialog/confirm-cancel-dialog.component';
+import { Notification } from 'src/app/utils/notification.interface';
 
 @Component({
     selector: 'app-perfil',
     templateUrl: './perfil.component.html',
     styleUrls: ['./perfil.component.scss']
 })
-export class PerfilComponent {
-    userInfo: User = {
-        _id: '',
-        name: '',
-        surName: '',
-        email: '',
-        roles: [],
-        password: '',
-        password2: '',
-        Menu_User: undefined,
-        emailVerified: undefined
-    }
+export class PerfilComponent{
+    userInfo!: User
     myId!: string
     perfilId!: string
     itsMe: boolean = false
     itsAdmin: boolean = false
+    rol: string = ""
+    requestRolSended: boolean = false
+    hasRole: boolean = false
+
+    ROLES = [
+        'ADMIN',     
+        'COCINERO',  
+        'COMENSAL',  
+        ''           
+    ]
 
     constructor(
         private authService: AuthService,
@@ -36,6 +38,7 @@ export class PerfilComponent {
         public dialog: MatDialog,
         private _snackBar: MatSnackBar,
         private router: Router,
+        private socketIoService: SocketIoService, 
     ){
         this.activatedRoute.params.subscribe((params) => {
             this.perfilId = params['userId']
@@ -44,17 +47,27 @@ export class PerfilComponent {
                 next: (v) => {
                     const user = v as User
                     this.userInfo = user
+                    this.rol = this.ROLES[parseInt(this.userInfo.rol)]
+                    
                     this.authService.getUser().subscribe({
                         next: (u:User) => {
                             this.myId = u._id
                             this.itsMe = user._id == u._id
-                            this.itsAdmin = u.roles.includes('ADMIN')
+                            this.hasRole = user.rol != "" && parseInt(u.rol) != 3
+                            this.itsAdmin = parseInt(u.rol) == 0
+
+                            socketIoService.getNotifications((data: any) => {
+                                const requestRole = data.find(({ name }: Notification) => name == 'requestRol')
+                                if (requestRole) this.requestRolSended = true
+                                
+                            })
                         }
                     })
                 },
                 error: () => window.location.href = '/home'
             })
         })
+        
     }
 
     public deleteUser() {
@@ -78,7 +91,14 @@ export class PerfilComponent {
         })
     }
 
-    public updateUser() {
-        window.alert('update User')
+    public openUpdateUser() {
+        
     }
+
+    // public requestRol() {
+    //     if (this.itsMe) {
+    //         this.socketIoService.requestRol(`Bearer ${this.authService.token}`, this.userInfo)
+    //         this.requestRolSended = true
+    //     }
+    // }
 }

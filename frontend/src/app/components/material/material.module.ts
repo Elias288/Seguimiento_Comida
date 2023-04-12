@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
-import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core'
 import { MatIconModule } from '@angular/material/icon'
@@ -18,6 +18,7 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatMenuModule } from '@angular/material/menu'
 import { MatCardModule } from '@angular/material/card'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatTabsModule } from '@angular/material/tabs';
 
 const materials = [
   MatButtonModule,
@@ -25,7 +26,7 @@ const materials = [
   MatInputModule,
   BrowserAnimationsModule,
   MatSnackBarModule,
-  MatCheckboxModule,
+  MatRadioModule,
   MatDatepickerModule,
   MatNativeDateModule,
   MatIconModule,
@@ -37,6 +38,7 @@ const materials = [
   MatMenuModule,
   MatCardModule,
   MatProgressSpinnerModule,
+  MatTabsModule,
 ]
 
 @NgModule({

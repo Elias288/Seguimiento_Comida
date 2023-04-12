@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         
-                        <div *ngIf="!day.menu && (roles?.includes('COCINERO') || roles?.includes('ADMIN')) && day.status != 'inactive' && day.validToAdd && !day.isWeekend" class="addMenu">
+                        <div *ngIf="!day.menu && canAddMenus && day.status != 'inactive' && day.validToAdd && !day.isWeekend" class="addMenu">
                             <button mat-raised-button color="primary" (click)="addMenu(day.numberDay)" id="{{day.numberDay}}">
                                 <mat-icon fontIcon="add_circle" />
                                 Agregar Menu

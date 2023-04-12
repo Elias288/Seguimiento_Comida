@@ -22,7 +22,10 @@ interface Day {
 })
 export class CalendarComponent implements OnInit{
     menues: Array<Menu> = []
-    roles!: string[]
+    rol!: number
+    myId!: string                       // ID DEL USUARIO LOGUEADO
+    canBeAddedToMenu: boolean = false   // PUEDE AGREGARSE AL MENÚ
+    canManageMenus: boolean = false     // PUEDE ADMINISTAR MENUS
 
     months = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", 
@@ -38,6 +41,7 @@ export class CalendarComponent implements OnInit{
     lastDayOfMonth!: number 
     lastDateOfLastMonth!: number 
     firstDayOfMonth!: number
+    canAddMenus: boolean = false
 
     constructor (
         private authService: AuthService,
@@ -53,42 +57,56 @@ export class CalendarComponent implements OnInit{
             if (status) {
                 this.authService.getUser().subscribe({
                     next: (v) => {
-                        this.roles = v.roles
+                        this.rol = v.rol
+                        this.canAddMenus = v.rol >= 0 && v.rol < 2
                     }
                 })
             }
         })
 
-        socketIoService.loadMenues((menu: Array<Menu>) => {
+        socketIoService.requestMenues()
+
+        socketIoService.getMenues((menu: Array<Menu>) => {
             this.menues = menu
             this.constructCalendar()
         })
 
-        socketIoService.onNewMenu((menu: Menu) => {
+        socketIoService.getNewMenu((menu: Menu) => {
             this.menues.push(menu)
             this.constructCalendar()
-        })
-        
-        socketIoService.webSocketError((data: any) => {
-            this._snackBar.open(data.message, 'close', { duration: 5000 })
         })
     }
 
     ngOnInit(): void {
+        this.authService.getUser().subscribe({
+            next: (v) => {
+                this.myId = v._id
+                this.canBeAddedToMenu = v.rol >= 0
+                this.canManageMenus = v.rol >= 0 && v.rol < 2
+            },
+            error: (e) => console.error(e)
+        })
     }
 
     public openDialog(day: Day) {
-        const dialogRef = this.dialog.open(MenuDialogComponent, {
-            data : {
-                roles: this.roles,
-                day,
-                completeDate: new Date(this.currYear, this.currMonth, day.numberDay),
-            }
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) this.constructCalendar()
-        })
+        if(this.canBeAddedToMenu || this.canBeAddedToMenu) {
+            const dialogRef = this.dialog.open(MenuDialogComponent, {
+                data : {
+                    rol: this.rol,
+                    day,
+                    completeDate: new Date(this.currYear, this.currMonth, day.numberDay),
+                    mySelectedMenu: day?.menu?.users?.find(user => user._id == this.myId)?.Menu_User?.selectedMenu,
+                    canBeAddedToMenu: this.canBeAddedToMenu,
+                    canManageMenus: this.canManageMenus,
+                },
+                width: "100%",
+                height: "90%",
+            });
+    
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) this.constructCalendar()
+            })
+        }
     }
 
     public constructCalendar() {
