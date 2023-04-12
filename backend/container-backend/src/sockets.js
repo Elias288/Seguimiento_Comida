@@ -69,7 +69,7 @@ module.exports = (io) => {
                 const menuData = await menuServices.createMenu(menuPrincipal, menuSecundario, date)
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
-                console.log(`[${new Date()}] Menú: [${menuData.data._id}] created by [${tokenData.email}]`)
+                console.log(`[${new Date()}] Menú: [${menuData.data._id}] creado por [${tokenData.email}]`)
                 io.emit("server:newMenu", menuData.data)
 
             } catch (error) {
@@ -93,7 +93,7 @@ module.exports = (io) => {
                 const menuData = await menuServices.deleteMenu(menuId)
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
-                console.log(`[${new Date()}] Menú: [${menuId}] deleted by [${tokenData.email}]`)
+                console.log(`[${new Date()}] Menú: [${menuId}] borrado por [${tokenData.email}]`)
                 socket.emit('server:deletedMenu', true)
                 const menues = await menuServices.getAllMenu()
                 io.emit('server:loadMenues', menues)
@@ -133,7 +133,7 @@ module.exports = (io) => {
                 const menuData = await menuServices.updateMenu(menu)
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
     
-                console.log(`[${new Date()}] Menú: [${menu._id}] updated by [${tokenData.email}]`)
+                console.log(`[${new Date()}] Menú: [${menu._id}] actualizado por [${tokenData.email}]`)
                 socket.emit('server:updatedMenu', true)
                 const menues = await menuServices.getAllMenu()
                 io.emit('server:loadMenues', menues)
@@ -160,7 +160,7 @@ module.exports = (io) => {
                 const menuData = await userServices.enterToMenu(menuId, selectedMenu, tokenData.id, new Date(entryDate))
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
     
-                console.log(`[${new Date()}] User: [${user.email}] join to menú [${menuId}]`)
+                console.log(`[${new Date()}] User: [${tokenData.email}] se unió al menú [${menuId}]`)
                 const menues = await menuServices.getAllMenu()
                 socket.emit('server:addedMenu', true)
                 io.emit('server:loadMenues', menues)
@@ -187,9 +187,9 @@ module.exports = (io) => {
                 const menuData = await userServices.dropToMenu(menuId, tokenData.id, new Date(dropDate))
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
-                console.log(`[${new Date()}] User: [${user.email}] drop to menú [${menuId}]`)
-                socket.emit('server:deletedToMenu', true)
+                console.log(`[${new Date()}] User: [${tokenData.email}] dado de baja del menú: [${menuId}]`)
                 const menues = await menuServices.getAllMenu()
+                socket.emit('server:deletedToMenu', true)
                 io.emit('server:loadMenues', menues)
             } catch (error) {
                 handleSocketErrors(error, socket)
