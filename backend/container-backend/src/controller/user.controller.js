@@ -142,7 +142,7 @@ exports.addRole = tryCatch(async (req, res) => {
     const data = await userServices.updateUser(userId, userData)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
     
-    console.log(`[${new Date()}] Usuario: [${tokenData.email}] rol cambiado`)
+    console.log(`[${new Date()}] Usuario: [${userId}] rol cambiado`)
     return res.status(200).send({ message: 'Usuario actualizado' })
 })
 
