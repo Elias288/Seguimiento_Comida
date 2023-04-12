@@ -70,11 +70,19 @@ export class CalendarComponent implements OnInit {
         socketIoService.getMenues((menu: Array<Menu>) => {
             this.menues = menu
             this.constructCalendar()
+        
+            this.toggleLoading()
+            // setTimeout(() => {
+            // }, 1000);
         })
 
         socketIoService.getNewMenu((menu: Menu) => {
             this.menues.push(menu)
             this.constructCalendar()
+        
+            this.toggleLoading()
+            // setTimeout(() => {
+            // }, 1000);
         })
     }
 
@@ -87,14 +95,10 @@ export class CalendarComponent implements OnInit {
             },
             error: (e) => console.error(e)
         })
-        
-        this.toggleLoading()
-        // setTimeout(() => {
-        // }, 1000);
     }
     
     toggleLoading() {
-        this.loading = !this.loading
+        this.loading = false
     }
 
     public openDialog(day: Day) {
