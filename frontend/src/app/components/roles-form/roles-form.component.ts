@@ -2,7 +2,6 @@ import { Component, Inject, OnInit} from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LoginComponent } from 'src/app/pages/login/login.component';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({

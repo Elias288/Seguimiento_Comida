@@ -27,7 +27,7 @@ export class UsersTableComponent implements OnInit{
         '',
         ''           
     ]
-
+    loading: boolean = true
     usuarios!: Array<User>
     dataSource!: MatTableDataSource<User>
     columsDefinitions!: Array<todo>
@@ -49,6 +49,14 @@ export class UsersTableComponent implements OnInit{
             { def: 'rol', label: 'rol', hide: true },
             { def: 'actions', label: 'actions', hide: this.hasActions},
         ]
+
+        this.toggleLoading()
+        // setTimeout(() => {
+        // }, 1000);
+    }
+
+    toggleLoading() {
+        this.loading = !this.loading
     }
 
     public updateUsers() {
@@ -56,8 +64,7 @@ export class UsersTableComponent implements OnInit{
             next: (v) => {
                 const allUsers = v as Array<User>
                 this.usuarios = allUsers.sort((a) => {
-                    if(a._id == this.myId) return -1
-                    return 0
+                    return a._id == this.myId ? -1 : 0
                 })
                 this.usuarios.map(u => u.rol = this.ROLES[parseInt(u.rol)])
             },

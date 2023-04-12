@@ -3,29 +3,34 @@ $tabletSize: 450px;
 $pcSize: 850px;
 $calendarWidth: 1280px;
 
+.loading {
+    width: 100%;
+    height: calc(100vh - #{$navbarHeight + 2});
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .container {
     width: 100%;
     height: calc(100vh - #{$navbarHeight + 2});
-
-    @media screen and (min-width: $pcSize) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    overflow: scroll;
+    
+    .container-content {
+        width: 100%;
+        border-radius: 10px;
+        background-color: #fff;
+        
+        @media screen and (min-width: $pcSize) {
+            min-width: 1130px;
+            max-width: 90%;
+            margin: auto;
+            padding: 0 30px;
+            box-sizing: border-box;
+        }
     }
 }
 
-.container-content {
-    background-color: #fff;
-    border-radius: 10px;
-    // overflow: hidden;
-    height: 100%;
-
-    @media screen and (min-width: $pcSize) {
-        width: 90%;
-        padding: 0 30px;
-        box-sizing: border-box;
-    }
-}
 
 header {
     display: flex;
@@ -56,11 +61,10 @@ header {
 }
 
 .calendar {
-    overflow: auto;
-
     .calendar-content {
-        padding: 20px;
+        padding: 0 20px;
         padding-bottom: 5rem;
+        height: 100%;
     
         > ul {
             display: flex;

@@ -1,5 +1,9 @@
 <div class="container">
-    <div class="container-content">
+    <div class="loading" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+    </div>
+    
+    <div class="container-content" *ngIf="!loading">
         <header>
             <p class="current-date">{{currentDate}}</p>
             <div class="icons">
