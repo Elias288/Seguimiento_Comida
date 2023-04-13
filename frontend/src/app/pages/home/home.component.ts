@@ -11,8 +11,7 @@ export class HomeComponent {
 
     constructor(
         private router: Router,
-        private authService: AuthService,
-
+        private authService: AuthService
     ) {
         this.authService.isLoggedIn$.subscribe(status => {
             if (!status){

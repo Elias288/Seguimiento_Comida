@@ -20,6 +20,9 @@ export class AuthService {
     isLoggedIn$ = this._isLoggedIn$.asObservable()
     private _user$ = new BehaviorSubject<User>(EMPTYUSER)
     user$ = this._user$.asObservable()
+    private _onlineUsers$ = new BehaviorSubject<string[]>([])
+    onlineUsers$ = this._onlineUsers$.asObservable()
+
     userInfo!: User
 
     constructor(
@@ -52,6 +55,10 @@ export class AuthService {
                 return res as User
             })
         )
+    }
+
+    public setOnlineUsers (users: string[]) {
+        this._onlineUsers$.next(users)
     }
 
     logout() {

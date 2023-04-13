@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/utils/user.interface';
 
@@ -36,17 +37,20 @@ export class UsersTableComponent implements OnInit{
 
     constructor (
         private userService: UserService,
+        private authService: AuthService,
     ) { }
 
     ngOnInit(): void {
         this.updateUsers()
 
         this.columsDefinitions = [
+            { def: 'online', label: 'online', hide: true },
             { def: 'name', label: 'name', hide: true },
             { def: 'email', label: 'email', hide: true },
             { def: 'rol', label: 'rol', hide: true },
-            { def: 'actions', label: 'actions', hide: this.hasActions},
+            { def: 'actions', label: 'actions', hide: this.hasActions },
         ]
+
     }
 
     toggleLoading() {
@@ -56,15 +60,18 @@ export class UsersTableComponent implements OnInit{
     public updateUsers() {
         this.userService.getAll(this.jwt).subscribe({
             next: (v) => {
-                const allUsers = v as Array<User>
-                this.usuarios = allUsers.sort((a) => {
-                    return a._id == this.myId ? -1 : 0
+                this.authService.onlineUsers$.subscribe(onlineUsers => {
+                    const allUsers = v as Array<User>
+                    this.usuarios = allUsers.sort((a) => {
+                        return a._id == this.myId ? -1 : 0
+                    })
+                    this.usuarios.map(u => {
+                        u.rolName = this.ROLES[u.rol]
+                        u.online = onlineUsers.some((oU: string) => oU === u._id)
+                    })
                 })
-                this.usuarios.map(u => u.rolName = this.ROLES[u.rol])
 
                 this.toggleLoading()
-                // setTimeout(() => {
-                // }, 1000);
             },
             error: (e) => {
                 console.error(e);

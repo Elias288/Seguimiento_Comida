@@ -17,19 +17,23 @@ const onlineUsers = new UsersInSocket()
 
 module.exports = (io) => {
     io.on('connection', (socket) => {
-        // console.log('new user connected:', socket.id);
 
         socket.on('client:joinToRoom', (userRol) => {
             socket.join(userRol)
         })
 
         socket.on('client:newUser', async (data) => {
-            try {
-                const { userId, email } = data
-                onlineUsers.addNewUser(userId, email, socket.id)
-            } catch (error) {
-                handleSocketErrors(error, socket)
-            }
+            const { userId, email } = data
+            onlineUsers.addNewUser(userId, email, socket.id)
+            emitOnlineUsers()
+        })
+
+        socket.on('client:isConnected', async () => {
+            emitIsConnected()
+        })
+
+        socket.on('client:requestMenues', () => {
+            emitMenues()
         })
 
         const emitMenues = async () => {
@@ -37,33 +41,21 @@ module.exports = (io) => {
             socket.emit('server:loadMenues', menues)
         }
 
-        socket.on('client:requestMenues', () => {
-            emitMenues()
-        })
+        const emitOnlineUsers = () => {
+            io.emit('server:onlineUsers', onlineUsers.getAllUsers().map(user => user.userId))
+        }
 
         const emitNewNotificacion = (notification) => {
-            // socketId y userRol sirve para identificar el receptor de la notificación
-            // console.log(notification);
             if (notification.receptorSocketId) {
                 return io.to(notification.receptorSocketId).emit('server:newNotification', notification)
             }
 
             io.to(notification.receptorRol).emit('server:newNotification', notification)
         }
-        
-        /*socket.on('client:requestPersonalNotifications', async (data) => {
-            const { userId, userRol } = data
 
-            const userNotificaciones = await notificationServices.getByReceptor(userId)
-            const rolNotificaciones = await notificationServices.getByReceptorRole(userRol)
-            const emisorNotification = await notificationServices.getByEmisor(userId)
-            // console.log(userId, userNotificaciones.length, rolNotificaciones.length, emisorNotification.length);
-            
-
-            const notifications = userNotificaciones.concat(rolNotificaciones).concat(emisorNotification)
-
-            socket.emit('server:notifications', notifications)
-        }) */
+        const emitIsConnected = () => {
+            io.to(socket.id).emit('server:IsConnected', onlineUsers.users.some(user => user.socketId === socket.id))
+        }
         
         socket.on('client:newMenu', async (data) => {
             try {
@@ -230,41 +222,17 @@ module.exports = (io) => {
                         createdTime,
                         active: true
                     }
-                    // console.log(`notificación de [${notification.emisorSocketId}] para [${receptorId}][${notification.receptorSocketId}]`);
                     return emitNewNotificacion(notification)
                 }
-
-                // GUARDAR NOTIFICACIÓN EN BD HASTA QUE EL USUARIO SE CONECTE
-                console.log('guardar notificación en bd');
             } catch (error) {
                 handleSocketErrors(error, socket)
             }
         })
 
-        /* socket.on('client:requestRol', async (data) => {
-            // notificar a administradores la solicitud de rol
-            // guardar en BD la notificación para mostrar cuando un admin se conecte
-
-            const { token, emisor } = data
-            const name = "requestRol", message = "solicitud de rol", receptorRol = 0
-            
-            const tokenData = verifyToken(token)
-            if (tokenData.isError){
-                return socket.emit('server:error', { message: res.message })
-            }
-
-            const creationResult = await notificationServices.createNotification(name, message, emisor._id, "", receptorRol)
-            if (creationResult.isError) {
-                console.error(new Error(creationResult.name))
-                return socket.emit('server:error', creationResult)
-            }
-
-            emitNewNotificacion("", "ADMIN", creationResult.notification)
-        }) */
-
         socket.on('disconnect', () => {
-            // console.log(`Usuario [${socket.id}] desconectado`);
             onlineUsers.removeUser(socket.id)
+            emitIsConnected()
+            emitOnlineUsers()
         })
     })
 }

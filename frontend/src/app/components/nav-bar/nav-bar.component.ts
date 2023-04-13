@@ -21,6 +21,7 @@ export class NavBarComponent {
     notification: Array<any> = []
     activeNotifications: Array<any> = []
     isMenuOpen = false
+    connected: boolean = false
 
     constructor(
         private router: Router,
@@ -32,7 +33,7 @@ export class NavBarComponent {
         authService.isLoggedIn$.subscribe(status => {
             this.logged = status
         })
-
+        
         authService.user$.subscribe(user => {
             this.userName = user.name
             this.myId = user._id
@@ -54,6 +55,11 @@ export class NavBarComponent {
                 })
             }
         })
+
+        socketIoService.getIsConnected((isConnected: boolean) => {
+            this.connected = isConnected
+        })
+        
     }
 
     public toggleMenu() {

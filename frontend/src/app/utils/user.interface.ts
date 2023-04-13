@@ -9,6 +9,7 @@ export interface User {
     rolName?: string
     Menu_User?: Menu_User
     emailVerified?: number
+    online?: Boolean
 }
 
 interface Menu_User {

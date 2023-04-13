@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io } from 'socket.io-client';
 import { Menu } from 'src/app/utils/menu.inteface';
-import { User } from 'src/app/utils/user.interface';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -16,6 +15,14 @@ export class SocketIoService {
 
     public getWebSocketError = (callback: any) => {
         this.socket.on('server:error', callback)
+    }
+
+    public getIsConnected = (callback: any) => {
+        this.socket.on('server:IsConnected', callback)
+    }
+
+    public getOnlineUsers = (callback: any) => {
+        this.socket.on('server:onlineUsers', callback)
     }
 
     public getMenues = (callback: any) => {
@@ -61,6 +68,11 @@ export class SocketIoService {
     // public requestNotifications = (userId: string, userRol: number) => {
     //     this.socket.emit('client:requestPersonalNotifications', { userId, userRol })
     // }
+
+
+    public isConnected = () => {
+        this.socket.emit('client:isConnected')
+    }
 
     public newUser = (userId: string, email: string) => {
         this.socket.emit('client:newUser', { userId, email })

@@ -28,9 +28,13 @@ export class AppComponent {
             if (isLogged && !this.user) {
                 this.authService.getUser().subscribe(user => {
                     this.authService.setUserInfo(user as User)
+                    socket.isConnected()
                 })
             }
         })
 
+        this.socket.getOnlineUsers((users: string[]) => {
+            this.authService.setOnlineUsers(users)
+        })
     }
 }

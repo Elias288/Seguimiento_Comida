@@ -12,8 +12,8 @@ class UsersInSocket {
             console.log(`usuario agregado: [${userId}][${socketId}]`);
     }
 
-    getUserByEmail(email) {
-        return this.users.find(user => user.email === email)
+    getUserBySocket(socketId) {
+        return this.users.find(user => user.socketId === socketId)
     }
 
     getUserById(id) {
