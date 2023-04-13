@@ -66,8 +66,6 @@ export class CalendarComponent implements OnInit {
             this.constructCalendar()
         
             this.toggleLoading()
-            // setTimeout(() => {
-            // }, 1000);
         })
 
         socketIoService.getNewMenu((menu: Menu) => {
@@ -75,8 +73,6 @@ export class CalendarComponent implements OnInit {
             this.constructCalendar()
         
             this.toggleLoading()
-            // setTimeout(() => {
-            // }, 1000);
         })
     }
 
@@ -101,8 +97,7 @@ export class CalendarComponent implements OnInit {
                 canBeAddedToMenu: this.canBeAddedToMenu,
                 canManageMenus: this.canManageMenus,
             },
-            width: "100%",
-            height: "90%",
+            width: "100%"
         });
 
         dialogRef.afterClosed().subscribe(result => {
