@@ -52,20 +52,6 @@ const loginUserSchema = Joi.object({
         .email({ minDomainSegments: 2, tlds: { allow: validEmails } }).required(),
         password: joiPassword
         .string()
-        .minOfSpecialCharacters(1)
-        .minOfLowercase(1)
-        .minOfUppercase(1)
-        .minOfNumeric(2)
-        .noWhiteSpaces()
-        .onlyLatinCharacters()
-        .messages({
-            'password.minOfUppercase': '{#label} debe contener al menos {#min} mayúsculas',
-            'password.minOfSpecialCharacters': '{#label} debe contener al menos {#min} caracter especial',
-            'password.minOfLowercase': '{#label} debe contener al menos {#min} minúsculas',
-            'password.minOfNumeric': '{#label} debe contener al menos {#min} números',
-            'password.noWhiteSpaces': '{#label} no debe contener espacios',
-            'password.onlyLatinCharacters': '{#label} debe contener solo caracteres latínos',
-        })
         .required(),
 })
 
@@ -127,10 +113,8 @@ exports.findAll = tryCatch(async (req, res) => {
 exports.login = tryCatch(async (req, res) => {
     const { email, password } = req.body
 
-    if (!process.env.DEV) {
-        const {error} = loginUserSchema.validate({ email, password })
-        if (error) throw error
-    }
+    const {error} = loginUserSchema.validate({ email, password })
+    if (error) throw error
 
     const data = await userServices.login(email, password)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
