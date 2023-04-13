@@ -1,7 +1,12 @@
-$navbarHeight: 60px;
 $tabletSize: 450px;
 $pcSize: 850px;
+
 $calendarWidth: 1280px;
+$navbarHeight: 60px;
+$headerHeight: 80px;
+
+$background_MP: rgb(0, 128, 0);
+$background_MS: rgb(67, 80, 191);
 
 .loading {
     width: 100%;
@@ -12,22 +17,18 @@ $calendarWidth: 1280px;
 }
 
 .container {
-    width: 100%;
-    height: calc(100vh - #{$navbarHeight + 2});
-    overflow: scroll;
-    
     .container-content {
         width: 100%;
         border-radius: 10px;
         background-color: #fff;
         
-        @media screen and (min-width: $pcSize) {
+        /* @media screen and (min-width: $pcSize) {
             min-width: 1130px;
             max-width: 90%;
             margin: auto;
             padding: 0 30px;
             box-sizing: border-box;
-        }
+        } */
     }
 }
 
@@ -37,6 +38,13 @@ header {
     align-items: center;
     padding: 25px 30px 10px;
     justify-content: space-between;
+    box-sizing: border-box;
+    height: $headerHeight;
+
+    @media screen and (min-width: $pcSize) {
+        max-width: 90%;
+        margin: auto;
+    }
 
     .current-date {
         font-size: 1.45rem;
@@ -61,10 +69,25 @@ header {
 }
 
 .calendar {
+    width: 100%;
+    max-height: calc(100vh - ($navbarHeight + $headerHeight));
+    overflow: auto;
+
     .calendar-content {
         padding: 0 20px;
         padding-bottom: 5rem;
         height: 100%;
+        min-width: 1130px;
+        max-width: 90%;
+        margin: auto;
+        padding: 0 30px;
+        box-sizing: border-box;
+
+        @media screen and (max-width: $pcSize) {
+            min-width: $calendarWidth;
+            margin: 0;
+            padding: 0;
+        }
     
         > ul {
             display: flex;
@@ -85,10 +108,6 @@ header {
                     padding: 1rem 0 2rem;
                 }
             }
-        }
-
-        @media screen and (max-width: $pcSize) {
-            min-width: $calendarWidth
         }
     }
 
@@ -142,11 +161,11 @@ header {
         }
         
         &.principalMenu {
-            background-color: #008000;
+            background-color: $background_MP;
         }
         
         &.secodaryMenu {
-            background-color: #4350bf;
+            background-color: $background_MS;
         }
 
         &.MPCount {

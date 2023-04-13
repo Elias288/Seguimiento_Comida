@@ -6,6 +6,7 @@ $background_color_1:#252525;
 $color_1_hover: #454545;
 
 $background_blue:#050531;
+$background_blue_transparent:#050531f7;
 $background_blue_hover: #070746;
 $color_orange: #ff9431;
 
@@ -56,6 +57,7 @@ $color_orange: #ff9431;
 .menu {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     min-width: 700px;
     
     @media screen and (max-width: $pcSize) {
@@ -65,17 +67,18 @@ $color_orange: #ff9431;
             min-width: auto;
             display: block;
             position: absolute;
-            top: #{$navbarHeight + 2};
+            // top: #{$navbarHeight + 2};
+            top: $navbarHeight;
             width: 100%;
-            height: calc(100vh - #{$navbarHeight + 2});
-            background-color: rgba(255, 255, 255, 0.95);
+            height: calc(100vh - $navbarHeight);
+            background: $background_blue_transparent;
             z-index: 10;
         }
     }
 
     .menu-item {
-        height: $navbarHeight;
-        line-height: $navbarHeight;
+        height: 5rem;
+        line-height: 5rem;
         display: block;
         padding: 0 20px;
         text-decoration: none;
@@ -85,7 +88,14 @@ $color_orange: #ff9431;
         text-align: center;
         border-radius: 0;
         box-sizing: border-box;
-            display: flex;
+        display: flex;
+
+        @media screen and (min-width: $pcSize) {
+            height: $navbarHeight;
+            line-height: $navbarHeight;
+            color: #cacaca;
+            width: fit-content;
+        }
 
         &:hover {
             background: $background_blue_hover;
@@ -95,10 +105,21 @@ $color_orange: #ff9431;
         .warn {
             background: #890606;
         }
+    }
 
-        @media screen and (min-width: $pcSize) {
-            color: #cacaca;
-            width: fit-content;
+    .status {
+        --size: 10px;
+        border-radius: 50%;
+        width: var(--size);
+        height: var(--size);
+        display: inline-block;
+
+        &.connected {
+            background: rgb(0, 255, 0);
+        }
+        &.not_connected {
+            background: rgb(255, 0, 0);
         }
     }
+
 }

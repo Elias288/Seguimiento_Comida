@@ -2,46 +2,43 @@ const db = require("../models")
 const { Op } = require("sequelize")
 const Notification = db.Notification
 const { v4: uuidv4 } = require('uuid')
+const { tryCatch } = require("./tryCatch")
+const AppError = require("../middleware/AppError")
+const { ALREADY_CREATE } = require("../middleware/errorCodes")
 
-exports.createNotification = async(name, message, emisor, receptor, receptorRole) => {
+exports.createNotification = tryCatch(async(notificationTitle, message, emisorSocketId, receptorSocketId, createdTime) => {
     const notificationData = {
         _id: uuidv4(),
-        name,
+        notificationTitle,
         message,
-        emisor,
-        receptor,
+        emisorSocketId,
+        receptorSocketId,
         receptorRole,
         active: true
     }
     
     const notificación = await Notification.findOne({
         where: {
-            [Op.and]: [{ name }, {
-                [Op.and]: [{ message }, { emisor }]
-            }]
+            [Op.and]: [{ emisorSocketId }, { createdAt: createdTime }]
         }
     })
 
     if (notificación){
-        return {
-            isError: true,
-            name: "alreadyCreated",
-            message: "Notificación ya creada"
-        }
+        throw new AppError(ALREADY_CREATE, "Notificación ya creada", 400)
+        // return {
+        //     isError: true,
+        //     name: "alreadyCreated",
+        //     message: "Notificación ya creada"
+        // }
     }
 
     return Notification.create(notificationData)
     .then(notification => {
-        return { isError: false, notification }
+        return notification
     }).catch(err => {
-        console.log(err);
-        return {
-            isError: true,
-            name: 'noDataError',
-            message: "Error de servidor"
-        }
+        return err
     })
-}
+})
 
 exports.getAll = () => {
     return Notification.findAll()

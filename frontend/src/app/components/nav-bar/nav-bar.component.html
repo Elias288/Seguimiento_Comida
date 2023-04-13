@@ -47,7 +47,10 @@
                 [matMenuTriggerFor]="menu">
                 <mat-icon fontIcon="account_circle" />
                 {{userName}}
+                <label class="status not_connected" *ngIf="!connected"></label>
+                <label class="status connected" *ngIf="connected"></label>
             </button>
+
             <mat-menu #menu="matMenu">
                 <button mat-menu-item 
                     color="warn"

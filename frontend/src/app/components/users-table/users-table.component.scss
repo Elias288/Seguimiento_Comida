@@ -31,3 +31,18 @@ $navbarHeight: 60px;
         }
     }
 }
+
+.status {
+    --size: 10px;
+    border-radius: 50%;
+    width: var(--size);
+    height: var(--size);
+    display: inline-block;
+
+    &.connected {
+        background: rgb(0, 255, 0);
+    }
+    &.not_connected {
+        background: rgb(255, 0, 0);
+    }
+}

@@ -1,9 +1,10 @@
 export interface Notification {
-    _id: string
-    name: string
+    _id?: string
+    notificationTitle: string
     message: string
-    emisor: string
-    receptor: string
-    receptorRole: string
+    emisorSocketId: string
+    receptorSocketId: string
+    receptorRol?: string
     active: boolean
+    createdTime: Date
 }

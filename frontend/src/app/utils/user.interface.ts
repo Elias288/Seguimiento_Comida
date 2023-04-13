@@ -1,13 +1,15 @@
 export interface User {
     _id: string
     name: string
-    surName: string | null | undefined
+    surName?: string
     email: string
     password: string
     password2: string
-    rol: string
-    Menu_User: Menu_User | undefined
-    emailVerified: number | undefined
+    rol: number
+    rolName?: string
+    Menu_User?: Menu_User
+    emailVerified?: number
+    online?: Boolean
 }
 
 interface Menu_User {

@@ -48,21 +48,15 @@ export class CalendarComponent implements OnInit {
         private authService: AuthService,
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
-        private _snackBar: MatSnackBar,
     ) {
         this.date = new Date()
         this.currYear = this.date.getFullYear()
         this.currMonth = this.date.getMonth()
 
-        authService.isLoggedIn$.subscribe(status => {
-            if (status) {
-                this.authService.getUser().subscribe({
-                    next: (v) => {
-                        this.rol = v.rol
-                        this.canAddMenus = v.rol >= 0 && v.rol < 2
-                    }
-                })
-            }
+        authService.user$.subscribe(user => {
+            const userRol = user.rol
+            this.rol = userRol
+            this.canAddMenus = userRol >= 0 && userRol < 2 
         })
 
         socketIoService.requestMenues()
@@ -72,8 +66,6 @@ export class CalendarComponent implements OnInit {
             this.constructCalendar()
         
             this.toggleLoading()
-            // setTimeout(() => {
-            // }, 1000);
         })
 
         socketIoService.getNewMenu((menu: Menu) => {
@@ -81,19 +73,14 @@ export class CalendarComponent implements OnInit {
             this.constructCalendar()
         
             this.toggleLoading()
-            // setTimeout(() => {
-            // }, 1000);
         })
     }
 
     ngOnInit(): void {
-        this.authService.getUser().subscribe({
-            next: (v) => {
-                this.myId = v._id
-                this.canBeAddedToMenu = v.rol >= 0
-                this.canManageMenus = v.rol >= 0 && v.rol < 2
-            },
-            error: (e) => console.error(e)
+        this.authService.user$.subscribe(user => {
+            this.myId = user._id
+            this.canBeAddedToMenu = user.rol >= 0
+            this.canManageMenus = user.rol >= 0 && user.rol < 2
         })
     }
     
@@ -102,24 +89,20 @@ export class CalendarComponent implements OnInit {
     }
 
     public openDialog(day: Day) {
-        if(this.canBeAddedToMenu || this.canBeAddedToMenu) {
-            const dialogRef = this.dialog.open(MenuDialogComponent, {
-                data : {
-                    rol: this.rol,
-                    day,
-                    completeDate: new Date(this.currYear, this.currMonth, day.numberDay),
-                    mySelectedMenu: day?.menu?.users?.find(user => user._id == this.myId)?.Menu_User?.selectedMenu,
-                    canBeAddedToMenu: this.canBeAddedToMenu,
-                    canManageMenus: this.canManageMenus,
-                },
-                width: "100%",
-                height: "90%",
-            });
-    
-            dialogRef.afterClosed().subscribe(result => {
-                if (result) this.constructCalendar()
-            })
-        }
+        const dialogRef = this.dialog.open(MenuDialogComponent, {
+            data : {
+                day,
+                completeDate: new Date(this.currYear, this.currMonth, day.numberDay),
+                mySelectedMenu: day?.menu?.users?.find(user => user._id == this.myId)?.Menu_User?.selectedMenu,
+                canBeAddedToMenu: this.canBeAddedToMenu,
+                canManageMenus: this.canManageMenus,
+            },
+            width: "100%"
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) this.constructCalendar()
+        })
     }
 
     public constructCalendar() {

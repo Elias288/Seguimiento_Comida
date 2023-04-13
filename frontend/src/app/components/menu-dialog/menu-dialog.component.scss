@@ -1,11 +1,23 @@
 $tabletSize: 450px;
 $pcSize: 850px;
 
+$light_background: #f3f3f3;
+
+$background_MP: rgb(0, 128, 0);
+$background_MP_transparent: rgb(0, 128, 0, 0.699);
+$background_MP_dark: rgb(1, 68, 1);
+
+$background_MS: rgb(67, 80, 191);
+$background_MS_transparent: rgb(67, 80, 191, 0.699);
+$background_MS_dark: rgb(50 57 122);
+
 .container {
-    height: 100%;
+    max-height: 600px;
+    overflow: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background: $light_background;
 
     @media screen and (min-width: $pcSize) {
         padding: 0 50px;
@@ -30,27 +42,25 @@ $pcSize: 850px;
     justify-content: center;
 }
 
-.dialogActions {
-    .formEditMenu {
+.canManageMenus {
+    display: flex;
+    flex-direction: column;
+    
+    @media screen and (min-width: $pcSize) {
+        width: 50%;
+    }
+
+    > * {
+        margin-bottom: 1.5rem;
+    }
+
+    .buttons {
         display: flex;
-        flex-direction: column;
-        
-        @media screen and (min-width: $pcSize) {
-            width: 50%;
-        }
-
-        > * {
-            margin-bottom: 1.5rem;
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: flex-end;
-        }
+        justify-content: flex-end;
     }
 }
 
-.radioActions {
+.canBeAddedToMenu {
     display: flex;
     flex-direction: column;
     margin-bottom: 2rem;
@@ -80,23 +90,23 @@ $pcSize: 850px;
         }
 
         .MenuPrincipal {
-            background-color: rgb(0, 128, 0);
-            border: 1px solid rgb(1, 68, 1);
-            box-shadow: 2px 5px rgb(1 68 1);
+            background-color: $background_MP;
+            border: 1px solid $background_MP_dark;
+            box-shadow: 2px 5px $background_MP_dark;
         }
         input:checked + .MenuPrincipal{
-            background: rgba(0, 128, 0, 0.699);
+            background: $background_MP_transparent;
             box-shadow: none;
             border: none;
         }
 
         .MenuSecundario {
-            background-color: rgb(67, 80, 191);
-            border: 1px solid rgb(50, 57, 122);
-            box-shadow: 2px 5px rgb(50 57 122);
+            background-color: $background_MS;
+            border: 1px solid $background_MS_dark;
+            box-shadow: 2px 5px $background_MS_dark;
         }
         input:checked + .MenuSecundario{
-            background: rgb(67, 80, 191, 0.699);
+            background: $background_MS_transparent;
             box-shadow: none;
             border: none;
         }
@@ -110,6 +120,35 @@ $pcSize: 850px;
     }
 }
 
+.noRole {
+    .card {
+        background: #ba1313;
+        color: #fff;
+    }
+    > *, ul li {
+        margin-bottom: 1rem;
+    }
+
+    ul li {
+        color: #fff;
+        padding: 1rem .5rem;
+        border-radius: 10px;
+    }
+    .menuPrincipal {
+        background-color: $background_MP;
+        border: 1px solid $background_MP_dark;
+    }
+    .menuSecundario {
+        background-color: $background_MS;
+        border: 1px solid $background_MS_dark;
+    }
+}
+
 .mat-tab-group {
     padding-bottom: 2rem;
+
+    .comensalesTable {
+        max-height: 400px;
+        overflow: auto;
+    }
 }
