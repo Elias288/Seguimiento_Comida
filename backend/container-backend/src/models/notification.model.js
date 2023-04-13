@@ -4,18 +4,18 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             primaryKey: true
         },
-        name: {
+        notificationTitle: {
             type: Sequelize.STRING,
             allowNull: false,
         },
         message: {
             type: Sequelize.STRING
         },
-        emisor: {
+        emisorSocketId: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        receptor: {
+        receptorSocketId: {
             type: Sequelize.STRING
         },
         receptorRole: {

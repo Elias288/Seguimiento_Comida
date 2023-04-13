@@ -47,24 +47,37 @@ export class PerfilComponent{
                 next: (v) => {
                     const user = v as User
                     this.userInfo = user
-                    this.rol = this.ROLES[parseInt(this.userInfo.rol)]
+                    this.rol = this.ROLES[this.userInfo.rol]
                     
-                    this.authService.getUser().subscribe({
-                        next: (u:User) => {
-                            this.myId = u._id
-                            this.itsMe = user._id == u._id
-                            this.hasRole = user.rol != "" && parseInt(u.rol) != 3
-                            this.itsAdmin = parseInt(u.rol) == 0
+                    // this.authService.getUser().subscribe({
+                    //     next: (u:User) => {
+                    //         this.myId = u._id
+                    //         this.itsMe = user._id == u._id
+                    //         this.hasRole = user.rol != "" && parseInt(u.rol) != 3
+                    //         this.itsAdmin = parseInt(u.rol) == 0
 
-                            socketIoService.getNotifications((data: any) => {
-                                const requestRole = data.find(({ name }: Notification) => name == 'requestRol')
-                                if (requestRole) this.requestRolSended = true
+                    //         socketIoService.getNotifications((data: any) => {
+                    //             const requestRole = data.find(({ name }: Notification) => name == 'requestRol')
+                    //             if (requestRole) this.requestRolSended = true
                                 
-                            })
-                        }
-                    })
+                    //         })
+                    //     }
+                    // })
                 },
                 error: () => window.location.href = '/home'
+            })
+            
+            this.authService.user$.subscribe(user => {
+                this.myId = user._id
+                this.itsMe = user._id == user._id
+                this.hasRole = user.rol >= 0
+                this.itsAdmin = user.rol == 0
+
+                // socketIoService.getNotifications((data: any) => {
+                //     const requestRole = data.find(({ notificationTitle }: Notification) => notificationTitle == 'requestRol')
+                //     if (requestRole) this.requestRolSended = true
+                    
+                // })
             })
         })
         
@@ -84,7 +97,6 @@ export class PerfilComponent{
                         if(this.myId == this.perfilId) {
                             this.authService.logout()
                         }
-                        this.router.navigate(['home'])
                     },
                 })
             }

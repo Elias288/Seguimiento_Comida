@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
 
 @Component({
     selector: 'app-login',
@@ -36,13 +37,15 @@ export class LoginComponent implements OnInit {
                 Validators.minLength(3),
             ])
         })
-
     }
 
     onSubmit(): void {
-        this.authService.login(this.loginForm.controls['email'].value, this.loginForm.controls['password'].value).subscribe({
+        const { email, password } = this.loginForm.value
+        this.authService.login(email, password).subscribe({
             error: (e) => this._snackBar.open(e.error.errorMessage, 'close', { duration: 5000 }),
-            complete: () => this.router.navigate(['home'])
+            complete: () => {
+                this.router.navigate(['home'])
+            }
         })
     }
 }

@@ -2,14 +2,34 @@
     <div class="title">
         <h3>Agregar Roles al usuario</h3>
     </div>
-    <form novalidate [formGroup]="rolesForm">
+    <form [formGroup]="rolesForm">
 
-        <mat-radio-group aria-label="Select an option" formControlName="rol" class="radioRoles">
-            <mat-radio-button value="0">Admin</mat-radio-button>
-            <mat-radio-button value="1">Cocinero</mat-radio-button>
-            <mat-radio-button value="2">Comensal</mat-radio-button>
-            <mat-radio-button value="-1">Sin rol</mat-radio-button>
-          </mat-radio-group>
+        <div class="rolOption">
+            <input type="radio" id="rolAdmin" value="0" formControlName="rolOption">
+            <label for="rolAdmin">Admin</label>
+        </div>
+
+        <div class="rolOption">
+            <input type="radio" id="rolCocinero" value="1" formControlName="rolOption">
+            <label for="rolCocinero">Cocinero</label>
+        </div>
+
+        <div class="rolOption">
+            <input type="radio" id="rolComensal" value="2" formControlName="rolOption">
+            <label for="rolComensal">Comensal</label>
+        </div>
+
+        <div class="rolOption">
+            <input type="radio" id="rolSinRol" value="-1" formControlName="rolOption">
+            <label for="rolSinRol">Sin Rol</label>
+        </div>
+        
+        <!-- <mat-radio-group aria-label="Select an option" formControlName="rolesForm" class="radioRoles">
+            <mat-radio-button formControlName="rolOption" value="0">Admin</mat-radio-button>
+            <mat-radio-button formControlName="rolOption" value="1">Cocinero</mat-radio-button>
+            <mat-radio-button formControlName="rolOption" value="2">Comensal</mat-radio-button>
+            <mat-radio-button formControlName="rolOption" value="-1">Sin rol</mat-radio-button>
+          </mat-radio-group> -->
 
         <button mat-raised-button color="primary" (click)="updateRoles()">Aceptar</button>
     </form>

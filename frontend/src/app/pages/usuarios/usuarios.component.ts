@@ -28,16 +28,10 @@ export class UsuariosComponent implements OnInit {
         public userService: UserService,
         public dialog: MatDialog,
         private _snackBar: MatSnackBar,
-    ) { 
-        this.authService.isLoggedIn$.subscribe(status => {
-            if (status) {
-                this.authService.getUser().subscribe({
-                    next: (v) => {
-                        this.myId = v._id
-                        this.admin = v.rol == 0
-                    }
-                })
-            }
+    ) {
+        this.authService.user$.subscribe(user => {
+            this.myId = user._id
+            this.admin = user.rol == 0
         })
     }
 
@@ -72,7 +66,7 @@ export class UsuariosComponent implements OnInit {
                     data: {
                         jwt: this.authService.token,
                         userId: user._id,
-                        rol: user.rol
+                        rol: user.rol/*  != undefined ? user.rol : "" */
                     }
                 })
 

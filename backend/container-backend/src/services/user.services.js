@@ -35,6 +35,7 @@ exports.createUser = async (name, surName, email, password) => {
     return User.create(userData).then((user) => {
         const token = jwt.sign({ email: user.email, id: user._id }, process.env.SECRET)
         if (process.env.DEV) {
+            console.log(token)
             return { isError: false,  user}
         } 
 

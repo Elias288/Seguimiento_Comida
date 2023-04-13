@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io } from 'socket.io-client';
 import { Menu } from 'src/app/utils/menu.inteface';
-import { User } from 'src/app/utils/user.interface';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -16,6 +15,14 @@ export class SocketIoService {
 
     public getWebSocketError = (callback: any) => {
         this.socket.on('server:error', callback)
+    }
+
+    public getIsConnected = (callback: any) => {
+        this.socket.on('server:IsConnected', callback)
+    }
+
+    public getOnlineUsers = (callback: any) => {
+        this.socket.on('server:onlineUsers', callback)
     }
 
     public getMenues = (callback: any) => {
@@ -50,8 +57,6 @@ export class SocketIoService {
         this.socket.on('server:deletedToMenu', callback)
     }
 
-    
-
     public joinToRoom = (userRol: string) => {
         this.socket.emit('client:joinToRoom', userRol)   
     }
@@ -60,9 +65,17 @@ export class SocketIoService {
         this.socket.emit('client:requestMenues', )
     }
     
-    public requestNotifications = (userId: string, userRol: number) => {
-        this.socket.emit('client:requestPersonalNotifications', { userId, userRol })
+    // public requestNotifications = (userId: string, userRol: number) => {
+    //     this.socket.emit('client:requestPersonalNotifications', { userId, userRol })
+    // }
 
+
+    public isConnected = () => {
+        this.socket.emit('client:isConnected')
+    }
+
+    public newUser = (userId: string, email: string) => {
+        this.socket.emit('client:newUser', { userId, email })
     }
     
     public newMenu = (token: string, menu: Menu) => {
@@ -85,7 +98,11 @@ export class SocketIoService {
         this.socket.emit('client:deleteToMenu', { token, menuId, dropDate })
     }
 
-    public requestRol = (token: string, emisor: User) => {
-        this.socket.emit('client:requestRol', { token, emisor })
+    public notifyRoleChanged = (receptorId: string, newRol: string) => {
+        this.socket.emit('client:notifyRoleChanged', { receptorId, newRol, createdTime: new Date()  })
     }
+
+    // public requestRol = (token: string, emisor: User) => {
+    //     this.socket.emit('client:requestRol', { token, emisor })
+    // }
 }
