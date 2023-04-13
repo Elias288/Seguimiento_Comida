@@ -6,13 +6,14 @@ import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
 import { User } from 'src/app/utils/user.interface';
 import { CreateMenuDialogComponent } from '../create-menu-dialog/create-menu-dialog.component';
 import { Notification } from 'src/app/utils/notification.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-nav-bar',
     templateUrl: './nav-bar.component.html',
     styleUrls: ['./nav-bar.component.scss']
 })
-export class NavBarComponent implements OnInit{
+export class NavBarComponent {
     logged: boolean = false         // ESTÁ LOGUEADO
     userName!: string               // NOMBRE DEL USUARIO LOGUEADO
     hasRoles: boolean = false       // TIENE EL ROL PARA MOSTRARLO
@@ -26,39 +27,34 @@ export class NavBarComponent implements OnInit{
         private authService: AuthService,
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
+        private _snackBar: MatSnackBar,
     ) {
         authService.isLoggedIn$.subscribe(status => {
             this.logged = status
-            if (status) {
-                this.authService.getUser().subscribe({
-                    next: (v: User) => {
-                        this.userName = v.name
-                        this.myId = v._id
-                        this.hasRoles = parseInt(v.rol) >= 0 && parseInt(v.rol) < 2
+        })
 
-                        socketIoService.getNotifications((data: any) => {
-                            const notifications = data.filter(({emisor}: Notification) => emisor != v._id)
-                            this.activeNotifications = notifications.filter(({active}: Notification) => active)
-                            
-                            // console.log('getNotifications', notifications);
-                            this.notification = notifications
-                        })
-                        
-                        socketIoService.getNewNotification((data: any) => {
-                            // console.log('getNewNotification', data);
-                            this.notification.push(data)
-                        })
-                    },
-                    error: (e) => {
-                        window.localStorage.removeItem('jwt')
-                        window.location.href = '/'
-                    }
+        authService.user$.subscribe(user => {
+            this.userName = user.name
+            this.myId = user._id
+            this.hasRoles = user.rol >= 0 && user.rol < 2
+        })
+
+        socketIoService.getNewNotification((newNotification: Notification) => {
+            const { notificationTitle, message, active } = newNotification
+            
+            const snackbarRef = this._snackBar.open(message, 'close', { duration: 5000 })
+            this.notification.push(newNotification)
+
+            if (notificationTitle === 'notifyRoleChanged') {
+                snackbarRef.afterDismissed().subscribe(() => {
+                    this.router.navigate(['/home'])
+                    this.authService.getUser().subscribe(user => {
+                        this.authService.setUserInfo(user as User)
+                    })
                 })
             }
         })
     }
-
-    ngOnInit() {}
 
     public toggleMenu() {
         this.isMenuOpen = !this.isMenuOpen

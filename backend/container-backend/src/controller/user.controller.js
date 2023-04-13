@@ -168,20 +168,22 @@ exports.addRole = tryCatch(async (req, res) => {
     const { tokenData } = req
 
     const userById = await userServices.getUserById(tokenData.id),
-    user = userById.data.dataValues
+    userById2 = await userServices.getUserById(userId),
+    admin = userById.data.dataValues,
+    user = userById2.data.dataValues
     
-    if (user.rol != 0) throw new AppError(UNAUTHORIZED, "No está autorizado", 401)
-
+    if (admin.rol != 0) throw new AppError(UNAUTHORIZED, "No está autorizado", 401)
     if (!userId) throw new AppError(MISSING_DATA, "userId es requerido", 404)
-
     if (rol == undefined) throw new AppError(MISSING_DATA, "roles es requerido", 404)
 
-    const userData = { rol }
-    const data = await userServices.updateUser(userId, userData)
-    if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
-    
-    console.log(`[${new Date()}] Usuario: [${userId}] rol cambiado`)
-    return res.status(200).send({ message: 'Usuario actualizado' })
+    if (user.rol != rol) {
+        const userData = { rol }
+        const data = await userServices.updateUser(userId, userData)
+        if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
+        
+        console.log(`[${new Date()}] Usuario: [${userId}] rol cambiado`)
+        return res.status(200).send({ message: 'Usuario actualizado' })
+    }
 })
 
 exports.delete = tryCatch(async (req, res) => {

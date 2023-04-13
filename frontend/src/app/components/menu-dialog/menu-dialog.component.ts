@@ -42,7 +42,6 @@ export class MenuDialogComponent implements OnInit {
         private _snackBar: MatSnackBar,
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
-        private _liveAnnouncer: LiveAnnouncer,
         public fb: FormBuilder,
     ) {
         socketIoService.getWebSocketError((error: any) => {

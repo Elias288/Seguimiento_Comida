@@ -21,11 +21,9 @@ export class UsersTableComponent implements OnInit{
     @Input() jwt!: string
     @Output() actions: EventEmitter<object> = new EventEmitter<object>()
     ROLES = [
-        'ADMIN',     
+        'ADMINISTRADOR',     
         'COCINERO',  
-        'COMENSAL',  
-        '',
-        ''           
+        'COMENSAL',
     ]
     loading: boolean = true
     usuarios!: Array<User>
@@ -62,7 +60,7 @@ export class UsersTableComponent implements OnInit{
                 this.usuarios = allUsers.sort((a) => {
                     return a._id == this.myId ? -1 : 0
                 })
-                this.usuarios.map(u => u.rol = this.ROLES[parseInt(u.rol)])
+                this.usuarios.map(u => u.rolName = this.ROLES[u.rol])
 
                 this.toggleLoading()
                 // setTimeout(() => {
@@ -74,6 +72,7 @@ export class UsersTableComponent implements OnInit{
         })
     }
 
+    // Función definida en el componente usuarios.components.ts
     sendInfo(user: any, option: string) {
         this.actions.emit({
             user, 

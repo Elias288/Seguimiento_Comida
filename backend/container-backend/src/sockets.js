@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const AppError = require('./middleware/AppError')
 const { REQUIREDTOKEN, SERVER_ERROR, DEFAULT_ERROR, UNAUTHORIZED, ACCESS_DENIED, INVALID_DATA, INFO_NOT_FOUND } = require('./middleware/errorCodes')
 const handleSocketErrors = require('./middleware/handleSocketError')
+const UsersInSocket = require('./services/usersInSocket')
 
 //''            -1
 //'ADMIN',      0
@@ -12,12 +13,23 @@ const handleSocketErrors = require('./middleware/handleSocketError')
 //'COMENSAL',   2
 //'All'         3
 
+const onlineUsers = new UsersInSocket()
+
 module.exports = (io) => {
     io.on('connection', (socket) => {
         // console.log('new user connected:', socket.id);
 
         socket.on('client:joinToRoom', (userRol) => {
             socket.join(userRol)
+        })
+
+        socket.on('client:newUser', async (data) => {
+            try {
+                const { userId, email } = data
+                onlineUsers.addNewUser(userId, email, socket.id)
+            } catch (error) {
+                handleSocketErrors(error, socket)
+            }
         })
 
         const emitMenues = async () => {
@@ -29,15 +41,17 @@ module.exports = (io) => {
             emitMenues()
         })
 
-        /* const emitNewNotificacion = (userId, userRol, message) => {
-            if (userId != "") {
-                return
+        const emitNewNotificacion = (notification) => {
+            // socketId y userRol sirve para identificar el receptor de la notificación
+            // console.log(notification);
+            if (notification.receptorSocketId) {
+                return io.to(notification.receptorSocketId).emit('server:newNotification', notification)
             }
 
-            io.to(userRol).emit('server:newNotification', message)
+            io.to(notification.receptorRol).emit('server:newNotification', notification)
         }
         
-        socket.on('client:requestPersonalNotifications', async (data) => {
+        /*socket.on('client:requestPersonalNotifications', async (data) => {
             const { userId, userRol } = data
 
             const userNotificaciones = await notificationServices.getByReceptor(userId)
@@ -196,6 +210,37 @@ module.exports = (io) => {
             }
         })
 
+        socket.on('client:notifyRoleChanged', async (data) => {
+            try {
+                const { receptorId, newRol, createdTime } = data
+                const user = onlineUsers.getUserById(receptorId)
+                const ROLES = [
+                    'SIN ROL',
+                    'ADMINISTRADOR',     
+                    'COCINERO',  
+                    'COMENSAL',
+                ]
+
+                if (user) {
+                    const notification = {
+                        notificationTitle: "notifyRoleChanged",
+                        message: `Su rol ha cambiado a [${ROLES[parseInt(newRol) + 1]}]`,
+                        emisorSocketId: socket.id,
+                        receptorSocketId: user.socketId,
+                        createdTime,
+                        active: true
+                    }
+                    // console.log(`notificación de [${notification.emisorSocketId}] para [${receptorId}][${notification.receptorSocketId}]`);
+                    return emitNewNotificacion(notification)
+                }
+
+                // GUARDAR NOTIFICACIÓN EN BD HASTA QUE EL USUARIO SE CONECTE
+                console.log('guardar notificación en bd');
+            } catch (error) {
+                handleSocketErrors(error, socket)
+            }
+        })
+
         /* socket.on('client:requestRol', async (data) => {
             // notificar a administradores la solicitud de rol
             // guardar en BD la notificación para mostrar cuando un admin se conecte
@@ -216,6 +261,11 @@ module.exports = (io) => {
 
             emitNewNotificacion("", "ADMIN", creationResult.notification)
         }) */
+
+        socket.on('disconnect', () => {
+            // console.log(`Usuario [${socket.id}] desconectado`);
+            onlineUsers.removeUser(socket.id)
+        })
     })
 }
 

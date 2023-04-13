@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User } from 'src/app/utils/user.interface';
 import { UserService } from '../user/user.service';
+
+const EMPTYUSER = {
+    _id: "",
+    email: "",
+    name: "",
+    password: "",
+    password2: "",
+    rol: -1,
+}
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +18,9 @@ import { UserService } from '../user/user.service';
 export class AuthService {
     private _isLoggedIn$ = new BehaviorSubject<boolean>(false)
     isLoggedIn$ = this._isLoggedIn$.asObservable()
+    private _user$ = new BehaviorSubject<User>(EMPTYUSER)
+    user$ = this._user$.asObservable()
+    userInfo!: User
 
     constructor(
         private userService: UserService
@@ -28,11 +40,16 @@ export class AuthService {
             })
         )
     }
+
+    public setUserInfo (user: User) {
+        this._user$.next(user)
+        this.userInfo = user
+    }
     
     public getUser() {
         return this.userService.getMe(this.token).pipe(
-            tap((res:any) => {
-                return res
+            tap((res) => {
+                return res as User
             })
         )
     }
