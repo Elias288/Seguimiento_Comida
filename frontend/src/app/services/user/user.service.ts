@@ -27,7 +27,7 @@ export class UserService {
         return this.http.post(`${environment.ENDPOINT}/api/user/login`, body, { 'headers': headers })
     }
     
-    public getMe(jwt: String) {
+    public getMe(jwt: String): Observable<Object> {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` }
         return this.http.get(`${environment.ENDPOINT}/api/user/me`, { 'headers': headers })
     }

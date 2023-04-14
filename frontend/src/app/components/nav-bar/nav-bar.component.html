@@ -51,7 +51,7 @@
                 <label class="status connected" *ngIf="connected"></label>
             </button>
 
-            <mat-menu #menu="matMenu">
+            <mat-menu #menu="matMenu" #beforeMenu="matMenu" xPosition="before">
                 <button mat-menu-item 
                     color="warn"
                     (click)="goToPerfil()">

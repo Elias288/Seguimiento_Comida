@@ -8,7 +8,7 @@
     </div>
     <div *ngIf="!loading" class="container-content">
         <table mat-table [dataSource]="usuarios" class="mat-elevation-z8">
-            <tr mat-header-row *matHeaderRowDef="getDisplayedColumns(); sticky: true"></tr>
+            <tr mat-header-row *matHeaderRowDef="getDisplayedColumns();"></tr>
             <tr mat-row *matRowDef="let row; columns: getDisplayedColumns();"></tr>
         
             <ng-container matColumnDef="online">
