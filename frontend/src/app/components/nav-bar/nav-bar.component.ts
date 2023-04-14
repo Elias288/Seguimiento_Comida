@@ -48,10 +48,13 @@ export class NavBarComponent {
 
             if (notificationTitle === 'notifyRoleChanged') {
                 snackbarRef.afterDismissed().subscribe(() => {
-                    this.router.navigate(['/home'])
-                    this.authService.getUser().subscribe(user => {
-                        this.authService.setUserInfo(user as User)
+                    this.authService.getUser().subscribe({
+                        error: (e) => {
+                            console.error(e);
+                        }
                     })
+                    
+                    this.router.navigate(['/home'])
                 })
             }
         })

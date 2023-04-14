@@ -51,8 +51,8 @@ export class AuthService {
     
     public getUser() {
         return this.userService.getMe(this.token).pipe(
-            tap((res) => {
-                return res as User
+            tap((res: any) => {
+                this.setUserInfo(res as User)
             })
         )
     }

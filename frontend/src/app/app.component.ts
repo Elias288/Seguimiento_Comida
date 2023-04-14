@@ -3,6 +3,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { SocketIoService } from './services/socket-io/socket-io.service';
 import { AuthService } from './services/auth/auth.service';
 import { User } from './utils/user.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-root',
@@ -15,6 +16,7 @@ export class AppComponent {
 
     constructor (
         private authService: AuthService,
+        private _snackBar: MatSnackBar,
         private socket: SocketIoService,
     ) {
         this.authService.user$.subscribe(user => {
@@ -26,9 +28,18 @@ export class AppComponent {
 
         authService.isLoggedIn$.subscribe(isLogged => {
             if (isLogged && !this.user) {
-                this.authService.getUser().subscribe(user => {
-                    this.authService.setUserInfo(user as User)
-                    socket.isConnected()
+                this.authService.getUser().subscribe({
+                    next: () => {
+                        socket.isConnected()
+                    },
+                    error: (e) => {
+                        console.log(e);
+                        const snackbarRef = this._snackBar.open(e.error.details, 'close', { duration: 5000 })
+                        snackbarRef.afterDismissed().subscribe(() => {
+                            window.localStorage.removeItem('jwt')
+                            window.location.href = '/'
+                        })
+                    }
                 })
             }
         })
