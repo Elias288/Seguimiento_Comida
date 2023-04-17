@@ -14,14 +14,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent {
-    logged: boolean = false         // ESTÁ LOGUEADO
-    userName!: string               // NOMBRE DEL USUARIO LOGUEADO
-    hasRoles: boolean = false       // TIENE EL ROL PARA MOSTRARLO
-    myId!: string
-    notification: Array<any> = []
-    activeNotifications: Array<any> = []
-    isMenuOpen = false
+    logged: boolean = false                 // ESTÁ LOGUEADO
+    hasRoles: boolean = false               // TIENE EL ROL PARA MOSTRARLO
+    userInfo!: User                         // NOMBRE DEL USUARIO LOGUEADO
+    isMenuOpen: boolean = false
     connected: boolean = false
+    
+    activeNotificationsCount: number = 0
+    notifications: Array<any> = []
+    isNotificationOpen: boolean = false
+    notificationCountHidden: boolean = true
 
     constructor(
         private router: Router,
@@ -35,38 +37,49 @@ export class NavBarComponent {
         })
         
         authService.user$.subscribe(user => {
-            this.userName = user.name
-            this.myId = user._id
+            this.userInfo = user
             this.hasRoles = user.rol >= 0 && user.rol < 2
+
+            this.requestNotifications(user._id)
         })
 
         socketIoService.getNewNotification((newNotification: Notification) => {
-            const { notificationTitle, message, active } = newNotification
-            
-            const snackbarRef = this._snackBar.open(message, 'close', { duration: 5000 })
-            this.notification.push(newNotification)
+            if (newNotification.active) {
+                this.activeNotificationsCount = this.activeNotificationsCount + 1
 
-            if (notificationTitle === 'notifyRoleChanged') {
-                snackbarRef.afterDismissed().subscribe(() => {
-                    this.authService.getUser().subscribe({
-                        error: (e) => {
-                            console.error(e);
-                        }
+                const snackbarRef = this._snackBar.open(newNotification.message, 'close', { duration: 5000 })
+                if (newNotification.notificationTitle === 'notifyRoleChanged') {
+                    snackbarRef.afterDismissed().subscribe(() => {
+                        this.authService.getUser().subscribe({
+                            error: (e) => {
+                                console.error(e);
+                            }
+                        })
+                        
+                        this.router.navigate(['/home'])
                     })
-                    
-                    this.router.navigate(['/home'])
-                })
+                }
             }
+        
+            newNotification.createdTime = new Date(newNotification.createdTime).toLocaleString('es-US', { timeZone: 'America/Montevideo' })
+
+            if (this.activeNotificationsCount > 0) this.notificationCountHidden = false
+
+            this.notifications.push(newNotification)
         })
 
         socketIoService.getIsConnected((isConnected: boolean) => {
             this.connected = isConnected
         })
-        
     }
 
     public toggleMenu() {
         this.isMenuOpen = !this.isMenuOpen
+    }
+
+    public toggleNotifications() {
+        this.isNotificationOpen = !this.isNotificationOpen
+        this.toggleMenu()
     }
 
     public createMenu() {
@@ -81,6 +94,11 @@ export class NavBarComponent {
         })
     }
 
+    public goToHome() {
+        this.toggleMenu()
+        this.router.navigate(['/home'])
+    }
+
     public goToUsuarios() {
         this.toggleMenu()
         this.router.navigate(['/users'])
@@ -88,7 +106,7 @@ export class NavBarComponent {
 
     public goToPerfil() {
         this.toggleMenu()
-        this.router.navigate([`/perfil/${this.myId}`])
+        this.router.navigate([`/perfil/${this.userInfo._id}`])
     }
 
     public goToHelps() {
@@ -98,5 +116,13 @@ export class NavBarComponent {
 
     public logout() {
         this.authService.logout()
+    }
+
+    requestRol() {
+        this.socketIoService.requestRol();
+    }
+
+    requestNotifications(userId: string) {
+        this.socketIoService.requestNotifications(userId, this.userInfo.rol);
     }
 }

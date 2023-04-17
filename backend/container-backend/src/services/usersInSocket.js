@@ -4,12 +4,12 @@ class UsersInSocket {
 
     constructor(){}
 
-    addNewUser (userId, email, socketId) {
+    addNewUser (userId, email, socketId, userRol) {
         !this.users.some(user => user.email === email || user.userId === userId) && 
-        this.users.push({ userId, email, socketId})
+        this.users.push({ userId, email, socketId, userRol })
 
         if (process.env.DEV)
-            console.log(`usuario agregado: [${userId}][${socketId}]`);
+            console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] usuario agregado: [${userId}][${socketId}][${userRol}]`);
     }
 
     getUserBySocket(socketId) {
@@ -18,6 +18,10 @@ class UsersInSocket {
 
     getUserById(id) {
         return this.users.find(user => user.userId === id)
+    }
+    
+    getUsersByRol(rol) {
+        return this.users.filter(user => parseInt(user.userRol) === rol)
     }
 
     getAllUsers () {
@@ -28,7 +32,7 @@ class UsersInSocket {
         this.users = this.users.filter((user) => user.socketId !== socketId)
 
         if (process.env.DEV)
-            console.log(`usuario eliminado: [${socketId}]`);
+            console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] usuario eliminado: [${socketId}]`);
     }
 }
 

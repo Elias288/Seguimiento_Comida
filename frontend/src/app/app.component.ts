@@ -22,7 +22,7 @@ export class AppComponent {
         this.authService.user$.subscribe(user => {
             if (user._id) {
                 this.user = user
-                this.socket.newUser(user._id, user.email)
+                this.socket.newUser(user._id, user.email, user.rol)
             }
         })
 
@@ -33,7 +33,6 @@ export class AppComponent {
                         socket.isConnected()
                     },
                     error: (e) => {
-                        console.log(e);
                         const snackbarRef = this._snackBar.open(e.error.details, 'close', { duration: 5000 })
                         snackbarRef.afterDismissed().subscribe(() => {
                             window.localStorage.removeItem('jwt')

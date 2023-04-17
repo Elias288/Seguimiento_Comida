@@ -2,59 +2,65 @@ const db = require("../models")
 const { Op } = require("sequelize")
 const Notification = db.Notification
 const { v4: uuidv4 } = require('uuid')
-const { tryCatch } = require("./tryCatch")
-const AppError = require("../middleware/AppError")
-const { ALREADY_CREATE } = require("../middleware/errorCodes")
+const { ALREADY_CREATE, SERVER_ERROR, MISSING_DATA } = require("../middleware/errorCodes")
 
-exports.createNotification = tryCatch(async(notificationTitle, message, emisorSocketId, receptorSocketId, createdTime) => {
-    const notificationData = {
-        _id: uuidv4(),
-        notificationTitle,
-        message,
-        emisorSocketId,
-        receptorSocketId,
-        receptorRole,
-        active: true
-    }
-    
+exports.createNotification = async(notification) => {
+    const notificationData = { _id: uuidv4(), ...notification }
+
     const notificación = await Notification.findOne({
         where: {
-            [Op.and]: [{ emisorSocketId }, { createdAt: createdTime }]
+            [Op.and]: [{ emisorSocketId: notificationData.emisorSocketId }, { createdAt: notificationData.createdTime }]
         }
     })
-
     if (notificación){
-        throw new AppError(ALREADY_CREATE, "Notificación ya creada", 400)
-        // return {
-        //     isError: true,
-        //     name: "alreadyCreated",
-        //     message: "Notificación ya creada"
-        // }
+        return {
+            isError: true,
+            errorCode: ALREADY_CREATE,
+            details: "Notificación ya creada",
+            statusCode: 400,
+        }
     }
 
     return Notification.create(notificationData)
     .then(notification => {
         return notification
     }).catch(err => {
-        return err
+        return {
+            isError: true,
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500
+        }
     })
-})
+}
 
 exports.getAll = () => {
     return Notification.findAll()
 }
 
-exports.getByReceptor = (receptor) => {
+exports.getByReceptorId = (receptorId) => {
+    if (!receptorId) return {
+        isError: true,
+        errorCode: MISSING_DATA,
+        details: 'receptorId es requerido',
+        statusCode: 404,
+    }
+
     return Notification.findAll({
-        where: { receptor }
+        where: { receptorId }
     })
 }
 
-exports.getByReceptorRole = (receptorRole) => {
+exports.getByReceptorRole = (receptorRol) => {
+    if (!receptorRol) return {
+        isError: true,
+        errorCode: MISSING_DATA,
+        details: 'receptorRol es requerido',
+        statusCode: 404,
+    }
+
     return Notification.findAll({
-        where: { receptorRole: {
-            [Op.eq]: receptorRole
-        } }
+        where: { receptorRol: { [Op.eq]: receptorRol } }
     })
 }
 
@@ -71,8 +77,9 @@ exports.deleteNotification = (id) => {
     }).catch(() => {
         return {
             isError: true,
-            name: 'notDataError',
-            message: "Error de servidor"
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500
         }
     })
 }

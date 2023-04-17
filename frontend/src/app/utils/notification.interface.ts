@@ -6,5 +6,5 @@ export interface Notification {
     receptorSocketId: string
     receptorRol?: string
     active: boolean
-    createdTime: Date
+    createdTime: Date | string
 }

@@ -57,25 +57,24 @@ export class SocketIoService {
         this.socket.on('server:deletedToMenu', callback)
     }
 
-    public joinToRoom = (userRol: string) => {
-        this.socket.emit('client:joinToRoom', userRol)   
-    }
-
     public requestMenues = () => {
         this.socket.emit('client:requestMenues', )
     }
-    
-    // public requestNotifications = (userId: string, userRol: number) => {
-    //     this.socket.emit('client:requestPersonalNotifications', { userId, userRol })
-    // }
 
+    public requestRol = () => {
+        this.socket.emit('client:requestRol', { createdTime: new Date() })
+    }
+
+    public requestNotifications = (userId: string, userRol: number) => {
+        this.socket.emit('client:requestNotifications', { userId, userRol })
+    }
 
     public isConnected = () => {
         this.socket.emit('client:isConnected')
     }
 
-    public newUser = (userId: string, email: string) => {
-        this.socket.emit('client:newUser', { userId, email })
+    public newUser = (userId: string, email: string, userRol: number) => {
+        this.socket.emit('client:newUser', { userId, email, userRol })
     }
     
     public newMenu = (token: string, menu: Menu) => {
@@ -101,8 +100,4 @@ export class SocketIoService {
     public notifyRoleChanged = (receptorId: string, newRol: string) => {
         this.socket.emit('client:notifyRoleChanged', { receptorId, newRol, createdTime: new Date()  })
     }
-
-    // public requestRol = (token: string, emisor: User) => {
-    //     this.socket.emit('client:requestRol', { token, emisor })
-    // }
 }

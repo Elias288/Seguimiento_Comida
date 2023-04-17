@@ -15,15 +15,18 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        receptorSocketId: {
+        receptorId: {
             type: Sequelize.STRING
         },
-        receptorRole: {
+        receptorRol: {
             type: Sequelize.STRING
         },
         active: {
             type: Sequelize.BOOLEAN,
             defaultValue: true
+        },
+        createdTime: {
+            type: Sequelize.DATE
         }
     })
 

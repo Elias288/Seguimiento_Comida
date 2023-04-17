@@ -14,11 +14,24 @@
             </button>
         </li>
         <li class="menu" [class.is-open]="isMenuOpen">
-            <a mat-button href="#"
-                class="menu-item" >
+            <!-- <button mat-button 
+                class="menu-item" 
+                (click)="requestNotifications(userInfo._id)">
+                getNotifications
+            </button>
+
+            <button mat-button 
+                class="menu-item" 
+                (click)="requestRol()">
+                reqRol
+            </button> -->
+
+            <button mat-button 
+                class="menu-item" 
+                (click)="goToHome()">
                 <mat-icon fontIcon="home" />
                 Inicio
-            </a>
+            </button>
 
             <button mat-button 
                 class="menu-item" 
@@ -42,15 +55,19 @@
                 Ayudas
             </button>
 
+            <button mat-button
+                class="menu-item" (click)="toggleNotifications()">
+                <mat-icon fontIcon="notifications" matBadge="{{activeNotificationsCount}}" [matBadgeHidden]="notificationCountHidden"/>
+            </button>
+
             <button mat-button 
                 class="menu-item countBtn" 
                 [matMenuTriggerFor]="menu">
                 <mat-icon fontIcon="account_circle" />
-                {{userName}}
+                {{userInfo.name}}
                 <label class="status not_connected" *ngIf="!connected"></label>
                 <label class="status connected" *ngIf="connected"></label>
             </button>
-
             <mat-menu #menu="matMenu" #beforeMenu="matMenu" xPosition="before">
                 <button mat-menu-item 
                     color="warn"
@@ -67,4 +84,23 @@
             </mat-menu>
         </li>
     </ul>
+    <div class="notifications" [class.is-open]="isNotificationOpen">
+        <div>
+            <h2>Notificaciones</h2>
+            <mat-list role="list" class="notificationList">
+                <div class="notificationListItem" *ngFor="let notification of notifications" [class.isActive]="!notification.active">
+                    <div class="notificationListItemTitle">
+                        {{notification.notificationTitle}}
+                    </div>
+                    <div class="notificationListItemMessage">
+                        <p>{{notification.message}}</p>
+                    </div>
+                    <div class="notificationListItemInfo">
+                        <p>{{notification.createdTime}}</p>
+                    </div>
+                </div>
+            </mat-list>
+        </div>
+        <button mat-flat-button (click)="toggleNotifications()">cerrar</button>
+    </div>
 </nav>
