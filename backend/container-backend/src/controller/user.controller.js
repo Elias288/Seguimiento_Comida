@@ -66,7 +66,7 @@ exports.create = tryCatch(async (req, res) => {
     const data = await userServices.createUser(name, surName, email, password)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
     
-    console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] Usuario: [${email}] creado`)
+    console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Usuario: [${email}] creado`)
     return res.status(200).send({ message: 'Usuario creado exitosamente' })
 })
 
@@ -79,7 +79,7 @@ exports.confirmEmail = tryCatch(async (req, res) => {
     const data = await userServices.validateEmail(id)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
 
-    console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] Usuario: [${email}] confirmado`)
+    console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Usuario: [${email}] confirmado`)
     return res.status(200).send({message: 'Email verificado'})
 })
 
@@ -143,7 +143,7 @@ exports.update = tryCatch(async (req, res) => {
     const data = await userServices.updateUser(tokenData.id, user)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
 
-    console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] Usuario: [${email}] actualizado`)
+    console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Usuario: [${email}] actualizado`)
     return res.status(200).send({ message: 'Usuario actualizado' })
 })
 
@@ -165,7 +165,7 @@ exports.addRole = tryCatch(async (req, res) => {
         const data = await userServices.updateUser(userId, userData)
         if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
         
-        console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] Usuario: [${userId}] rol cambiado`)
+        console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Usuario: [${userId}] rol cambiado`)
         return res.status(200).send({ message: 'Usuario actualizado' })
     }
 })
@@ -184,6 +184,6 @@ exports.delete = tryCatch(async (req, res) => {
     const data = await userServices.deleteUser(userId)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
 
-    console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] Usuario: [${userId}] borrado por [${tokenData.email}]`)
+    console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Usuario: [${userId}] borrado por [${tokenData.email}]`)
     return res.status(200).send({ message: 'Usuario eliminado' })
 })

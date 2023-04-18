@@ -9,7 +9,7 @@ class UsersInSocket {
         this.users.push({ userId, email, socketId, userRol })
 
         if (process.env.DEV)
-            console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] usuario agregado: [${userId}][${socketId}][${userRol}]`);
+            console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] usuario agregado: [${userId}][${socketId}][${userRol}]`);
     }
 
     getUserBySocket(socketId) {
@@ -32,7 +32,7 @@ class UsersInSocket {
         this.users = this.users.filter((user) => user.socketId !== socketId)
 
         if (process.env.DEV)
-            console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] usuario eliminado: [${socketId}]`);
+            console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] usuario eliminado: [${socketId}]`);
     }
 }
 

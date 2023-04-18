@@ -30,6 +30,11 @@ export class SocketIoService {
     }
 
     public getNotifications = (callback: any) => {
+        // El servidor pide que se actualice las notificaciones
+        this.socket.on('server:requestNotifications', callback)
+    }
+
+    public notifications = (callback: any) => {
         this.socket.on('server:notifications', callback)
     }
 
@@ -65,8 +70,16 @@ export class SocketIoService {
         this.socket.emit('client:requestRol', { createdTime: new Date() })
     }
 
-    public requestNotifications = (userId: string, userRol: number) => {
-        this.socket.emit('client:requestNotifications', { userId, userRol })
+    public requestNotifications = (userId: string) => {
+        this.socket.emit('client:requestNotifications', { userId })
+    }
+
+    public activeNotification = (notificationId: string, userId: string) => {
+        this.socket.emit('client:activeNotification', { notificationId, userId })
+    }
+
+    public deleteNotification = (notificationId: string, userId: string) => {
+        this.socket.emit('client:deleteNotification', { notificationId, userId })
     }
 
     public isConnected = () => {

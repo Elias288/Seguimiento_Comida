@@ -4,7 +4,7 @@ const { DEFAULT_ERROR } = require("./errorCodes");
 const handleSocketErrors = (error, socket) => {
     
     if (error instanceof AppError) {
-        console.error(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] [${error.errorCode}] ${error.message}`);
+        console.error(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] [${error.errorCode}] ${error.message}`);
         return socket.emit('server:error', { errorCode: error.errorCode, errorMessage: error.message })
     }
     

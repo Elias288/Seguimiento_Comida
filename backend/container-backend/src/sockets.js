@@ -3,10 +3,9 @@ const userServices = require('./services/user.services')
 const notificationServices = require('./services/notification.service')
 const jwt = require('jsonwebtoken')
 const AppError = require('./middleware/AppError')
-const { REQUIREDTOKEN, SERVER_ERROR, UNAUTHORIZED, ACCESS_DENIED, INVALID_DATA, INFO_NOT_FOUND } = require('./middleware/errorCodes')
+const { REQUIREDTOKEN, SERVER_ERROR, UNAUTHORIZED, ACCESS_DENIED, INVALID_DATA, INFO_NOT_FOUND, MISSING_DATA } = require('./middleware/errorCodes')
 const handleSocketErrors = require('./middleware/handleSocketError')
 const UsersInSocket = require('./services/usersInSocket')
-const { MISSING_DATA } = require('./middleware/errorCodes')
 
 //''            -1
 //'ADMIN',      0
@@ -38,52 +37,51 @@ module.exports = (io) => {
             // guardar en BD la notificación para mostrar cuando un admin se conecte
             const { createdTime } = data
             const emisorUser = onlineUsers.getUserBySocket(socket.id)
-            const adminUsers = onlineUsers.getUsersByRol(0)
 
             const notification = {
                 notificationTitle: "requestRol",
                 message: `[${emisorUser.email}] esta solicitando un rol`,
-                emisorSocketId: socket.id,
+                emisorId: emisorUser.userId,
                 receptorId: undefined,
                 receptorRol: 0,
                 createdTime: createdTime,
                 active: true
             }
 
-            if (adminUsers.length > 0) {
-                emitNewNotificacion(notification)
-            }
-
             try {
                 const notificationRes = await notificationServices.createNotification(notification)
-                if (notification.isError) throw new AppError(notificationRes.errorCode, notificationRes.details, notificationRes.statusCode)
+                if (notificationRes.isError) 
+                    throw new AppError(notificationRes.errorCode, notificationRes.details, notificationRes.statusCode)
+                
+                emitNewNotificacion(notificationRes)
 
-                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] Notificación: [${notificationRes._id}] creada`)
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Notificación: [${notificationRes._id}] creada`)
             } catch (error) {
                 handleSocketErrors(error, socket)
             }
         })
 
         socket.on('client:requestNotifications', async (data) => {
-            const { userId, userRol } = data
+            const { userId } = data
             let notifications = []
 
-            // console.log(data);
             try {
-                if (userId) {
-                    const notificationsByReceptorIdRes = await notificationServices.getByReceptorId(userId)
-                    if (notificationsByReceptorIdRes.isError) throw new AppError(notificationsByReceptorIdRes.errorCode, notificationsByReceptorIdRes.details, notificationsByReceptorIdRes.statusCode)
-                    notifications.push(...notificationsByReceptorIdRes.map(notification => notification.dataValues)) 
-                }
-                if (userRol) {
-                    const notificationsByRolRes = userRol && await notificationServices.getByReceptorRole(userRol)
-                    if (notificationsByRolRes.isError) throw new AppError(notificationsByRolRes.errorCode, notificationsByRolRes.details, notificationsByRolRes.statusCode)
-                    notifications.push(...notificationsByRolRes.map(notification => notification.dataValues))
-                }
+                if (!userId) throw new AppError(MISSING_DATA, 'userId es necesario', 404)
+                const user = onlineUsers.getUserById(userId)
                 
-                notifications.forEach(notification => {
-                    emitNewNotificacion(notification)
-                })
+                const notificationsByReceptorIdRes = await notificationServices.getByReceptorId(userId)
+                if (notificationsByReceptorIdRes.isError) 
+                    throw new AppError(notificationsByReceptorIdRes.errorCode, notificationsByReceptorIdRes.details, notificationsByReceptorIdRes.statusCode)
+
+                notifications.push(...notificationsByReceptorIdRes.map(notification => notification.dataValues))
+
+                const notificationsByRolRes = await notificationServices.getByReceptorRole(user.userRol)
+                if (notificationsByRolRes.isError)
+                    throw new AppError(notificationsByRolRes.errorCode, notificationsByRolRes.details, notificationsByRolRes.statusCode)
+
+                notifications.push(...notificationsByRolRes.map(notification => notification.dataValues))
+
+                emitNotifications(notifications, userId)
             } catch (error) {
                 handleSocketErrors(error, socket)
             }
@@ -91,6 +89,7 @@ module.exports = (io) => {
 
         socket.on('client:notifyRoleChanged', async (data) => {
             const { receptorId, newRol, createdTime } = data
+            const emisorUser = onlineUsers.getUserBySocket(socket.id)
             const ROLES = [
                 'SIN ROL',
                 'ADMINISTRADOR',
@@ -101,15 +100,22 @@ module.exports = (io) => {
             const notification = {
                 notificationTitle: "notifyRoleChanged",
                 message: `Su rol ha cambiado a [${ROLES[parseInt(newRol) + 1]}]`,
-                emisorSocketId: socket.id,
+                emisorId: emisorUser.userId,
                 receptorId: receptorId,
                 receptorRol: undefined,
                 createdTime: createdTime,
                 active: true
             }
 
-            if (receptorId) {
-                return emitNewNotificacion(notification)
+            try {
+                const notificationRes = await notificationServices.createNotification(notification)
+                if (notificationRes.isError) throw new AppError(notificationRes.errorCode, notificationRes.details, notificationRes.statusCode)
+
+                emitNewNotificacion(notificationRes)
+
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Notificación: [${notificationRes._id}] creada`)
+            } catch (error) {
+                handleSocketErrors(error, socket)
             }
         })
 
@@ -122,13 +128,21 @@ module.exports = (io) => {
             io.emit('server:onlineUsers', onlineUsers.getAllUsers().map(user => user.userId))
         }
 
+        const emitNotifications = (notifications, userId) => {
+            // Emite una lista de notificaciónes segun el userId
+            const receptorSocketId = onlineUsers.getUserById(userId).socketId
+            return io.to(receptorSocketId).emit('server:notifications', notifications)
+        }
+
         const emitNewNotificacion = (notification) => {
-            if (notification.receptorId) {
+            // Emite notificaciones de a una por vez
+
+            if (notification.receptorId != undefined) {
                 const receptorSocketId = onlineUsers.getUserById(notification.receptorId).socketId
                 return io.to(receptorSocketId).emit('server:newNotification', notification)
             }
 
-            if (notification.receptorRol) {
+            if (notification.receptorRol != undefined) {
                 return io.to(parseInt(notification.receptorRol)).emit('server:newNotification', notification)
             }
             
@@ -157,7 +171,7 @@ module.exports = (io) => {
                 const menuData = await menuServices.createMenu(menuPrincipal, menuSecundario, date)
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
-                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] Menú: [${menuData.data._id}] creado por [${tokenData.email}]`)
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Menú: [${menuData.data._id}] creado por [${tokenData.email}]`)
                 io.emit("server:newMenu", menuData.data)
 
             } catch (error) {
@@ -181,7 +195,7 @@ module.exports = (io) => {
                 const menuData = await menuServices.deleteMenu(menuId)
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
-                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] Menú: [${menuId}] borrado por [${tokenData.email}]`)
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Menú: [${menuId}] borrado por [${tokenData.email}]`)
                 socket.emit('server:deletedMenu', true)
                 const menues = await menuServices.getAllMenu()
                 io.emit('server:loadMenues', menues)
@@ -221,7 +235,7 @@ module.exports = (io) => {
                 const menuData = await menuServices.updateMenu(menu)
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
     
-                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] Menú: [${menu._id}] actualizado por [${tokenData.email}]`)
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Menú: [${menu._id}] actualizado por [${tokenData.email}]`)
                 socket.emit('server:updatedMenu', true)
                 const menues = await menuServices.getAllMenu()
                 io.emit('server:loadMenues', menues)
@@ -248,7 +262,7 @@ module.exports = (io) => {
                 const menuData = await userServices.enterToMenu(menuId, selectedMenu, tokenData.id, new Date(entryDate))
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
     
-                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] User: [${tokenData.email}] se unió al menú [${menuId}]`)
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] User: [${tokenData.email}] se unió al menú [${menuId}]`)
                 const menues = await menuServices.getAllMenu()
                 socket.emit('server:addedMenu', true)
                 io.emit('server:loadMenues', menues)
@@ -275,10 +289,44 @@ module.exports = (io) => {
                 const menuData = await userServices.dropToMenu(menuId, tokenData.id, new Date(dropDate))
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
-                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo' })}] User: [${tokenData.email}] dado de baja del menú: [${menuId}]`)
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] User: [${tokenData.email}] dado de baja del menú: [${menuId}]`)
                 const menues = await menuServices.getAllMenu()
                 socket.emit('server:deletedToMenu', true)
                 io.emit('server:loadMenues', menues)
+            } catch (error) {
+                handleSocketErrors(error, socket)
+            }
+        })
+
+        socket.on('client:activeNotification', async (data) => {
+            const { notificationId, userId } = data
+            const user = onlineUsers.getUserById(userId)
+
+            try {
+                const notificationRes = await notificationServices.changeActive(notificationId)
+                if (notificationRes.isError) 
+                    throw new AppError(notificationRes.errorCode, notificationRes.details, notificationRes.statusCode)
+
+                io.to(user.socketId).emit('server:requestNotifications')
+
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Notificación: [${notificationId}] actualizada`)
+            } catch (error) {
+                handleSocketErrors(error, socket)
+            }
+        })
+
+        socket.on('client:deleteNotification', async (data) => {
+            const { notificationId, userId } = data
+            const user = onlineUsers.getUserById(userId)
+
+            try {
+                const notificationRes = await notificationServices.deleteNotification(notificationId)
+                if (notificationRes.isError) 
+                    throw new AppError(notificationRes.errorCode, notificationRes.details, notificationRes.statusCode)
+
+                io.to(user.socketId).emit('server:requestNotifications')
+
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Notificación: [${notificationId}] eliminada`)
             } catch (error) {
                 handleSocketErrors(error, socket)
             }

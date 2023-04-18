@@ -14,17 +14,12 @@
             </button>
         </li>
         <li class="menu" [class.is-open]="isMenuOpen">
-            <!-- <button mat-button 
-                class="menu-item" 
-                (click)="requestNotifications(userInfo._id)">
-                getNotifications
-            </button>
-
             <button mat-button 
                 class="menu-item" 
-                (click)="requestRol()">
+                (click)="requestRol()"
+                *ngIf="!hasRoles">
                 reqRol
-            </button> -->
+            </button>
 
             <button mat-button 
                 class="menu-item" 
@@ -43,7 +38,7 @@
             <button mat-button
                 class="menu-item"
                 (click)="createMenu()"
-                *ngIf="hasRoles">
+                *ngIf="canAdmin">
                 <mat-icon fontIcon="lunch_dining" />
                 Agregar Comida
             </button>
@@ -88,15 +83,25 @@
         <div>
             <h2>Notificaciones</h2>
             <mat-list role="list" class="notificationList">
-                <div class="notificationListItem" *ngFor="let notification of notifications" [class.isActive]="!notification.active">
+                <div class="notificationListItem" *ngFor="let notification of notifications" [class.isActive]="!notification.active" >
                     <div class="notificationListItemTitle">
-                        {{notification.notificationTitle}}
+                        <h2>{{notification.notificationTitle}}</h2>
                     </div>
                     <div class="notificationListItemMessage">
                         <p>{{notification.message}}</p>
                     </div>
                     <div class="notificationListItemInfo">
                         <p>{{notification.createdTime}}</p>
+                    </div>
+                    <div class="notificationListItemActions">
+                        <button mat-icon-button 
+                            class="done" 
+                            (click)="activeNotification(notification._id, userInfo._id)">
+                            <mat-icon fontIcon="done"/>
+                        </button>
+                        <button mat-icon-button class="delete" (click)="deleteNotification(notification._id, userInfo._id)">
+                            <mat-icon fontIcon="delete"/>
+                        </button>
                     </div>
                 </div>
             </mat-list>

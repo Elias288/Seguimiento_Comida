@@ -7,13 +7,14 @@ const { ALREADY_CREATE, SERVER_ERROR, MISSING_DATA } = require("../middleware/er
 exports.createNotification = async(notification) => {
     const notificationData = { _id: uuidv4(), ...notification }
 
-    const notificación = await Notification.findOne({
-        where: {
-            [Op.and]: [{ emisorSocketId: notificationData.emisorSocketId }, { createdAt: notificationData.createdTime }]
-        }
-    })
-    if (notificación){
-        return {
+    if (notificationData.notificationTitle != 'notifyRoleChanged') {
+        const notificación = await Notification.findOne({
+            where: {
+                [Op.and]: [{ emisorId: notificationData.emisorId }, { notificationTitle: notificationData.notificationTitle }]
+            }
+        })
+    
+        if (notificación) return {
             isError: true,
             errorCode: ALREADY_CREATE,
             details: "Notificación ya creada",
@@ -32,6 +33,36 @@ exports.createNotification = async(notification) => {
             statusCode: 500
         }
     })
+}
+
+exports.changeActive = async (notificationId) => {
+    if (!notificationId) return {
+        isError: true,
+        errorCode: MISSING_DATA,
+        details: "NotificationId es necesaria",
+        statusCode: 400,
+    }
+
+    return Notification.update({ active: 0 }, { where: { _id: notificationId } })
+    .then(num => {
+        if (num == 1)
+            return { isError: false }
+
+        return {
+            isError: true,
+            errorCode: SERVER_ERROR,
+            details: "No se pudo actualizar",
+            statusCode: 400,
+        }
+    }).catch((err) => {
+        return {
+            isError: true,
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500,
+        }
+    })
+
 }
 
 exports.getAll = () => {

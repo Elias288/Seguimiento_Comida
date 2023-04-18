@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
         message: {
             type: Sequelize.STRING
         },
-        emisorSocketId: {
+        emisorId: {
             type: Sequelize.STRING,
             allowNull: false,
         },

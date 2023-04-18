@@ -190,18 +190,32 @@ $color_orange: #ff9431;
             }
 
             > * {
-                display: block;
                 margin-bottom: 5px;
             }
 
-            &Title {
+            &Title h2{
                 text-transform: uppercase;
-                font-weight: bold;
             }
 
             &Info {
                 color: #ababab;
                 text-align: end;
+            }
+
+            &Actions {
+                display: flex;
+
+                > * {
+                    flex: 1;
+                }
+
+                .done {
+                    color: green;
+                }
+
+                .delete {
+                    color: #831010;
+                }
             }
         }
     }
