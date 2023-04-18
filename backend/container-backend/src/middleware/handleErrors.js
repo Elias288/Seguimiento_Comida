@@ -2,7 +2,7 @@ const AppError = require("./AppError");
 const { TOKEN_EXPIRED } = require("./errorCodes");
 
 module.exports = (error, req, res, next) => {
-    console.error(`[${new Date()}]`, error);
+    console.error(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}]`, error);
 
     if (error instanceof AppError) {
         return res.status(error.statusCode).json({

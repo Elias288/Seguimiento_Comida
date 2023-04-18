@@ -25,10 +25,21 @@ $background_MS_dark: rgb(50 57 122);
 }
 
 .header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
     @media screen and (min-width: $pcSize) {
-        display: flex;
+        flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+    }
+
+    > * {
+        margin-bottom: 10px;
+    }
+
+    .menuInfo {
+        font-size: 1.5rem;
     }
 
     .headerActions {

@@ -2,6 +2,9 @@
     <div class="body">
         <div class="header">
             <h1 mat-dialog-title class="title">Información del Menu</h1>
+            <div class="menuInfo">
+                {{localDate}}
+            </div>
             <div class="headerActions">
                 <button mat-icon-button color="primary" aria-label="Editar Menú" (click)="toggleUpdateMenu()" *ngIf="canManageMenus"><mat-icon>edit</mat-icon></button>
                 <button mat-icon-button color="warn" aria-label="Borrar Menú" (click)="deleteMenu()" *ngIf="canManageMenus"><mat-icon>delete</mat-icon></button>

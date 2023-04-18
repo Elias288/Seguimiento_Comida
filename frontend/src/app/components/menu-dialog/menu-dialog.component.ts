@@ -20,6 +20,7 @@ export class MenuDialogComponent implements OnInit {
     day: any = this.data.day                                // TODA LA INFORMACIÓN DEL DIA
     menu: Menu = this.day.menu                              // TODA LA INFORMACIÓN DEL MENU
     completeDate: Date = this.data.completeDate             // FECHA COMPLETA DEL MENU
+    localDate: string = new Date(this.data.completeDate).toLocaleDateString()
     mySelectedMenu: string = this.data.mySelectedMenu       // MENU DEL USUARIO LOGUEADO
     usersInMenu!: Array<User>                               // USUARIOS EN EL MENU
     
@@ -84,7 +85,7 @@ export class MenuDialogComponent implements OnInit {
                     const date = u.Menu_User?.entryDate && new Date(u.Menu_User.entryDate)
                     return {
                         menu_option: u.Menu_User?.selectedMenu,
-                        hour: date?.toLocaleTimeString(),
+                        hour: date?.toLocaleString('es-US', { hour12: false }),
                         name: u.name,
                         surName: u.surName,
                         email: u.email,
