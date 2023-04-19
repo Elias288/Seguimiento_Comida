@@ -26,6 +26,7 @@ export class MenuDialogComponent implements OnInit {
     
     canBeAddedToMenu: boolean = this.data.canBeAddedToMenu  // PUEDE AGREGARSE AL MENÚ
     canManageMenus: boolean = this.data.canManageMenus      // PUEDE ADMINISTAR MENUS
+    outOfDate: boolean = false                              // INDICA SI EL MENÚ ESTÁ FUERA DE FECHA
 
     dataCountMenuOption = [{ MP: 0, MS: 0, total: 0 }]
     displayedCountColumns: Array<string> = [ 'menu_principal', 'menu_secundario', 'total' ]
@@ -93,6 +94,8 @@ export class MenuDialogComponent implements OnInit {
                 })
             );
         }
+        
+        this.outOfDate = new Date().getTime() >= new Date(this.menu.date).getTime()
 
         this.menuData = new FormGroup ({
             menuPrincipal: new FormControl<string>(this.menu.menuPrincipal, [
