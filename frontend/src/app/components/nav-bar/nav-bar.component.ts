@@ -14,7 +14,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent {
-    logged: boolean = false                 // ESTÁ LOGUEADO
     hasRoles: boolean = false               // TIENE EL ROL PARA MOSTRARLO
     canAdmin: boolean = false               // TIENE EL ROL PARA ADMINISTRAR
     userInfo!: User                         // NOMBRE DEL USUARIO LOGUEADO
@@ -33,9 +32,6 @@ export class NavBarComponent {
         public socketIoService: SocketIoService,
         private _snackBar: MatSnackBar,
     ) {
-        authService.isLoggedIn$.subscribe(status => {
-            this.logged = status
-        })
         
         authService.user$.subscribe(user => {
             this.userInfo = user
