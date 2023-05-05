@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     ) {
         authService.isLoggedIn$.subscribe(status => {
             if (status){
-                router.navigate(['home'])
+                router.navigate(['seguimiento-almuerzo'])
             }
         })
     }
@@ -41,9 +41,15 @@ export class LoginComponent implements OnInit {
     onSubmit(): void {
         const { email, password } = this.loginForm.value
         this.authService.login(email, password).subscribe({
-            error: (e) => this._snackBar.open(e.error.errorMessage, 'close', { duration: 5000 }),
+            error: (e) => {
+                if(e.error.errorCode) {
+                    this._snackBar.open(e.error.errorMessage, 'close', { duration: 5000 })
+                } else {
+                    this._snackBar.open('Error del servidor', 'close', { duration: 5000 })
+                }
+            },
             complete: () => {
-                this.router.navigate(['home'])
+                this.router.navigate(['seguimiento-almuerzo'])
             }
         })
     }

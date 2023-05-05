@@ -16,13 +16,13 @@ module.exports = (error, req, res, next) => {
 }
 
 const ERROR_HANDLERS = {
-    TokenExpiredError: (res, error) => res.status(400).send({errorCode: TOKEN_EXPIRED, details: "Token expirado"}),
-    JsonWebTokenError: (res, error) => res.status(400).send({ error: error.name, details: error.details }),
+    // TokenExpiredError: (res, error) => res.status(400).send({errorCode: TOKEN_EXPIRED, details: "Token expirado"}),
+    // JsonWebTokenError: (res, error) => res.status(400).send({ error: error.name, details: error.details }),
 
-    SequelizeValidationError: (res, error) => res.status(400).send({ error: error.name, details: error.errors[0].details}),
-    SequelizeUniqueConstraintError: (res, error) => res.status(400).send({ error: error.name, details: error.errors[0].details}),
+    // SequelizeValidationError: (res, error) => res.status(400).send({ error: error.name, details: error.errors[0].details}),
+    // SequelizeUniqueConstraintError: (res, error) => res.status(400).send({ error: error.name, details: error.errors[0].details}),
 
-    ValidationError: (res, error) => res.status(400).send({ type: 'ValidationError', details: error.details}),
+    // ValidationError: (res, error) => res.status(400).send({ type: 'ValidationError', details: error.details}),
     
     defaultError: (res) => { res.status(500).send('Something went wrong') }
 }

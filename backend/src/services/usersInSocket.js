@@ -5,11 +5,11 @@ class UsersInSocket {
     constructor(){}
 
     addNewUser (userId, email, socketId, userRol) {
-        !this.users.some(user => user.email === email || user.userId === userId) && 
-        this.users.push({ userId, email, socketId, userRol })
-
-        if (process.env.DEV)
-            console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] usuario agregado: [${userId}][${socketId}][${userRol}]`);
+        if (!this.users.some(user => user.email === email || user.userId === userId)) {
+            this.users.push({ userId, email, socketId, userRol })
+            if (process.env.DEV)
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] usuario agregado: [${userId}][${socketId}][${userRol}]`);
+        } 
     }
 
     getUserBySocket(socketId) {

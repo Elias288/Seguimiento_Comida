@@ -8,60 +8,33 @@ import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { CanAccesService } from './services/canAcces/can-acces.service';
 import { HelpsComponent } from './pages/helps/helps.component';
 import { EntryPageComponent } from './pages/entry-page/entry-page.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 
 const routes: Routes = [
+    { path: '', redirectTo: '/login', pathMatch: 'full'  },
+    { path: 'confirm/:token', title: "Email confirmation", component: ConfirmationComponent }, 
     {
-        path: '',
-        redirectTo: '/login',
-        pathMatch: 'full' 
-    },
-    {
-        path: 'confirm/:token',
-        title: "Email confirmation",
-        component: ConfirmationComponent
-    },
-    {
-        path: 'home',
-        title: "Home",
+        path: 'seguimiento-almuerzo',
         component: HomeComponent,
-        canActivate: [CanAccesService]
+        children: [
+            { path: '', redirectTo: 'calendar', pathMatch: 'prefix'},
+            { path: 'calendar', title: "Calendario", component: CalendarComponent, canActivate: [CanAccesService] },
+            { path: 'users', title: "Listar usuario", component: UsuariosComponent, canActivate: [CanAccesService] },
+            { path: 'perfil/:userId', title: "My perfil", component: PerfilComponent, canActivate: [CanAccesService] }, 
+            { path: 'helps', title: "Ayudas", component: HelpsComponent }, 
+        ]
     },
-    {
-        path: 'login',
-        title: "Login",
-        component: EntryPageComponent
-    },
-    {
-        path: 'create/user',
-        title: "Crear usuario",
-        component: EntryPageComponent
-    },
-    {
-        path: 'users',
-        title: "Listar usuario",
-        component: UsuariosComponent,
-        canActivate: [CanAccesService]
-    },
-    {
-        path: 'perfil/:userId',
-        title: "My perfil",
-        component: PerfilComponent,
-        canActivate: [CanAccesService]
-    },
-    {
-        path: 'helps',
-        title: "Ayudas",
-        component: HelpsComponent
-    },
-    {
-        path: '**',
-        title: "Not Found",
-        component: NotFoundComponent
-    },
+    { path: 'login', title: "Login", component: EntryPageComponent },
+    { path: 'create/user', title: "Crear usuario", component: EntryPageComponent },
+    { path: '**', title: "Not Found", component: NotFoundComponent },
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes, {
+        anchorScrolling: 'enabled',
+        onSameUrlNavigation: 'reload',
+        scrollPositionRestoration: 'enabled'
+      })],
     exports: [RouterModule]
 })
 export class AppRoutingModule {  }

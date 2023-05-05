@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { SocketIoService } from './services/socket-io/socket-io.service';
+// import { SocketIoService } from './services/socket-io/socket-io.service';
 import { AuthService } from './services/auth/auth.service';
 import { User } from './utils/user.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,22 +12,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AppComponent {
     title = "Seguimiento comida"
-    user!: User
+    
+    // user!: User
 
     constructor (
         private authService: AuthService,
         private _snackBar: MatSnackBar,
-        private socket: SocketIoService,
+        // private socket: SocketIoService,
     ) {
-        this.authService.user$.subscribe(user => {
+        /* this.authService.user$.subscribe(user => {
             if (user._id) {
                 this.user = user
                 this.socket.newUser(user._id, user.email, user.rol)
             }
-        })
+        }) */
 
-        authService.isLoggedIn$.subscribe(isLogged => {
-            if (isLogged && !this.user) {
+        /*authService.isLoggedIn$.subscribe(isLogged => {
+            this.isLogged = isLogged
+             if (isLogged && !this.user) {
                 this.authService.getUser().subscribe({
                     next: () => {
                         socket.isConnected()
@@ -40,11 +42,11 @@ export class AppComponent {
                         })
                     }
                 })
-            }
-        })
+            } 
+        })*/
 
-        this.socket.getOnlineUsers((users: string[]) => {
+        /* this.socket.getOnlineUsers((users: string[]) => {
             this.authService.setOnlineUsers(users)
-        })
+        }) */
     }
 }

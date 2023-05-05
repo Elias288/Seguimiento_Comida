@@ -60,7 +60,7 @@ exports.create = tryCatch(async (req, res) => {
 
     if (!process.env.DEV) {
         const {error} = createUserSchema.validate({ name, email, password, repeat_password: password2 })
-        if (error) throw error
+        if (error) throw new AppError(MISSING_DATA, error, 404)
     }
 
     const data = await userServices.createUser(name, surName, email, password)
@@ -114,7 +114,7 @@ exports.login = tryCatch(async (req, res) => {
     const { email, password } = req.body
 
     const {error} = loginUserSchema.validate({ email, password })
-    if (error) throw error
+    if (error) throw new AppError(MISSING_DATA, error, 404)
 
     const data = await userServices.login(email, password)
     if (data.isError) throw new AppError(data.errorCode, data.details, data.statusCode)
