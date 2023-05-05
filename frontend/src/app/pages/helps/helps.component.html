@@ -19,30 +19,30 @@
             <div class="indice" [class.is-open]="isMenuOpen">
                 <ul>
                     <li>
-                        <a mat-button (click)="toggleMenu()" href="/helps#introduccion">Introducción</a>
+                        <a mat-button (click)="toggleMenu()" [routerLink]="['.']" fragment="introduccion">Introducción</a>
                     </li>
                     <li>
-                        <a mat-button (click)="toggleMenu()" href="/helps#roles">Roles de usuarios</a>
+                        <a mat-button (click)="toggleMenu()" [routerLink]="['.']" fragment="roles">Roles de usuarios</a>
                     </li>
                     <li>
-                        <a mat-button (click)="toggleMenu()" href="/helps#menu">Menú</a>
+                        <a mat-button (click)="toggleMenu()" [routerLink]="['.']" fragment="menu">Menú</a>
                         <ul>
                             <li>
-                                <a mat-button (click)="toggleMenu()" href="/helps#crearMenu">Crear Menú</a>
+                                <a mat-button (click)="toggleMenu()" [routerLink]="['.']" fragment="crearMenu">Crear Menú</a>
                             </li>
                             <li>
-                                <a mat-button (click)="toggleMenu()" href="/helps#editarMenu">Editar Menú</a>
+                                <a mat-button (click)="toggleMenu()" [routerLink]="['.']" fragment="editarMenu">Editar Menú</a>
                             </li>
                             <li>
-                                <a mat-button (click)="toggleMenu()" href="/helps#eliminarMenu">Eliminar Menú</a>
+                                <a mat-button (click)="toggleMenu()" [routerLink]="['.']" fragment="eliminarMenu">Eliminar Menú</a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a mat-button (click)="toggleMenu()" href="/helps#agregarseAMenu">Agregarse a Menú</a>
+                        <a mat-button (click)="toggleMenu()" [routerLink]="['.']" fragment="agregarseAMenu">Agregarse a Menú</a>
                     </li>
                     <li>
-                        <a mat-button (click)="toggleMenu()" href="/helps#quitarseDeMenu">Quitarse de Menú</a>
+                        <a mat-button (click)="toggleMenu()" [routerLink]="['.']" fragment="quitarseDeMenu">Quitarse de Menú</a>
                     </li>
                 </ul>
             </div>
@@ -85,7 +85,7 @@
                 <section class="menu" id="menu">
                     <h2>Menú</h2>
             
-                    <div class="sectionContent">
+                    <section class="sectionContent">
                         <div>
                             <p>Los menús son la parte más importante de esta aplicación, cada menú estará conformado por un menú principal (obligatiorio), un menú secundario (opcional), la fecha en la que será servido y una lista de usuarios que solicitaron uno de los menús, si el menú cuenta con las 2 opciones un usuario podrá elegir uno, en el caso contrario solamente el que este registrado.</p>
                             <p>En el calendario de la pagina principal cada menú mostrará las opciones de menú registrados y la cantidad total de comensales sea cual sea su opción. Para ver las cantidades especificas de cada opcion es necesario abrir el menú e ir a la opción de "Cantidades".</p>
@@ -98,7 +98,7 @@
                                 <p>Panel de información de menú</p>
                             </mat-card-content>
                         </mat-card>
-                    </div>
+                    </section>
             
                     <section class="crearMenu" id="crearMenu">
                         <h3>Crear Menú</h3>

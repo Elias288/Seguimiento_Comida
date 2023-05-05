@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     ) {
         authService.isLoggedIn$.subscribe(status => {
             if (status){
-                router.navigate(['home'])
+                router.navigate(['seguimiento-almuerzo'])
             }
         })
     }
@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
                 }
             },
             complete: () => {
-                this.router.navigate(['home'])
+                this.router.navigate(['seguimiento-almuerzo'])
             }
         })
     }

@@ -76,7 +76,7 @@ export class NavBarComponent {
                             }
                         })
                         
-                        this.router.navigate(['/home'])
+                        this.router.navigate(['/seguimiento-almuerzo'])
                     })
                 }
             }
@@ -116,26 +116,6 @@ export class NavBarComponent {
         dialogRef.afterClosed().subscribe(result => {
             window.location.href = '/'
         })
-    }
-
-    public goToHome() {
-        this.toggleMenu()
-        this.router.navigate(['/home'])
-    }
-
-    public goToUsuarios() {
-        this.toggleMenu()
-        this.router.navigate(['/users'])
-    }
-
-    public goToPerfil() {
-        this.toggleMenu()
-        this.router.navigate([`/perfil/${this.userInfo._id}`])
-    }
-
-    public goToHelps() {
-        this.toggleMenu()
-        this.router.navigate(['/helps'])
     }
 
     public logout() {
