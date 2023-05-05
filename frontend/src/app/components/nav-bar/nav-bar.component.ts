@@ -14,7 +14,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent {
-    logged: boolean = false                 // ESTÁ LOGUEADO
     hasRoles: boolean = false               // TIENE EL ROL PARA MOSTRARLO
     canAdmin: boolean = false               // TIENE EL ROL PARA ADMINISTRAR
     userInfo!: User                         // NOMBRE DEL USUARIO LOGUEADO
@@ -33,9 +32,6 @@ export class NavBarComponent {
         public socketIoService: SocketIoService,
         private _snackBar: MatSnackBar,
     ) {
-        authService.isLoggedIn$.subscribe(status => {
-            this.logged = status
-        })
         
         authService.user$.subscribe(user => {
             this.userInfo = user
@@ -80,7 +76,7 @@ export class NavBarComponent {
                             }
                         })
                         
-                        this.router.navigate(['/home'])
+                        this.router.navigate(['/seguimiento-almuerzo'])
                     })
                 }
             }
@@ -120,26 +116,6 @@ export class NavBarComponent {
         dialogRef.afterClosed().subscribe(result => {
             window.location.href = '/'
         })
-    }
-
-    public goToHome() {
-        this.toggleMenu()
-        this.router.navigate(['/home'])
-    }
-
-    public goToUsuarios() {
-        this.toggleMenu()
-        this.router.navigate(['/users'])
-    }
-
-    public goToPerfil() {
-        this.toggleMenu()
-        this.router.navigate([`/perfil/${this.userInfo._id}`])
-    }
-
-    public goToHelps() {
-        this.toggleMenu()
-        this.router.navigate(['/helps'])
     }
 
     public logout() {

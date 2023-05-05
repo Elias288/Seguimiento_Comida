@@ -42,6 +42,8 @@ p {
     border-right: 2px solid #bebebe;
     background: rgba(255, 255, 255, 0.855);
     z-index: 10;
+    width: 220px;
+    box-sizing: border-box;
 
     @media screen and (max-width: $pcSize) {
         display: none;
@@ -85,8 +87,9 @@ p {
 }
 
 .sections {
-    height: calc(100vh - $navbarHeight * 2);
-    overflow: scroll;
+    @media screen and (min-width: $pcSize) {
+        width: calc(100% - 240px);
+    }
 
     section {
         padding: 0 1rem;
