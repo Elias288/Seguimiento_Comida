@@ -42,7 +42,6 @@ export class LoginComponent implements OnInit {
         const { email, password } = this.loginForm.value
         this.authService.login(email, password).subscribe({
             error: (e) => {
-                console.log(e);
                 if(e.error.errorCode) {
                     this._snackBar.open(e.error.errorMessage, 'close', { duration: 5000 })
                 } else {

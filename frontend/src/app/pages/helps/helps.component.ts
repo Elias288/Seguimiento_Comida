@@ -13,9 +13,7 @@ export class HelpsComponent {
     constructor(
         private router: Router,
     ){
-        setTimeout(() => {
-            this.toggleLoading()
-        }, 500);
+        this.toggleLoading()
     }
 
     toggleLoading() {
