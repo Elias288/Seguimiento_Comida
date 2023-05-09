@@ -10,7 +10,7 @@
         <p>Rol: {{rol}}</p>
     </div>
     <div class="container-actions" *ngIf="itsMe || itsAdmin">
-        <button mat-raised-button color="warn" (click)="deleteUser()">Eliminar</button>
+        <button mat-raised-button color="warn" (click)="deleteUser()">Darse de baja</button>
         <!-- <button mat-raised-button (click)="openUpdateUser()">Editar</button> -->
     </div>
     <!-- <mat-card *ngIf="!hasRole">

@@ -40,7 +40,9 @@ const createUserSchema = Joi.object({
             'password.onlyLatinCharacters': '{#label} debe contener solo caracteres latínos',
         })
         .required(),
-    repeat_password: Joi.ref('password'),
+    repeat_password: Joi.any().valid(Joi.ref('password')).messages({
+        'any.only': 'Las contraseñas deben ser iguales'
+    }),
 
     access_token: [
         Joi.string(), Joi.number()
@@ -60,7 +62,7 @@ exports.create = tryCatch(async (req, res) => {
 
     if (!process.env.DEV) {
         const {error} = createUserSchema.validate({ name, email, password, repeat_password: password2 })
-        if (error) throw new AppError(MISSING_DATA, error, 404)
+        if (error) throw new AppError(MISSING_DATA, error, 400)
     }
 
     const data = await userServices.createUser(name, surName, email, password)

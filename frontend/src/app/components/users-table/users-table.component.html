@@ -22,7 +22,7 @@
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Nombre </th>
                 <td mat-cell *matCellDef="let user">
-                    <a href="perfil/{{user._id}}">
+                    <a [routerLink]="['../perfil', user._id]">
                         {{user.name}}
                     </a>
                 </td>
