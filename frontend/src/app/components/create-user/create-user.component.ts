@@ -51,7 +51,7 @@ export class CreateUserComponent implements OnInit{
         this.userService.create(user).subscribe({
             next: (v) => this._snackBar.open('Usuario creado exitosamente, activelo desde su correo', 'close', { duration: 5000 }),
             error: (e) => {
-                this._snackBar.open(e.error.details[0].message, 'close', { duration: 5000 })
+                this._snackBar.open(e.error.errorMessage, 'close', { duration: 5000 })
             },
             complete: () => this.router.navigate(['login'])
         })
