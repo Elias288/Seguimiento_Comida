@@ -1,6 +1,7 @@
 <div class="container" *ngIf="userInfo">
     <div class="title">
-        <h1>Mi Perfil</h1>
+        <h1 *ngIf="itsMe">Mi Perfil</h1>
+        <h1 *ngIf="!itsMe">Perfil</h1>
     </div>
     <div class="container-content">
         <h2>{{userInfo.name}} {{userInfo.surName}}</h2>

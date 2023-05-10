@@ -8,7 +8,7 @@
             <div class="headerActions">
                 <button mat-icon-button color="primary" aria-label="Editar Menú" (click)="toggleUpdateMenu()" *ngIf="canManageMenus"><mat-icon>edit</mat-icon></button>
                 <button mat-icon-button color="warn" aria-label="Borrar Menú" (click)="deleteMenu()" *ngIf="canManageMenus"><mat-icon>delete</mat-icon></button>
-                <a mat-icon-button href="/helps#menu"><mat-icon>question_mark</mat-icon></a>
+                <a mat-icon-button [routerLink]="['./seguimiento-almuerzo/helps']" fragment="menu" (click)="onNoClick()"><mat-icon>question_mark</mat-icon></a>
             </div>
         </div>
 

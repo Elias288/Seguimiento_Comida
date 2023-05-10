@@ -1,7 +1,7 @@
 <nav class="navBar">
     <ul>
         <li class="home">
-            <a [routerLink]="['./calendar']">
+            <a [routerLink]="['./calendar']" (click)="toggleMenu()">
                 <img src="assets/images/logo-sofka-blanco.png" alt="Logo Sofka" class="sofkaLogo">
             </a>
         </li>
@@ -23,14 +23,14 @@
 
             <button mat-button 
                 class="menu-item" 
-                [routerLink]="['./calendar']">
+                [routerLink]="['./calendar']" (click)="toggleMenu()">
                 <mat-icon fontIcon="home" />
                 Inicio
             </button>
 
             <button mat-button 
                 class="menu-item" 
-                [routerLink]="['./users']">
+                [routerLink]="['./users']" (click)="toggleMenu()">
                 <mat-icon fontIcon="group" />
                 Usuarios
             </button>
@@ -45,7 +45,7 @@
             
             <button mat-button
                 class="menu-item"
-                [routerLink]="['./helps']">
+                [routerLink]="['./helps']" (click)="toggleMenu()">
                 <mat-icon fontIcon="live_help" />
                 Ayudas
             </button>
@@ -66,7 +66,7 @@
             <mat-menu #menu="matMenu" #beforeMenu="matMenu" xPosition="before">
                 <button mat-menu-item 
                     color="warn"
-                    [routerLink]="['./perfil/', userInfo._id]">
+                    [routerLink]="['./perfil/', userInfo._id]" (click)="toggleMenu()">
                     <mat-icon fontIcon="manage_accounts" />
                     Perfil
                 </button>
