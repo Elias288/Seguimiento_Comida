@@ -138,6 +138,9 @@ module.exports = (io) => {
             // Emite notificaciones de a una por vez
 
             if (notification.receptorId != undefined) {
+                const receptor = onlineUsers.getUserById(notification.receptorId)
+                if (!receptor) return
+
                 const receptorSocketId = onlineUsers.getUserById(notification.receptorId).socketId
                 return io.to(receptorSocketId).emit('server:newNotification', notification)
             }

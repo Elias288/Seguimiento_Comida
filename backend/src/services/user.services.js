@@ -178,7 +178,7 @@ exports.login = async (email, password) => {
 
     if (await bcrypt.compare(password, user.password)) {
         const tokenData = { id: user._id, email: user.email }
-        const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: 43200 }) // EXPIRA EN 12 HORAS CADA VEZ QUE SE LOGUEA
+        const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: 259200 }) // EXPIRA EN 72 HORAS CADA VEZ QUE SE LOGUEA
         return { jwt: token }
     } else {
         return {

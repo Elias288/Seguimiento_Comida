@@ -11,9 +11,11 @@ $background_blue_hover: #070746;
 $color_orange: #ff9431;
 
 .navBar {
+    width: 100%;
+    box-sizing: border-box;
+    height: $navbarHeight;
     background: $background_blue;
     color: #fff;
-    height: $navbarHeight;
 
     ul {
         display: flex;

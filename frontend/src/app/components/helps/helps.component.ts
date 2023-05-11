@@ -1,19 +1,29 @@
-import { Component } from '@angular/core'
-import { Router } from '@angular/router'
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
 
 @Component({
     selector: 'app-helps',
     templateUrl: './helps.component.html',
     styleUrls: ['./helps.component.scss']
 })
-export class HelpsComponent {
+export class HelpsComponent implements OnInit{
     isMenuOpen: Boolean = false
     loading: boolean = true
     
     constructor(
         private router: Router,
+        private activatedRoute: ActivatedRoute,
     ){
         this.toggleLoading()
+    }
+    ngOnInit(): void {
+        this.activatedRoute.fragment.subscribe((value) => {
+            value && this.jumpTo(value)
+        })
+    }
+
+    jumpTo(section: string) {
+        document.getElementById(section)?.scrollIntoView({ behavior:'smooth' })
     }
 
     toggleLoading() {

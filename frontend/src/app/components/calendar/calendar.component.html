@@ -2,31 +2,29 @@
     <div class="loading" *ngIf="loading">
         <mat-spinner></mat-spinner>
     </div>
-    
+
     <div class="container-content" *ngIf="!loading">
         <header>
-            <p class="current-date">{{currentDate}}</p>
-            <div class="icons">
-                <mat-icon id="prev" (click)="prevNextMonth($event)" fontIcon="chevron_left" />
-                <mat-icon id="next" (click)="prevNextMonth($event)" fontIcon="chevron_right" />
+            <div>
+                <p class="current-date">{{currentDateText}}</p>
+                <div class="todayBtn">
+                    <a mat-button color="primary" href="seguimiento-almuerzo/calendar#today"
+                        *ngIf="date.getMonth() == currentDate.getMonth()">Hoy</a>
+                </div>
+                <div class="icons">
+                    <mat-icon id="prev" (click)="prevNextMonth($event)" fontIcon="chevron_left" />
+                    <mat-icon id="next" (click)="prevNextMonth($event)" fontIcon="chevron_right" />
+                </div>
             </div>
         </header>
-        
-        <div class="calendar">
-            <div class="calendar-content">
-                <ul class="week">
-                    <li><strong>Domingo</strong></li>
-                    <li><strong>Lunes</strong></li>
-                    <li><strong>Martes</strong></li>
-                    <li><strong>Miercoles</strong></li>
-                    <li><strong>Jueves</strong></li>
-                    <li><strong>Viernes</strong></li>
-                    <li><strong>Sabado</strong></li>
-                </ul>
+        <div class="calendarMovil">
+            <div class="calendar">
+
                 <ul class="days">
-                    <li *ngFor="let day of numbersDay" [class.inactive]="day.status === 'inactive'" [class.today]="day.status === 'today'">
-                        <p>{{day.numberDay}}</p>
-                        
+                    <li *ngFor="let day of calendarMovil" [class.inactive]="day.status === 'inactive'"
+                        [class.today]="day.status === 'today'" [id]="day.status === 'today' ? 'today' : ''">
+                        <h2>{{day.dayName}}, {{day.dayInfo.getDate()}}</h2>
+
                         <div *ngIf="day.menu" class="menu" (click)="openDialog(day)">
                             <div class="menuInfo principalMenu">
                                 <div class="MPName">{{day.menu.menuPrincipal}}</div>
@@ -38,15 +36,59 @@
                                 Totales: {{day.menu.users?.length || 0 | number}}
                             </div>
                         </div>
-                        
-                        <div *ngIf="!day.menu && canAddMenus && day.status != 'inactive' && day.validToAdd && !day.isWeekend" class="addMenu">
-                            <button mat-raised-button color="primary" (click)="addMenu(day.numberDay)" id="{{day.numberDay}}">
+
+                        <div *ngIf="!day.menu && canAddMenus && day.status != 'inactive' && day.validToAdd"
+                            class="addMenu">
+                            <button mat-raised-button color="primary" (click)="addMenu(day.dayInfo.getDay())"
+                                id="{{day.dayInfo.getDay()}}">
                                 <mat-icon fontIcon="add_circle" />
                                 Agregar Menu
                             </button>
                         </div>
                     </li>
                 </ul>
+            </div>
+        </div>
+        <div class="calendarPC">
+            <div class="calendar">
+                <div class="calendar-content">
+                    <ul class="week">
+                        <li><strong>Domingo</strong></li>
+                        <li><strong>Lunes</strong></li>
+                        <li><strong>Martes</strong></li>
+                        <li><strong>Miercoles</strong></li>
+                        <li><strong>Jueves</strong></li>
+                        <li><strong>Viernes</strong></li>
+                        <li><strong>Sabado</strong></li>
+                    </ul>
+                    <ul class="days">
+                        <li *ngFor="let day of calendarPC" [class.inactive]="day.status === 'inactive'"
+                            [class.today]="day.status === 'today'">
+                            <p>{{day.dayInfo.getDate()}}</p>
+
+                            <div *ngIf="day.menu" class="menu" (click)="openDialog(day)">
+                                <div class="menuInfo principalMenu">
+                                    <div class="MPName">{{day.menu.menuPrincipal}}</div>
+                                </div>
+                                <div class="menuInfo secodaryMenu" *ngIf="day.menu.menuSecundario">
+                                    <div class="MSName">{{day.menu.menuSecundario}}</div>
+                                </div>
+                                <div class="menuInfo MPCount">
+                                    Totales: {{day.menu.users?.length || 0 | number}}
+                                </div>
+                            </div>
+
+                            <div *ngIf="!day.menu && canAddMenus && day.status != 'inactive' && day.validToAdd && !day.isWeekend"
+                                class="addMenu">
+                                <button mat-raised-button color="primary" (click)="addMenu(day.dayInfo.getDay())"
+                                    id="{{day.dayInfo.getDay()}}">
+                                    <mat-icon fontIcon="add_circle" />
+                                    Agregar Menu
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
