@@ -1,4 +1,4 @@
-$tabletSize: 450px;
+$mobileSize: 450px;
 $pcSize: 850px;
 
 $calendarWidth: 1280px;
@@ -21,29 +21,33 @@ $background_MS: rgb(67, 80, 191);
         width: 100%;
         border-radius: 10px;
         background-color: #fff;
-        
-        /* @media screen and (min-width: $pcSize) {
-            min-width: 1130px;
-            max-width: 90%;
-            margin: auto;
-            padding: 0 30px;
-            box-sizing: border-box;
-        } */
     }
 }
 
-
 header {
-    display: flex;
-    align-items: center;
-    padding: 25px 30px 10px;
-    justify-content: space-between;
-    box-sizing: border-box;
+    width: 100%;
     height: $headerHeight;
+    padding: 25px 30px 10px;
+    box-sizing: border-box;
+    background-color: #fff;
 
     @media screen and (min-width: $pcSize) {
-        max-width: 90%;
-        margin: auto;
+        > div {
+            max-width: 90%;
+            margin: auto;
+        }
+    }
+    
+    > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .todayBtn {
+        @media screen and (min-width: $pcSize) {
+            display: none;
+        }
     }
 
     .current-date {
@@ -68,70 +72,113 @@ header {
     
 }
 
-.calendar {
-    width: 100%;
-    max-height: calc(100vh - ($navbarHeight + $headerHeight));
-    overflow: auto;
+.calendarMovil {
+    @media screen and (min-width: $pcSize) {
+        display: none;
+    }
 
-    .calendar-content {
-        padding: 0 20px;
-        padding-bottom: 5rem;
-        height: 100%;
-        min-width: 1130px;
-        max-width: 90%;
-        margin: auto;
-        padding: 0 30px;
-        box-sizing: border-box;
+    .calendar {
+        width: 100%;
+        max-height: calc(100vh - ($navbarHeight + $headerHeight));
+        overflow: auto;
 
-        @media screen and (max-width: $pcSize) {
-            min-width: $calendarWidth;
-            margin: 0;
-            padding: 0;
-        }
+        .days {
+            li {
+                padding: 1rem;
     
-        > ul {
-            display: flex;
-            list-style: none;
-            flex-wrap: wrap;
-        
-            > li {
-                text-align: center;
-                width: calc((100% / 7));
-                position: relative;
-                padding: 10px 0;
-                box-shadow: 0 0.1px 0.1px 0 #00000033, 0 0.1px 1px 0 #00000030;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
+                &.inactive {
+                    color: #aaa;
+                }
+                &.today {
+                    background-color: #c7fac3;
+                }
+    
+                p {
+                    font-size: 1rem;
+                }
+            }
 
-                @media screen and (min-width: $pcSize) {
-                    padding: 1rem 0 2rem;
+            .addMenu {
+                padding: 1rem 0;
+                box-sizing: border-box;
+                text-align: center;
+                
+                button {
+                    background-color: #af8e01;
+                    padding: 2rem;
                 }
             }
         }
     }
-
 }
 
-.week {
-    li{
-        font-size: 1rem;
+.calendarPC {
+    display: none;
+    
+    @media screen and (min-width: $pcSize) {
+        display: block;
     }
-}
 
-.days {
-    margin-bottom: 20px;
+    .calendar {
+        width: 100%;
+        overflow: auto;
 
-    > li {
-        &.inactive {
-            color: #aaa;
-        }
-        &.today {
-            background-color: #c7fac3;
-        }
+        .calendar-content {
+            min-width: $calendarWidth;
+            max-width: 90%;
+            padding: 0 30px;
+            margin: auto;
+            box-sizing: border-box;
 
-        p {
-            font-size: 1rem;
+        
+            > ul {
+                display: flex;
+                list-style: none;
+                flex-wrap: wrap;
+            
+                > li {
+                    text-align: center;
+                    width: calc((100% / 7));
+                    position: relative;
+                    padding: 1rem 0 2rem;
+                    box-shadow: 0 0.1px 0.1px 0 #00000033, 0 0.1px 1px 0 #00000030;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                }
+            }
+    
+            .week {
+                li{
+                    font-size: 1rem;
+                }
+            }
+    
+            .days {
+                margin-bottom: 20px;
+    
+                > li {
+                    &.inactive {
+                        color: #aaa;
+                    }
+                    &.today {
+                        background-color: #c7fac3;
+                    }
+    
+                    p {
+                        font-size: 1rem;
+                    }
+                }
+    
+                .addMenu {
+                    padding: 0 10px;
+                    box-sizing: border-box;
+    
+                    button {
+                        background-color: #af8e01;
+                    }
+                }
+            }
         }
     }
 }
@@ -172,15 +219,5 @@ header {
             background-color: #8d8d8d;
             text-align: end;
         }
-    }
-
-}
-
-.addMenu {
-    padding: 0 10px;
-    box-sizing: border-box;
-
-    button {
-        background-color: #af8e01;
     }
 }

@@ -87,6 +87,9 @@ p {
 }
 
 .sections {
+    height: calc(100vh - $navbarHeight * 2);
+    overflow: auto;
+
     @media screen and (min-width: $pcSize) {
         width: calc(100% - 240px);
     }

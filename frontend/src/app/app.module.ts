@@ -16,19 +16,19 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { MenuDialogComponent } from './components/menu-dialog/menu-dialog.component';
 import { CreateMenuDialogComponent } from './components/create-menu-dialog/create-menu-dialog.component';
 import { ConfirmCancelDialogComponent } from './components/confirm-cancel-dialog/confirm-cancel-dialog.component';
-import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { UsersTableComponent } from './components/users-table/users-table.component';
 import { RolesFormComponent } from './components/roles-form/roles-form.component';
-import { PerfilComponent } from './pages/perfil/perfil.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
-import { HelpsComponent } from './pages/helps/helps.component';
+import { HelpsComponent } from './components/helps/helps.component';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';'@angular/material/core';
+import { EntryPageComponent } from './pages/entry-page/entry-page.component';
 import {
     MAT_MOMENT_DATE_FORMATS,
     MomentDateAdapter,
     MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   } from '@angular/material-moment-adapter';
-import { EntryPageComponent } from './pages/entry-page/entry-page.component';
 
 @NgModule({
   declarations: [

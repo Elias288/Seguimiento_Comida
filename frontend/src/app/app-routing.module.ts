@@ -1,12 +1,12 @@
 import { Input, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { PerfilComponent } from './pages/perfil/perfil.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
 import { HomeComponent } from './pages/home/home.component';
-import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { CanAccesService } from './services/canAcces/can-acces.service';
-import { HelpsComponent } from './pages/helps/helps.component';
+import { HelpsComponent } from './components/helps/helps.component';
 import { EntryPageComponent } from './pages/entry-page/entry-page.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 

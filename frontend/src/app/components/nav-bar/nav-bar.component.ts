@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
 import { User } from 'src/app/utils/user.interface';
@@ -13,7 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     templateUrl: './nav-bar.component.html',
     styleUrls: ['./nav-bar.component.scss']
 })
-export class NavBarComponent {
+export class NavBarComponent implements OnInit{
     hasRoles: boolean = false               // TIENE EL ROL PARA MOSTRARLO
     canAdmin: boolean = false               // TIENE EL ROL PARA ADMINISTRAR
     userInfo!: User                         // NOMBRE DEL USUARIO LOGUEADO
@@ -28,9 +28,10 @@ export class NavBarComponent {
     constructor(
         private router: Router,
         private authService: AuthService,
+        private activatedRoute: ActivatedRoute,
+        private _snackBar: MatSnackBar,
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
-        private _snackBar: MatSnackBar,
     ) {
         
         authService.user$.subscribe(user => {
@@ -95,6 +96,18 @@ export class NavBarComponent {
         socketIoService.getWebSocketError((error: any) => {
             this._snackBar.open(error.errorMessage, 'close', { duration: 5000 })
         })
+    }
+    
+    ngOnInit(): void {
+        this.activatedRoute.fragment.subscribe((value) => {
+            value && this.jumpTo(value)
+        })
+    }
+
+    jumpTo(section: string) {
+        setTimeout(() => {
+            document.getElementById(section)?.scrollIntoView()
+        }, 500);
     }
 
     public toggleMenu() {
