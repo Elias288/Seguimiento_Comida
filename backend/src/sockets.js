@@ -119,6 +119,19 @@ module.exports = (io) => {
             }
         })
 
+        socket.on('client:requestMenusByUserId', async (data) => {
+            const { token, userId } = data
+            try {
+                const tokenData = verifyToken(token)
+                if (tokenData.isError) throw new AppError(tokenData.errorCode, tokenData.details, 400)
+
+                const menues = await menuServices.getMenusByUserId(userId)
+                socket.emit('server:loadMenuesOfUser', menues.data)
+            } catch (error) {
+                handleSocketErrors(error, socket)
+            }
+        })
+
         const emitMenues = async () => {
             const menues = await menuServices.getAllMenu()
             socket.emit('server:loadMenues', menues)

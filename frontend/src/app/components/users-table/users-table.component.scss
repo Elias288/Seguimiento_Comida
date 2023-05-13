@@ -1,6 +1,7 @@
 $tabletSize: 450px;
 $pcSize: 850px;
 $navbarHeight: 60px;
+$titleHeight: 50px;
 
 .loading {
     width: 100%;
@@ -13,32 +14,27 @@ $navbarHeight: 60px;
 
 .container {
     width: 100%;
-    height: calc(100vh - $navbarHeight);
-    overflow: hidden;
-    padding: .1rem .5rem;
-    box-sizing: border-box;
 
-    .container-content {
-        min-width: 90%;
-        padding: .5rem 1rem 1rem;
-        overflow: auto;
+    .title {
+        height: $titleHeight;
+        padding: 0 2rem;
+        box-sizing: border-box;
+        margin: auto;
 
         @media screen and (min-width: $pcSize) {
-            display: flex;
-            justify-content: center;
+            max-width: $pcSize;
         }
+    }
 
-        .mat-elevation-z8 {
-            min-width: max-content;
-            max-height: 400px;
-            overflow: auto;
-            display: block;
+    .container-content {
+        height: calc(100vh - $navbarHeight - $titleHeight);
+        overflow: auto;
+        padding: 0 2rem 5rem;
+        box-sizing: border-box;
 
-            tr {
-                @media screen and (min-width: $pcSize) {
-                    position: sticky;
-                }
-            }
+        @media screen and (min-width: $pcSize) {
+            margin: auto;
+            max-width: $pcSize;
         }
     }
 }
@@ -53,6 +49,7 @@ $navbarHeight: 60px;
     &.connected {
         background: rgb(0, 255, 0);
     }
+
     &.not_connected {
         background: rgb(255, 0, 0);
     }

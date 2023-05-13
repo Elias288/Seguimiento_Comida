@@ -62,8 +62,12 @@ export class SocketIoService {
         this.socket.on('server:deletedToMenu', callback)
     }
 
+    public getMenusOfUser = (callback: any) => {
+        this.socket.on('server:loadMenuesOfUser', callback)
+    }
+
     public requestMenues = () => {
-        this.socket.emit('client:requestMenues', )
+        this.socket.emit('client:requestMenues',)
     }
 
     public requestRol = () => {
@@ -89,7 +93,7 @@ export class SocketIoService {
     public newUser = (userId: string, email: string, userRol: number) => {
         this.socket.emit('client:newUser', { userId, email, userRol })
     }
-    
+
     public newMenu = (token: string, menu: Menu) => {
         this.socket.emit('client:newMenu', { token, menu })
     }
@@ -111,6 +115,10 @@ export class SocketIoService {
     }
 
     public notifyRoleChanged = (receptorId: string, newRol: string) => {
-        this.socket.emit('client:notifyRoleChanged', { receptorId, newRol, createdTime: new Date()  })
+        this.socket.emit('client:notifyRoleChanged', { receptorId, newRol, createdTime: new Date() })
+    }
+
+    public requestMenuesOfUser = (token: string, userId: string) => {
+        this.socket.emit('client:requestMenusByUserId', { token, userId })
     }
 }

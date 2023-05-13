@@ -3,6 +3,7 @@ const db = require('../models')
 const { MISSING_DATA, INFO_NOT_FOUND, SERVER_ERROR, INVALID_DATA } = require('../middleware/errorCodes')
 const User = db.User
 const Menu = db.Menu
+const Menu_User = db.Menu_User
 
 exports.createMenu = async (menuPrincipal, menuSecundario, date) => {
     if (!menuPrincipal) {
@@ -23,7 +24,7 @@ exports.createMenu = async (menuPrincipal, menuSecundario, date) => {
             statusCode: 404,
         }
     }
-    const dataDate = new Date(date)
+    const dataDate = new Date(date).setHours(12)
 
     if (+dataDate <= +new Date()) {
         return {
@@ -112,7 +113,7 @@ exports.getUsersOfMenu = (id) => {
     })
 }
 
-exports.getMenuById = (id) => {
+exports.getMenuByMenuId = (id) => {
     if (!id) {
         return {
             isError: true,
@@ -137,6 +138,76 @@ exports.getMenuById = (id) => {
             errorCode: SERVER_ERROR,
             details: err,
             statusCode: 500
+        }
+    })
+}
+
+exports.getMenusByUserId = (userId) => {
+    if (!userId) {
+        return {
+            isError: true,
+            errorCode: MISSING_DATA,
+            details: 'userId es requerida []',
+            statusCode: 404,
+        }
+    }
+    return Menu.findAll({
+        include: {
+            model: Menu_User,
+            required: true,
+            where: { userId },
+        }
+    }).then(data => {
+        if (!data) {
+            return {
+                isError: true,
+                errorCode: INFO_NOT_FOUND,
+                details: `Menu no encontrado [${id}]`,
+                statusCode: 404,
+            }
+        }
+        return { data, isError: false }
+    }).catch((err) => {
+        return {
+            isError: true,
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500
+        }
+    })
+}
+
+// CAMBIAR SISTEMA DE OBTENCION Y ACTUALIZACION DE MENUS
+// server:loadMenu sirva para que cada cliente solicite los menus de su mes
+exports.getMenusOfMonth = (month) => {
+    if (!month) {
+        return {
+            isError: true,
+            errorCode: MISSING_DATA,
+            details: 'Mes es requerido',
+            statusCode: 404,
+        }
+    }
+    return Menu.findAll({ 
+        where: { 
+            date: db.Sequelize.where(db.Sequelize.fn('MONTH', db.Sequelize.col('date')), month)
+        }
+    }).then(data => {
+        if (!data) {
+            return { 
+                isError: true,
+                errorCode: INFO_NOT_FOUND,
+                details: `Menu no encontrado [${date}]`,
+                statusCode: 404, 
+            }
+        }
+        return { data, isError: false }
+    }).catch((err) => {
+        return {
+            isError: true,
+            errorCode: SERVER_ERROR,
+            details: err,
+            statusCode: 500 
         }
     })
 }

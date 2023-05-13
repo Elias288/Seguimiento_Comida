@@ -6,73 +6,55 @@
             </a>
         </li>
         <li class="toggleBtn">
-            <button 
-                mat-icon-button class="example-icon"
-                aria-label="Example icon-button with menu icon"
-                (click)="toggleMenu()">
+            <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"
+                (click)="toggleMenu(!isMenuOpen)">
                 <mat-icon>menu</mat-icon>
             </button>
         </li>
         <li class="menu" [class.is-open]="isMenuOpen">
-            <button mat-button 
-                class="menu-item" 
-                (click)="requestRol()"
-                *ngIf="!hasRoles">
+            <button mat-button class="menu-item" (click)="requestRol()" *ngIf="!hasRoles">
                 reqRol
             </button>
 
-            <button mat-button 
-                class="menu-item" 
-                [routerLink]="['./calendar']" fragment="today" (click)="toggleMenu()">
+            <button mat-button class="menu-item" [routerLink]="['./calendar']" fragment="today"
+                (click)="toggleMenu(false)">
                 <mat-icon fontIcon="home" />
                 Inicio
             </button>
 
-            <button mat-button 
-                class="menu-item" 
-                [routerLink]="['./users']" (click)="toggleMenu()">
+            <button mat-button class="menu-item" [routerLink]="['./users']" (click)="toggleMenu(false)">
                 <mat-icon fontIcon="group" />
                 Usuarios
             </button>
 
-            <button mat-button
-                class="menu-item"
-                (click)="createMenu()"
-                *ngIf="canAdmin">
+            <button mat-button class="menu-item" (click)="createMenu()" *ngIf="canAdmin">
                 <mat-icon fontIcon="lunch_dining" />
                 Agregar Comida
             </button>
-            
-            <button mat-button
-                class="menu-item"
-                [routerLink]="['./helps']" (click)="toggleMenu()">
+
+            <button mat-button class="menu-item" [routerLink]="['./helps']" (click)="toggleMenu(false)">
                 <mat-icon fontIcon="live_help" />
                 Ayudas
             </button>
 
-            <button mat-button
-                class="menu-item" (click)="toggleNotifications()">
-                <mat-icon fontIcon="notifications" matBadge="{{activeNotificationsCount}}" [matBadgeHidden]="notificationCountHidden"/>
+            <button mat-button class="menu-item" (click)="toggleNotifications()">
+                <mat-icon fontIcon="notifications" matBadge="{{activeNotificationsCount}}"
+                    [matBadgeHidden]="notificationCountHidden" />
             </button>
 
-            <button mat-button 
-                class="menu-item countBtn" 
-                [matMenuTriggerFor]="menu">
+            <button mat-button class="menu-item countBtn" [matMenuTriggerFor]="menu">
                 <mat-icon fontIcon="account_circle" />
                 {{userInfo.name}}
                 <label class="status not_connected" *ngIf="!connected"></label>
                 <label class="status connected" *ngIf="connected"></label>
             </button>
             <mat-menu #menu="matMenu" #beforeMenu="matMenu" xPosition="before">
-                <button mat-menu-item 
-                    color="warn"
-                    [routerLink]="['./perfil/', userInfo._id]" (click)="toggleMenu()">
+                <button mat-menu-item color="warn" [routerLink]="['./perfil/', userInfo._id]"
+                    (click)="toggleMenu(false)">
                     <mat-icon fontIcon="manage_accounts" />
                     Perfil
                 </button>
-                <button mat-menu-item 
-                    color="warn"
-                    (click)="logout()">
+                <button mat-menu-item color="warn" (click)="logout()">
                     <mat-icon fontIcon="logout" />
                     Logout
                 </button>
@@ -83,7 +65,8 @@
         <div>
             <h2>Notificaciones</h2>
             <mat-list role="list" class="notificationList">
-                <div class="notificationListItem" *ngFor="let notification of notifications" [class.isActive]="!notification.active" >
+                <div class="notificationListItem" *ngFor="let notification of notifications"
+                    [class.isActive]="!notification.active">
                     <div class="notificationListItemTitle">
                         <h2>{{notification.notificationTitle}}</h2>
                     </div>
@@ -94,13 +77,13 @@
                         <p>{{notification.createdTime}}</p>
                     </div>
                     <div class="notificationListItemActions">
-                        <button mat-icon-button 
-                            class="done" 
+                        <button mat-icon-button class="done"
                             (click)="activeNotification(notification._id, userInfo._id)">
-                            <mat-icon fontIcon="done"/>
+                            <mat-icon fontIcon="done" />
                         </button>
-                        <button mat-icon-button class="delete" (click)="deleteNotification(notification._id, userInfo._id)">
-                            <mat-icon fontIcon="delete"/>
+                        <button mat-icon-button class="delete"
+                            (click)="deleteNotification(notification._id, userInfo._id)">
+                            <mat-icon fontIcon="delete" />
                         </button>
                     </div>
                 </div>
