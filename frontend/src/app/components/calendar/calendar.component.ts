@@ -51,27 +51,23 @@ export class CalendarComponent implements OnInit {
         this.currYear = this.date.getFullYear()
         this.currMonth = this.date.getMonth()
 
-        authService.user$.subscribe(user => {
-            const userRol = user.rol
-            this.rol = userRol
-            this.canAddMenus = userRol >= 0 && userRol < 2
-        })
+        socketIoService.requestMenusOfMonth(this.currMonth + 1)
 
-        socketIoService.requestMenues()
-
-        socketIoService.getMenues((menu: Array<Menu>) => {
-            this.menues = menu
+        socketIoService.getMenu((menus: Array<Menu>) => {
+            this.menues = menus
             this.constructCalendar()
         })
 
-        socketIoService.getNewMenu((menu: Menu) => {
-            this.menues.push(menu)
-            this.constructCalendar()
+        socketIoService.loadMenus(() => {
+            socketIoService.requestMenusOfMonth(this.currMonth + 1)
         })
     }
 
     ngOnInit(): void {
         this.authService.user$.subscribe(user => {
+            const userRol = user.rol
+            this.rol = userRol
+            this.canAddMenus = userRol >= 0 && userRol < 2
             this.myId = user._id
             this.canBeAddedToMenu = user.rol >= 0
             this.canManageMenus = user.rol >= 0 && user.rol < 2
@@ -86,9 +82,6 @@ export class CalendarComponent implements OnInit {
         const dialogRef = this.dialog.open(MenuDialogComponent, {
             data: {
                 menu,
-                mySelectedMenu: menu.users?.find(user => user._id == this.myId)?.Menu_User?.selectedMenu,
-                canBeAddedToMenu: this.canBeAddedToMenu,
-                canManageMenus: this.canManageMenus,
             },
             width: "100%"
         });
@@ -154,10 +147,7 @@ export class CalendarComponent implements OnInit {
             }
 
             this.calendarPC.push(thisDayInfo)
-
-            if (!thisDayInfo.isWeekend) {
-                this.calendarMovil.push(thisDayInfo)
-            }
+            this.calendarMovil.push(thisDayInfo)
         }
 
         for (let i = numberOfLastDayOfMonth; i < 6; i++) {
@@ -191,12 +181,16 @@ export class CalendarComponent implements OnInit {
             this.currMonth = newDate.getMonth()
         }
 
+        this.socketIoService.requestMenusOfMonth(this.currMonth + 1)
         this.constructCalendar()
     }
 
     private checkMenu(day: number) {
         const date = new Date(this.currYear, this.currMonth, day)
-        return this.menues.find(menu => new Date(new Date(menu.date).setHours(0)).getTime() === date.getTime())
+
+        return this.menues.find(menu =>
+            new Date(new Date(menu.date).setHours(0)).getTime() === date.getTime()
+        )
     }
 
     public addMenu(day: number) {

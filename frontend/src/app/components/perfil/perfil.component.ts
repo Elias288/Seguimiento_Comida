@@ -54,7 +54,7 @@ export class PerfilComponent {
                         this.rol = this.ROLES[Number(this.userInfo.rol) + 1]
                         this.canBeAddedToMenu = user.rol >= 0
                         this.canManageMenus = user.rol >= 0 && user.rol < 2
-                        this.socketIo.requestMenuesOfUser(`Bearer ${this.authService.token}`, user._id)
+                        this.socketIo.requestMenusOfUser(`Bearer ${this.authService.token}`, user._id)
                     },
                     error: () => window.location.href = '/'
                 })
@@ -66,19 +66,21 @@ export class PerfilComponent {
                 this.itsAdmin = user.rol == 0
             })
 
-            this.socketIo.getMenues((menu: Array<Menu>) => {
-                this.socketIo.requestMenuesOfUser(`Bearer ${this.authService.token}`, this.userInfo._id)
+            socketIo.loadMenus(() => {
+                this.socketIo.requestMenusOfUser(`Bearer ${this.authService.token}`, this.userInfo._id)
             })
         })
 
-        this.socketIo.getMenusOfUser((menus: any) => {
-            const menusOfUser = menus.map((menuOU: any) => {
-                return { ...menuOU, Menu_Users: menuOU.Menu_Users[0] }
-            }).sort((a: Menu, b: Menu) => {
-                if (+new Date(a.date) < +new Date(b.date)) return 1
-                return -1
-            })
-            this.menusOfUser = menusOfUser
+        this.socketIo.getMenusOfUser((menus: Array<Menu>) => {
+            if (menus.length > 0) {
+                const menusOfUser = menus.map((menuOU: any) => {
+                    return { ...menuOU, Menu_Users: menuOU.Menu_Users[0] }
+                }).sort((a: Menu, b: Menu) => {
+                    if (+new Date(a.date) < +new Date(b.date)) return 1
+                    return -1
+                })
+                this.menusOfUser = menusOfUser
+            }
         })
     }
 
@@ -108,9 +110,6 @@ export class PerfilComponent {
         this.dialog.open(MenuDialogComponent, {
             data: {
                 menu,
-                mySelectedMenu: menu.Menu_Users && menu.Menu_Users.selectedMenu,
-                canBeAddedToMenu: this.canBeAddedToMenu,
-                canManageMenus: this.canManageMenus,
             },
             width: "100%"
         });

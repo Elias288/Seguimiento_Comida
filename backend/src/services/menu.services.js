@@ -191,6 +191,13 @@ exports.getMenusOfMonth = (month) => {
     return Menu.findAll({ 
         where: { 
             date: db.Sequelize.where(db.Sequelize.fn('MONTH', db.Sequelize.col('date')), month)
+        },
+        include: { 
+            model: User,
+            attributes: ['_id', 'name', 'email', 'surName', 'rol'],
+            through: {
+                attributes: ['selectedMenu', 'entryDate']
+            }
         }
     }).then(data => {
         if (!data) {

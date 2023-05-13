@@ -23,10 +23,12 @@ mat-card {
     .container-content {
         @media screen and (min-width: $tabletSize) {
             max-width: 1050px;
+            min-width: $pcSize;
+            padding: 0 3rem;
             margin: auto;
 
             display: grid;
-            grid-template-columns: auto auto;
+            grid-template-columns: max-content auto;
             grid-template-rows: auto min-content;
             align-items: start;
             gap: 20px;

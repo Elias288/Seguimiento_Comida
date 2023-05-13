@@ -16,7 +16,7 @@ export class CreateMenuDialogComponent implements OnInit {
     menuData!: FormGroup
     fecha!: Date
 
-    constructor (
+    constructor(
         public dialogRef: MatDialogRef<CreateMenuDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private menuService: MenuService,
@@ -31,14 +31,14 @@ export class CreateMenuDialogComponent implements OnInit {
             this.dialogRef.close(true)
         })
 
-        socketIoService.getNewMenu(() => {
+        socketIoService.loadMenus(() => {
             this._snackBar.open('Menu creado exitosamente', 'close', { duration: 5000 }),
-            this.dialogRef.close(true)
+                this.dialogRef.close(true)
         })
     }
 
     ngOnInit(): void {
-        this.menuData = new FormGroup ({
+        this.menuData = new FormGroup({
             menuPrincipal: new FormControl<string>("", [
                 Validators.required,
                 Validators.minLength(3),
@@ -53,13 +53,11 @@ export class CreateMenuDialogComponent implements OnInit {
     onSubmit(): void {
         const { menuPrincipal, menuSecundario, date } = this.menuData.value
         const menu: Menu = { _id: '', menuPrincipal, menuSecundario, date, users: undefined }
-        
+
         if (this.menuData.invalid) {
             this.menuData.markAllAsTouched()
         } else {
             this.socketIoService.newMenu(`Bearer ${this.authService.token}`, menu)
-            // this._snackBar.open('Menu creado exitosamente', 'close', { duration: 5000 }),
-            // this.dialogRef.close(true)
         }
     }
 }

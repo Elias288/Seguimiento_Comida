@@ -17,16 +17,17 @@ import { MatTableDataSource } from '@angular/material/table';
     providers: []
 })
 export class MenuDialogComponent implements OnInit {
-    menu: Menu = this.data.menu                              // TODA LA INFORMACIÓN DEL MENU
+    menu: Menu = this.data.menu                                         // TODA LA INFORMACIÓN DEL MENU
 
-    completeDate: Date = this.menu.date             // FECHA COMPLETA DEL MENU
+    completeDate: Date = this.menu.date                                 // FECHA COMPLETA DEL MENU
     localDate: string = new Date(this.menu.date).toLocaleDateString()
-    mySelectedMenu: string = this.data.mySelectedMenu       // MENU DEL USUARIO LOGUEADO
-    usersInMenu!: Array<User>                               // USUARIOS EN EL MENU
+    mySelectedMenu: string = this.data.mySelectedMenu                   // MENU DEL USUARIO LOGUEADO
+    usersInMenu!: Array<User>                                           // USUARIOS EN EL MENU
 
-    canBeAddedToMenu: boolean = this.data.canBeAddedToMenu  // PUEDE AGREGARSE AL MENÚ
-    canManageMenus: boolean = this.data.canManageMenus      // PUEDE ADMINISTAR MENUS
-    outOfDate: boolean = false                              // INDICA SI EL MENÚ ESTÁ FUERA DE FECHA
+    canBeAddedToMenu: boolean = false                                   // PUEDE AGREGARSE AL MENÚ
+    canManageMenus: boolean = false                                     // PUEDE ADMINISTAR MENUS
+    userRol: number = -1
+    outOfDate: boolean = false                                          // INDICA SI EL MENÚ ESTÁ FUERA DE FECHA
 
     dataCountMenuOption = [{ MP: 0, MS: 0, total: 0 }]
     displayedCountColumns: Array<string> = ['menu_principal', 'menu_secundario', 'total']
@@ -106,6 +107,13 @@ export class MenuDialogComponent implements OnInit {
             date: new FormControl(this.completeDate, [
                 Validators.required,
             ])
+        })
+
+        this.authService.user$.subscribe(user => {
+            this.userRol = user.rol
+            this.canBeAddedToMenu = user.rol >= 0
+            this.canManageMenus = user.rol >= 0 && user.rol < 2
+
         })
     }
 

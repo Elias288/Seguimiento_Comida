@@ -6,9 +6,12 @@
                 {{localDate}}
             </div>
             <div class="headerActions">
-                <button mat-icon-button color="primary" aria-label="Editar Menú" (click)="toggleUpdateMenu()" *ngIf="canManageMenus"><mat-icon>edit</mat-icon></button>
-                <button mat-icon-button color="warn" aria-label="Borrar Menú" (click)="deleteMenu()" *ngIf="canManageMenus"><mat-icon>delete</mat-icon></button>
-                <a mat-icon-button [routerLink]="['./seguimiento-almuerzo/helps']" fragment="menu" (click)="onNoClick()"><mat-icon>question_mark</mat-icon></a>
+                <button mat-icon-button color="primary" aria-label="Editar Menú" (click)="toggleUpdateMenu()"
+                    *ngIf="canManageMenus"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button color="warn" aria-label="Borrar Menú" (click)="deleteMenu()"
+                    *ngIf="canManageMenus"><mat-icon>delete</mat-icon></button>
+                <a mat-icon-button [routerLink]="['./seguimiento-almuerzo/helps']" fragment="menu"
+                    (click)="onNoClick()"><mat-icon>question_mark</mat-icon></a>
             </div>
         </div>
 
@@ -16,27 +19,18 @@
             <div [formGroup]="menuData" class="canManageMenus" *ngIf="canManageMenus && toggleEditMenu && !outOfDate">
                 <mat-form-field appearance="fill">
                     <mat-label for="menuPrincipal">Menu Principal</mat-label>
-                    <textarea  matInput
-                        id="menuPrincipal"
-                        type="text"
-                        formControlName="menuPrincipal">
+                    <textarea matInput id="menuPrincipal" type="text" formControlName="menuPrincipal">
                     </textarea>
                 </mat-form-field>
-            
+
                 <mat-form-field appearance="fill">
                     <mat-label for="menuSecundario">Menu Secundario</mat-label>
-                    <textarea  matInput
-                        id="menuSecundario"
-                        type="text"
-                        formControlName="menuSecundario"></textarea>
+                    <textarea matInput id="menuSecundario" type="text" formControlName="menuSecundario"></textarea>
                 </mat-form-field>
-            
+
                 <mat-form-field appearance="fill">
                     <mat-label for="fecha">Fecha</mat-label>
-                    <input matInput 
-                        [matDatepicker]="picker"
-                        formControlName="date"
-                        id="fecha" value="fecha">
+                    <input matInput [matDatepicker]="picker" formControlName="date" id="fecha" value="fecha">
                     <mat-hint>DD/MM/YYYY</mat-hint>
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
@@ -48,48 +42,53 @@
                 </div>
 
             </div>
-            <div class="canBeAddedToMenu" *ngIf="canBeAddedToMenu && !toggleEditMenu && !outOfDate">
+            <div class="canBeAddedToMenu" *ngIf="canBeAddedToMenu && !toggleEditMenu && !outOfDate && userRol != 1">
                 <form [formGroup]="registrationForm" class="options">
-                    <input type="radio" id="MP" name="menuOption" value="MP" formControlName="menuOption" (change)="addtoMenu('MP')">
+                    <input type="radio" id="MP" name="menuOption" value="MP" formControlName="menuOption"
+                        (change)="addtoMenu('MP')">
                     <label class="MenuPrincipal OptionBox" for="MP">{{menu.menuPrincipal}}</label>
-                    
-                    <input type="radio" id="MS" name="menuOption" value="MS" formControlName="menuOption" (change)="addtoMenu('MS')">
-                    <label class="MenuSecundario OptionBox" for="MS" *ngIf="menu.menuSecundario">{{menu.menuSecundario}}</label>
+
+                    <input type="radio" id="MS" name="menuOption" value="MS" formControlName="menuOption"
+                        (change)="addtoMenu('MS')">
+                    <label class="MenuSecundario OptionBox" for="MS"
+                        *ngIf="menu.menuSecundario">{{menu.menuSecundario}}</label>
                 </form>
-    
+
                 <div class="actions">
-                    <button mat-raised-button color="warn" class="btnDown" [disabled]="mySelectedMenu == undefined" (click)="deleteToMenu(menu._id)">Darse de baja</button>
+                    <button mat-raised-button color="warn" class="btnDown" [disabled]="mySelectedMenu == undefined"
+                        (click)="deleteToMenu(menu._id)">Darse de baja</button>
                 </div>
             </div>
 
-            <div class="noRole" *ngIf="!canBeAddedToMenu && !canManageMenus || outOfDate">
+            <div class="noRole" *ngIf="!canBeAddedToMenu && !canManageMenus || outOfDate || userRol == 1">
                 <div class="menues">
                     <ul>
                         <li class="menuPrincipal">{{menu.menuPrincipal}}</li>
                         <li class="menuSecundario" *ngIf="menu.menuSecundario">{{menu.menuSecundario}}</li>
                     </ul>
                 </div>
-                <mat-card class="card" *ngIf="!canBeAddedToMenu && !canManageMenus">
-                    <mat-card-content >
-                        No tienes <strong>Rol</strong> para interactuar con el menú.<br> Contactate con un administrador para solicitar un rol.
+                <mat-card class="card" *ngIf="!canBeAddedToMenu && !canManageMenus && userRol != 1">
+                    <mat-card-content>
+                        No tienes <strong>Rol</strong> para interactuar con el menú.<br> Contactate con un administrador
+                        para solicitar un rol.
                     </mat-card-content>
                 </mat-card>
                 <mat-card class="card" *ngIf="outOfDate">
-                    <mat-card-content >
+                    <mat-card-content>
                         El menú está fuera de fecha, ya no puedes agregarte.
                     </mat-card-content>
                 </mat-card>
             </div>
-        </div>  
+        </div>
     </div>
-    
+
     <div class="footer">
         <mat-tab-group class="mat-tab-group">
             <mat-tab label="Cantidades">
                 <table mat-table [dataSource]="dataCountMenuOption">
                     <tr mat-header-row *matHeaderRowDef="displayedCountColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedCountColumns;"></tr>
-            
+
                     <ng-container matColumnDef="menu_principal">
                         <th mat-header-cell *matHeaderCellDef> Menu Principal </th>
                         <td mat-cell *matCellDef="let element"> {{element.MP}} </td>
@@ -120,11 +119,11 @@
                             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                         </ng-container>
                         <ng-container matColumnDef="surName">
-                            <th mat-header-cell *matHeaderCellDef > Apellido </th>
+                            <th mat-header-cell *matHeaderCellDef> Apellido </th>
                             <td mat-cell *matCellDef="let element"> {{element.surName}} </td>
                         </ng-container>
                         <ng-container matColumnDef="email">
-                            <th mat-header-cell *matHeaderCellDef > Email </th>
+                            <th mat-header-cell *matHeaderCellDef> Email </th>
                             <td mat-cell *matCellDef="let element"> {{element.email}} </td>
                         </ng-container>
 

@@ -1,17 +1,16 @@
 <div class="container" *ngIf="userInfo">
     <div class="container-content">
         <mat-card>
-            <mat-card-title>Info card</mat-card-title>
-            <h2>{{userInfo.name}} {{userInfo.surName}}</h2>
-
-            <h3>{{userInfo.email}}</h3>
-
+            <mat-card-title>Información de Usuario</mat-card-title>
+            <hr>
+            <h2><strong>{{userInfo.name}} {{userInfo.surName}}</strong></h2>
+            <p>{{userInfo.email}}</p>
             <p>Rol: {{rol}}</p>
         </mat-card>
 
         <mat-card class="menusCards">
             <mat-card-title>Menus</mat-card-title>
-
+            <hr>
             <ng-container *ngFor="let menu of menusOfUser">
                 <mat-card class="MenuCardInfo">
                     <div (click)="openMenuDialog(menu)">
@@ -35,8 +34,9 @@
             </ng-container>
         </mat-card>
 
-        <mat-card>
-            <mat-card-title>Action card</mat-card-title>
+        <mat-card *ngIf="itsMe || itsAdmin">
+            <mat-card-title>Acciones del perfil</mat-card-title>
+            <hr>
             <button mat-raised-button color="warn" (click)="deleteUser()">Darse de baja</button>
         </mat-card>
     </div>
