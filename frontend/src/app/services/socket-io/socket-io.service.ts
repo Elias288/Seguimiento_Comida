@@ -25,8 +25,16 @@ export class SocketIoService {
         this.socket.on('server:onlineUsers', callback)
     }
 
-    public getMenues = (callback: any) => {
-        this.socket.on('server:loadMenues', callback)
+    public getMenu = (callback: any) => { //RECIBE LOS MENUS DEL BACKEND
+        this.socket.on('server:menus', callback)
+    }
+
+    public getMenusOfUser = (callback: any) => { //RECIBE LOS MENUS DEL CLIENTE
+        this.socket.on('server:loadMenusOfUser', callback)
+    }
+
+    public loadMenus = (callback: any) => { //ORDENA AL FRONTEND SOLICITAR TODOS LOS MENUS
+        this.socket.on('server:loadMenus', callback)
     }
 
     public getNotifications = (callback: any) => {
@@ -40,10 +48,6 @@ export class SocketIoService {
 
     public getNewNotification = (callback: any) => {
         this.socket.on('server:newNotification', callback)
-    }
-
-    public getNewMenu = (callback: any) => {
-        this.socket.on('server:newMenu', callback);
     }
 
     public getAddedMenu = (callback: any) => {
@@ -62,8 +66,12 @@ export class SocketIoService {
         this.socket.on('server:deletedToMenu', callback)
     }
 
-    public requestMenues = () => {
-        this.socket.emit('client:requestMenues', )
+    public requestMenus = () => { //FRONTEND SOLICITA TODOS LOS MENUS
+        this.socket.emit('client:requestMenus',)
+    }
+
+    public requestMenusOfMonth = (month: number) => { //FRONTEND SOLICITA MENUS DEL MES
+        this.socket.emit('client:requestMenusOfMonth', { month })
     }
 
     public requestRol = () => {
@@ -89,7 +97,7 @@ export class SocketIoService {
     public newUser = (userId: string, email: string, userRol: number) => {
         this.socket.emit('client:newUser', { userId, email, userRol })
     }
-    
+
     public newMenu = (token: string, menu: Menu) => {
         this.socket.emit('client:newMenu', { token, menu })
     }
@@ -111,6 +119,10 @@ export class SocketIoService {
     }
 
     public notifyRoleChanged = (receptorId: string, newRol: string) => {
-        this.socket.emit('client:notifyRoleChanged', { receptorId, newRol, createdTime: new Date()  })
+        this.socket.emit('client:notifyRoleChanged', { receptorId, newRol, createdTime: new Date() })
+    }
+
+    public requestMenusOfUser = (token: string, userId: string) => {
+        this.socket.emit('client:requestMenusByUserId', { token, userId })
     }
 }

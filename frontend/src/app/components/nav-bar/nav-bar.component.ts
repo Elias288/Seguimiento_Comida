@@ -13,13 +13,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     templateUrl: './nav-bar.component.html',
     styleUrls: ['./nav-bar.component.scss']
 })
-export class NavBarComponent implements OnInit{
+export class NavBarComponent implements OnInit {
     hasRoles: boolean = false               // TIENE EL ROL PARA MOSTRARLO
     canAdmin: boolean = false               // TIENE EL ROL PARA ADMINISTRAR
     userInfo!: User                         // NOMBRE DEL USUARIO LOGUEADO
     isMenuOpen: boolean = false
     connected: boolean = false
-    
+
     activeNotificationsCount: number = 0
     notifications: Array<any> = []
     isNotificationOpen: boolean = false
@@ -33,7 +33,7 @@ export class NavBarComponent implements OnInit{
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
     ) {
-        
+
         authService.user$.subscribe(user => {
             this.userInfo = user
             this.canAdmin = user.rol >= 0 && user.rol < 2
@@ -47,9 +47,9 @@ export class NavBarComponent implements OnInit{
         socketIoService.notifications((notificaciones: Notification[]) => {
             this.notificationCountHidden = true
             this.activeNotificationsCount = 0
-            
+
             notificaciones.map(notification => {
-                notification.createdTime = new Date(notification.createdTime).toLocaleString('es-US', { timeZone: 'America/Montevideo' , hour12: false})
+                notification.createdTime = new Date(notification.createdTime).toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })
                 if (notification.active) {
                     this.activeNotificationsCount = this.activeNotificationsCount + 1
                 }
@@ -76,13 +76,13 @@ export class NavBarComponent implements OnInit{
                                 console.error(e);
                             }
                         })
-                        
+
                         this.router.navigate(['/seguimiento-almuerzo'])
                     })
                 }
             }
-        
-            newNotification.createdTime = new Date(newNotification.createdTime).toLocaleString('es-US', { timeZone: 'America/Montevideo' , hour12: false})
+
+            newNotification.createdTime = new Date(newNotification.createdTime).toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })
 
             if (this.activeNotificationsCount > 0) this.notificationCountHidden = false
 
@@ -97,7 +97,7 @@ export class NavBarComponent implements OnInit{
             this._snackBar.open(error.errorMessage, 'close', { duration: 5000 })
         })
     }
-    
+
     ngOnInit(): void {
         this.activatedRoute.fragment.subscribe((value) => {
             value && this.jumpTo(value)
@@ -110,19 +110,19 @@ export class NavBarComponent implements OnInit{
         }, 500);
     }
 
-    public toggleMenu() {
-        this.isMenuOpen = !this.isMenuOpen
+    public toggleMenu(value: boolean) {
+        this.isMenuOpen = value
     }
 
     public toggleNotifications() {
         this.isNotificationOpen = !this.isNotificationOpen
-        this.toggleMenu()
+        this.toggleMenu(false)
     }
 
     public createMenu() {
-        this.toggleMenu()
+        this.toggleMenu(false)
         const dialogRef = this.dialog.open(CreateMenuDialogComponent, {
-            data : {
+            data: {
                 date: 0
             }
         })

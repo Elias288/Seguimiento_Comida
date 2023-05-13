@@ -19,13 +19,12 @@
         </header>
         <div class="calendarMovil">
             <div class="calendar">
-
                 <ul class="days">
                     <li *ngFor="let day of calendarMovil" [class.inactive]="day.status === 'inactive'"
                         [class.today]="day.status === 'today'" [id]="day.status === 'today' ? 'today' : ''">
                         <h2>{{day.dayName}}, {{day.dayInfo.getDate()}}</h2>
 
-                        <div *ngIf="day.menu" class="menu" (click)="openDialog(day)">
+                        <div *ngIf="day.menu" class="menu" (click)="openDialog(day.menu)">
                             <div class="menuInfo principalMenu">
                                 <div class="MPName">{{day.menu.menuPrincipal}}</div>
                             </div>
@@ -39,7 +38,7 @@
 
                         <div *ngIf="!day.menu && canAddMenus && day.status != 'inactive' && day.validToAdd"
                             class="addMenu">
-                            <button mat-raised-button color="primary" (click)="addMenu(day.dayInfo.getDay())"
+                            <button mat-raised-button color="primary" (click)="addMenu(day.dayInfo.getDate())"
                                 id="{{day.dayInfo.getDay()}}">
                                 <mat-icon fontIcon="add_circle" />
                                 Agregar Menu
@@ -66,7 +65,7 @@
                             [class.today]="day.status === 'today'">
                             <p>{{day.dayInfo.getDate()}}</p>
 
-                            <div *ngIf="day.menu" class="menu" (click)="openDialog(day)">
+                            <div *ngIf="day.menu" class="menu" (click)="openDialog(day.menu)">
                                 <div class="menuInfo principalMenu">
                                     <div class="MPName">{{day.menu.menuPrincipal}}</div>
                                 </div>
@@ -80,7 +79,7 @@
 
                             <div *ngIf="!day.menu && canAddMenus && day.status != 'inactive' && day.validToAdd && !day.isWeekend"
                                 class="addMenu">
-                                <button mat-raised-button color="primary" (click)="addMenu(day.dayInfo.getDay())"
+                                <button mat-raised-button color="primary" (click)="addMenu(day.dayInfo.getDate())"
                                     id="{{day.dayInfo.getDay()}}">
                                     <mat-icon fontIcon="add_circle" />
                                     Agregar Menu

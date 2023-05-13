@@ -28,8 +28,20 @@ module.exports = (io) => {
             emitIsConnected()
         })
 
-        socket.on('client:requestMenues', () => {
-            emitMenues()
+        socket.on('client:requestMenus', async () => {
+            emitMenues(await menuServices.getAllMenu())
+        })
+
+        socket.on('client:requestMenusOfMonth', async (data) => {
+            const { month } = data
+            try {
+                const menusRes = await menuServices.getMenusOfMonth(month)
+                if (menusRes.isError) throw new AppError(menusRes.errorCode, menusRes.details, menusRes.statusCode)
+
+                emitMenues(menusRes.data)
+            } catch (error) {
+                handleSocketErrors(error, socket)
+            }
         })
 
         socket.on('client:requestRol', async (data) => {
@@ -50,9 +62,9 @@ module.exports = (io) => {
 
             try {
                 const notificationRes = await notificationServices.createNotification(notification)
-                if (notificationRes.isError) 
+                if (notificationRes.isError)
                     throw new AppError(notificationRes.errorCode, notificationRes.details, notificationRes.statusCode)
-                
+
                 emitNewNotificacion(notificationRes)
 
                 console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Notificación: [${notificationRes._id}] creada`)
@@ -68,9 +80,9 @@ module.exports = (io) => {
             try {
                 if (!userId) throw new AppError(MISSING_DATA, 'userId es necesario', 404)
                 const user = onlineUsers.getUserById(userId)
-                
+
                 const notificationsByReceptorIdRes = await notificationServices.getByReceptorId(userId)
-                if (notificationsByReceptorIdRes.isError) 
+                if (notificationsByReceptorIdRes.isError)
                     throw new AppError(notificationsByReceptorIdRes.errorCode, notificationsByReceptorIdRes.details, notificationsByReceptorIdRes.statusCode)
 
                 notifications.push(...notificationsByReceptorIdRes.map(notification => notification.dataValues))
@@ -119,9 +131,23 @@ module.exports = (io) => {
             }
         })
 
-        const emitMenues = async () => {
-            const menues = await menuServices.getAllMenu()
-            socket.emit('server:loadMenues', menues)
+        socket.on('client:requestMenusByUserId', async (data) => { //FRONTEND SOLICITA MENUS DEL CLIENTE
+            const { token, userId } = data
+            try {
+                const tokenData = verifyToken(token)
+                if (tokenData.isError) throw new AppError(tokenData.errorCode, tokenData.details, 400)
+
+                const menusRes = await menuServices.getMenusByUserId(userId)
+                if (menusRes.isError) throw new AppError(menusRes.errorCode, menusRes.details, menusRes.statusCode)
+
+                socket.emit('server:loadMenusOfUser', menusRes.data)
+            } catch (error) {
+                handleSocketErrors(error, socket)
+            }
+        })
+
+        const emitMenues = (menus) => { //EMITE AL FRONTEND LOS MENUS
+            socket.emit('server:menus', menus)
         }
 
         const emitOnlineUsers = () => {
@@ -148,60 +174,59 @@ module.exports = (io) => {
             if (notification.receptorRol != undefined) {
                 return io.to(parseInt(notification.receptorRol)).emit('server:newNotification', notification)
             }
-            
+
             handleSocketErrors(new AppError(MISSING_DATA, `receptorId o receptorRol son necesarias`, 400), socket)
         }
 
         const emitIsConnected = () => {
             io.to(socket.id).emit('server:IsConnected', onlineUsers.users.some(user => user.socketId === socket.id))
         }
-        
+
         socket.on('client:newMenu', async (data) => {
             try {
                 const { token, menu } = data
 
                 const tokenData = verifyToken(token)
                 if (tokenData.isError) throw new AppError(tokenData.errorCode, tokenData.details, 400)
-                
-                const userData = await userServices.getUserById(tokenData.id) 
+
+                const userData = await userServices.getUserById(tokenData.id)
                 if (userData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
                 user = userData.data.dataValues
-                if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1) 
+                if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1)
                     throw new AppError(UNAUTHORIZED, 'No tiene la autorización necesaria', 400)
-    
+
                 const { menuPrincipal, menuSecundario, date } = menu
                 const menuData = await menuServices.createMenu(menuPrincipal, menuSecundario, date)
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
                 console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Menú: [${menuData.data._id}] creado por [${tokenData.email}]`)
-                io.emit("server:newMenu", menuData.data)
+                io.emit('server:loadMenus')
 
             } catch (error) {
                 handleSocketErrors(error, socket)
             }
         })
-        
+
         socket.on('client:deleteMenu', async (data) => {
             try {
                 const { token, menuId } = data
 
                 const tokenData = verifyToken(token)
                 if (tokenData.isError) throw new AppError(tokenData.errorCode, tokenData.details, 400)
-                
+
                 const userData = await userServices.getUserById(tokenData.id),
-                user = userData.data.dataValues
+                    user = userData.data.dataValues
                 if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1) {
                     throw new AppError(UNAUTHORIZED, 'No tiene la autorización necesaria', 400)
                 }
-                
+
                 const menuData = await menuServices.deleteMenu(menuId)
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
                 console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Menú: [${menuId}] borrado por [${tokenData.email}]`)
                 socket.emit('server:deletedMenu', true)
-                const menues = await menuServices.getAllMenu()
-                io.emit('server:loadMenues', menues)
+                io.emit('server:loadMenus')
 
             } catch (error) {
                 handleSocketErrors(error, socket)
@@ -216,17 +241,17 @@ module.exports = (io) => {
                 if (tokenData.isError) {
                     throw new AppError(tokenData.errorCode, tokenData.details, 400)
                 }
-                
+
                 const userData = await userServices.getUserById(tokenData.id),
-                user = userData.data.dataValues
-                if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1) { 
+                    user = userData.data.dataValues
+                if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 1) {
                     throw new AppError(UNAUTHORIZED, 'No tiene la autorización necesaria', 400)
                 }
 
-                if (menu.menuPrincipal.length >= 255 || menu.menuSecundario.length >= 255) { 
+                if (menu.menuPrincipal.length >= 255 || menu.menuSecundario.length >= 255) {
                     throw new AppError(INVALID_DATA, 'Cantidad de caracteres excedido', 400)
                 }
-        
+
                 const menuDate = await menuServices.getMenuByDate(menu.date)
                 if (menuDate.isError && menuDate.errorCode != INFO_NOT_FOUND) {
                     throw new AppError(menuDate.errorCode, menuDate.details, menuDate.statusCode)
@@ -234,15 +259,15 @@ module.exports = (io) => {
                 if (!menuDate.isError && menuDate.data.dataValues._id != menu._id) {
                     throw new AppError(INVALID_DATA, 'Ya hay un menú registrado en esa fecha', 400)
                 }
-        
+
                 const menuData = await menuServices.updateMenu(menu)
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
-    
+
                 console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] Menú: [${menu._id}] actualizado por [${tokenData.email}]`)
                 socket.emit('server:updatedMenu', true)
-                const menues = await menuServices.getAllMenu()
-                io.emit('server:loadMenues', menues)
-                
+
+                io.emit('server:loadMenus')
+
             } catch (error) {
                 handleSocketErrors(error, socket)
             }
@@ -255,20 +280,20 @@ module.exports = (io) => {
                 const tokenData = verifyToken(token)
                 if (tokenData.isError)
                     throw new AppError(tokenData.errorCode, tokenData.details, 400)
-                
+
                 const userData = await userServices.getUserById(tokenData.id),
-                user = userData.data.dataValues
-                if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 2) { 
+                    user = userData.data.dataValues
+                if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 2) {
                     throw new AppError(UNAUTHORIZED, 'No tiene la autorización necesaria', 400)
                 }
-        
+
                 const menuData = await userServices.enterToMenu(menuId, selectedMenu, tokenData.id, new Date(entryDate))
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
-    
-                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] User: [${tokenData.email}] se unió al menú [${menuId}]`)
-                const menues = await menuServices.getAllMenu()
+
+                console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] User: [${tokenData.email}] se unió al menú [${menuId}][${selectedMenu}]`)
+                // const menues = await menuServices.getAllMenu()
                 socket.emit('server:addedMenu', true)
-                io.emit('server:loadMenues', menues)
+                io.emit('server:loadMenus')
 
             } catch (error) {
                 handleSocketErrors(error, socket)
@@ -278,24 +303,24 @@ module.exports = (io) => {
         socket.on('client:deleteToMenu', async (data) => {
             try {
                 const { token, menuId, dropDate } = data
-                
+
                 const tokenData = verifyToken(token)
                 if (tokenData.isError)
                     throw new AppError(tokenData.errorCode, tokenData.details, 400)
-    
+
                 const userData = await userServices.getUserById(tokenData.id),
-                user = userData.data?.dataValues
-                if (user.rol == null || user.rol == undefined || user.rol == -1 ||  user.rol > 2) { 
+                    user = userData.data?.dataValues
+                if (user.rol == null || user.rol == undefined || user.rol == -1 || user.rol > 2) {
                     throw new AppError(UNAUTHORIZED, 'No tiene la autorización necesaria', 400)
                 }
-    
+
                 const menuData = await userServices.dropToMenu(menuId, tokenData.id, new Date(dropDate))
                 if (menuData.isError) throw new AppError(menuData.errorCode, menuData.details, menuData.statusCode)
 
                 console.log(`[${new Date().toLocaleString('es-US', { timeZone: 'America/Montevideo', hour12: false })}] User: [${tokenData.email}] dado de baja del menú: [${menuId}]`)
-                const menues = await menuServices.getAllMenu()
+
                 socket.emit('server:deletedToMenu', true)
-                io.emit('server:loadMenues', menues)
+                io.emit('server:loadMenus')
             } catch (error) {
                 handleSocketErrors(error, socket)
             }
@@ -307,7 +332,7 @@ module.exports = (io) => {
 
             try {
                 const notificationRes = await notificationServices.changeActive(notificationId)
-                if (notificationRes.isError) 
+                if (notificationRes.isError)
                     throw new AppError(notificationRes.errorCode, notificationRes.details, notificationRes.statusCode)
 
                 io.to(user.socketId).emit('server:requestNotifications')
@@ -324,7 +349,7 @@ module.exports = (io) => {
 
             try {
                 const notificationRes = await notificationServices.deleteNotification(notificationId)
-                if (notificationRes.isError) 
+                if (notificationRes.isError)
                     throw new AppError(notificationRes.errorCode, notificationRes.details, notificationRes.statusCode)
 
                 io.to(user.socketId).emit('server:requestNotifications')

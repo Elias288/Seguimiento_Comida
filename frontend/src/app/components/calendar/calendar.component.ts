@@ -6,15 +6,9 @@ import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
 import { Menu } from 'src/app/utils/menu.inteface';
 import { CreateMenuDialogComponent } from '../create-menu-dialog/create-menu-dialog.component';
 import { MenuDialogComponent } from '../menu-dialog/menu-dialog.component';
+import { Day } from 'src/app/utils/day.interface';
 
-interface Day {
-    dayInfo: Date
-    dayName: string
-    status: string
-    menu: Menu | undefined
-    isWeekend: boolean
-    validToAdd: boolean
-}
+
 
 @Component({
     selector: 'app-calendar',
@@ -57,27 +51,23 @@ export class CalendarComponent implements OnInit {
         this.currYear = this.date.getFullYear()
         this.currMonth = this.date.getMonth()
 
-        authService.user$.subscribe(user => {
-            const userRol = user.rol
-            this.rol = userRol
-            this.canAddMenus = userRol >= 0 && userRol < 2
-        })
+        socketIoService.requestMenusOfMonth(this.currMonth + 1)
 
-        socketIoService.requestMenues()
-
-        socketIoService.getMenues((menu: Array<Menu>) => {
-            this.menues = menu
+        socketIoService.getMenu((menus: Array<Menu>) => {
+            this.menues = menus
             this.constructCalendar()
         })
 
-        socketIoService.getNewMenu((menu: Menu) => {
-            this.menues.push(menu)
-            this.constructCalendar()
+        socketIoService.loadMenus(() => {
+            socketIoService.requestMenusOfMonth(this.currMonth + 1)
         })
     }
 
     ngOnInit(): void {
         this.authService.user$.subscribe(user => {
+            const userRol = user.rol
+            this.rol = userRol
+            this.canAddMenus = userRol >= 0 && userRol < 2
             this.myId = user._id
             this.canBeAddedToMenu = user.rol >= 0
             this.canManageMenus = user.rol >= 0 && user.rol < 2
@@ -88,14 +78,10 @@ export class CalendarComponent implements OnInit {
         this.loading = false
     }
 
-    public openDialog(day: Day) {
+    public openDialog(menu: Menu) {
         const dialogRef = this.dialog.open(MenuDialogComponent, {
             data: {
-                day,
-                completeDate: new Date(this.currYear, this.currMonth, day.dayInfo.getDay()),
-                mySelectedMenu: day?.menu?.users?.find(user => user._id == this.myId)?.Menu_User?.selectedMenu,
-                canBeAddedToMenu: this.canBeAddedToMenu,
-                canManageMenus: this.canManageMenus,
+                menu,
             },
             width: "100%"
         });
@@ -126,14 +112,14 @@ export class CalendarComponent implements OnInit {
             const day = numberOfLastDateOfLastMonth - i + 1
             const thisDay = new Date(this.currYear, this.currMonth, day)
 
-            this.calendarPC.push({
+            const dayInfo: Day = {
                 dayInfo: thisDay,
-                dayName: '',
                 status: 'inactive',
                 menu: undefined,
                 isWeekend: false,
                 validToAdd: false
-            })
+            }
+            this.calendarPC.push(dayInfo)
         }
 
         for (let i = 1; i <= numberOfLastDateOfMonth; i++) {
@@ -151,7 +137,7 @@ export class CalendarComponent implements OnInit {
             const validToAdd = +new Date(this.currYear, this.currMonth, i) > +tomorrow
 
             const dayName = this.getDayName(thisDay)
-            const thisDayInfo = {
+            const thisDayInfo: Day = {
                 dayInfo: thisDay,
                 dayName: dayName,
                 status: isToday ? 'today' : '',
@@ -161,24 +147,23 @@ export class CalendarComponent implements OnInit {
             }
 
             this.calendarPC.push(thisDayInfo)
-
-            if (!thisDayInfo.isWeekend) {
-                this.calendarMovil.push(thisDayInfo)
-            }
+            this.calendarMovil.push(thisDayInfo)
         }
 
         for (let i = numberOfLastDayOfMonth; i < 6; i++) {
             const day = i - numberOfLastDayOfMonth + 1
             const thisDay = new Date(this.currYear, this.currMonth, day)
 
-            this.calendarPC.push({
+            const dayInfo: Day = {
                 dayInfo: thisDay,
                 dayName: '',
                 status: 'inactive',
                 menu: undefined,
                 isWeekend: false,
                 validToAdd: false
-            })
+            }
+
+            this.calendarPC.push(dayInfo)
         }
 
         this.currentDateText = `${this.months[this.currMonth]} ${this.currYear}`
@@ -196,12 +181,16 @@ export class CalendarComponent implements OnInit {
             this.currMonth = newDate.getMonth()
         }
 
+        this.socketIoService.requestMenusOfMonth(this.currMonth + 1)
         this.constructCalendar()
     }
 
     private checkMenu(day: number) {
-        const date = new Date(this.currYear, this.currMonth, day, 0, 0, 0)
-        return this.menues.find(menu => new Date(menu.date).getTime() === date.getTime())
+        const date = new Date(this.currYear, this.currMonth, day)
+
+        return this.menues.find(menu =>
+            new Date(new Date(menu.date).setHours(0)).getTime() === date.getTime()
+        )
     }
 
     public addMenu(day: number) {

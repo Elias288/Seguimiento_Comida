@@ -22,52 +22,54 @@ import { RolesFormComponent } from './components/roles-form/roles-form.component
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
 import { HelpsComponent } from './components/helps/helps.component';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';'@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { EntryPageComponent } from './pages/entry-page/entry-page.component';
 import {
     MAT_MOMENT_DATE_FORMATS,
     MomentDateAdapter,
     MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-  } from '@angular/material-moment-adapter';
+} from '@angular/material-moment-adapter';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    LoginComponent,
-    CreateUserComponent,
-    NotFoundComponent,
-    NavBarComponent,
-    CalendarComponent,
-    MenuDialogComponent,
-    CreateMenuDialogComponent,
-    ConfirmCancelDialogComponent,
-    UsuariosComponent,
-    UsersTableComponent,
-    RolesFormComponent,
-    PerfilComponent,
-    ConfirmationComponent,
-    HelpsComponent,
-    EntryPageComponent,
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [
-    MaterialModule,
-    ReactiveFormsModule,
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-  ],
-  providers: [
-    CanAccesService,
-    {provide: MAT_DATE_LOCALE, useValue: 'es-ES'},
-    {
-        provide: DateAdapter,
-        useClass: MomentDateAdapter,
-        deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        LoginComponent,
+        CreateUserComponent,
+        NotFoundComponent,
+        NavBarComponent,
+        CalendarComponent,
+        MenuDialogComponent,
+        CreateMenuDialogComponent,
+        ConfirmCancelDialogComponent,
+        UsuariosComponent,
+        UsersTableComponent,
+        RolesFormComponent,
+        PerfilComponent,
+        ConfirmationComponent,
+        HelpsComponent,
+        EntryPageComponent,
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [
+        MaterialModule,
+        ReactiveFormsModule,
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+    ],
+    providers: [
+        CanAccesService,
+        {
+            provide: MAT_DATE_LOCALE, useValue: 'es-US'
+        },
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+        },
+        { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

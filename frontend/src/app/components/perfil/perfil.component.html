@@ -1,28 +1,43 @@
 <div class="container" *ngIf="userInfo">
-    <div class="title">
-        <h1 *ngIf="itsMe">Mi Perfil</h1>
-        <h1 *ngIf="!itsMe">Perfil</h1>
-    </div>
     <div class="container-content">
-        <h2>{{userInfo.name}} {{userInfo.surName}}</h2>
+        <mat-card>
+            <mat-card-title>Información de Usuario</mat-card-title>
+            <hr>
+            <h2><strong>{{userInfo.name}} {{userInfo.surName}}</strong></h2>
+            <p>{{userInfo.email}}</p>
+            <p>Rol: {{rol}}</p>
+        </mat-card>
 
-        <h3>{{userInfo.email}}</h3>
+        <mat-card class="menusCards">
+            <mat-card-title>Menus</mat-card-title>
+            <hr>
+            <ng-container *ngFor="let menu of menusOfUser">
+                <mat-card class="MenuCardInfo">
+                    <div (click)="openMenuDialog(menu)">
+                        <div class="menuDate">
+                            <p><strong>{{menu.date | date:'shortDate'}}</strong></p>
+                        </div>
 
-        <p>Rol: {{rol}}</p>
+                        <div class="MenuOptions">
+                            <div class="principalMenu" *ngIf="menu.Menu_Users.selectedMenu == 'MP'; else MenuS">
+                                <div class="MPName">{{menu.menuPrincipal}}</div>
+                            </div>
+
+                            <ng-template #MenuS>
+                                <div class="secodaryMenu">
+                                    <div class="MSName">{{menu.menuSecundario}}</div>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </mat-card>
+            </ng-container>
+        </mat-card>
+
+        <mat-card *ngIf="itsMe || itsAdmin">
+            <mat-card-title>Acciones del perfil</mat-card-title>
+            <hr>
+            <button mat-raised-button color="warn" (click)="deleteUser()">Darse de baja</button>
+        </mat-card>
     </div>
-    <div class="container-actions" *ngIf="itsMe || itsAdmin">
-        <button mat-raised-button color="warn" (click)="deleteUser()">Darse de baja</button>
-        <!-- <button mat-raised-button (click)="openUpdateUser()">Editar</button> -->
-    </div>
-    <!-- <mat-card *ngIf="!hasRole">
-        <mat-card-content>
-            <mat-card-header>
-                <mat-card-title>Solicitar Rol</mat-card-title>
-            </mat-card-header>
-            <mat-card-actions>
-                <button mat-button color="primary" (click)="requestRol()" *ngIf="!requestRolSended">Solicitar</button>
-                <p *ngIf="requestRolSended">Solicitud enviada, aguarde a que un Administrador le asigne su rol</p>
-            </mat-card-actions>
-        </mat-card-content>
-    </mat-card> -->
 </div>

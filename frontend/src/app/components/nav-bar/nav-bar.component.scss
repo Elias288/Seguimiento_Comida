@@ -2,11 +2,11 @@ $navbarHeight: 60px;
 $tabletSize: 450px;
 $pcSize: 850px;
 
-$background_color_1:#252525;
+$background_color_1: #252525;
 $color_1_hover: #454545;
 
-$background_blue:#050531;
-$background_blue_transparent:#050531f7;
+$background_blue: #050531;
+$background_blue_transparent: #050531f7;
 $background_blue_hover: #070746;
 $color_orange: #ff9431;
 
@@ -25,11 +25,11 @@ $color_orange: #ff9431;
 
         .toggleBtn {
             display: block;
-            
+
             @media screen and (min-width: $pcSize) {
                 display: none;
             }
-        }   
+        }
     }
 
     @media screen and (min-width: $pcSize) {
@@ -61,10 +61,10 @@ $color_orange: #ff9431;
     align-items: center;
     justify-content: flex-end;
     min-width: 700px;
-    
+
     @media screen and (max-width: $pcSize) {
         display: none;
-        
+
         &.is-open {
             display: block;
             position: absolute;
@@ -73,7 +73,7 @@ $color_orange: #ff9431;
             height: calc(100vh - $navbarHeight);
             top: $navbarHeight;
             background: $background_blue_transparent;
-            z-index: 10;
+            z-index: 500;
             min-width: auto;
         }
     }
@@ -119,6 +119,7 @@ $color_orange: #ff9431;
         &.connected {
             background: rgb(0, 255, 0);
         }
+
         &.not_connected {
             background: rgb(255, 0, 0);
         }
@@ -129,7 +130,7 @@ $color_orange: #ff9431;
 .notifications {
     display: none;
 
-    > div {
+    >div {
         padding: 0 1rem;
 
         @media screen and (min-width: $pcSize) {
@@ -151,7 +152,7 @@ $color_orange: #ff9431;
         padding: 10px 0;
         box-sizing: border-box;
         background: $background_blue_transparent;
-        z-index: 10;
+        z-index: 500;
 
         @media screen and (min-width: $pcSize) {
             width: 500px;
@@ -191,11 +192,11 @@ $color_orange: #ff9431;
                 }
             }
 
-            > * {
+            >* {
                 margin-bottom: 5px;
             }
 
-            &Title h2{
+            &Title h2 {
                 text-transform: uppercase;
             }
 
@@ -207,7 +208,7 @@ $color_orange: #ff9431;
             &Actions {
                 display: flex;
 
-                > * {
+                >* {
                     flex: 1;
                 }
 

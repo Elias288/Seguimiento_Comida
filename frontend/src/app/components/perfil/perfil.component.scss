@@ -1,56 +1,72 @@
 $tabletSize: 450px;
 $pcSize: 850px;
 
+$background_MP: rgb(0, 128, 0);
+$background_MS: rgb(67, 80, 191);
+
+mat-card {
+    padding: 1rem;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+}
+
 .container {
-    display: flex;
-    flex-direction: column;
-    // align-items: center;
-
-    width: 100%;
-    margin-bottom: 2rem;
-
-    padding: 0 2rem 3rem;
+    padding: 1rem 2rem 3rem;
     box-sizing: border-box;
-
-    .title {
-        padding: .5rem 0;
-        text-align: center;
-    }
+    height: calc(100vh - 60px);
+    overflow: auto;
 
     @media screen and (min-width: $tabletSize) {
-        padding: 0;
-        align-items: center;
-        // width: 50%;
-    }
-}
-
-.container-content {
-    padding-bottom: 3rem;
-
-    @media screen and (min-width: $tabletSize) {
-        width: 400px;
-    }
-}
-
-.container-actions {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
-    padding: 0 1rem;
-
-    & * {
-        width: 100%;
-        margin-bottom: .5rem;
+        padding: 3rem 0 5rem;
     }
 
-    @media screen and (min-width: $tabletSize) {
-        display: block;
-        width: 400px;
+    .container-content {
+        @media screen and (min-width: $tabletSize) {
+            max-width: 1050px;
+            min-width: $pcSize;
+            padding: 0 3rem;
+            margin: auto;
 
-        & * {
-            width: auto;
+            display: grid;
+            grid-template-columns: max-content auto;
+            grid-template-rows: auto min-content;
+            align-items: start;
+            gap: 20px;
+        }
+
+        .menusCards {
+            max-height: 70vh;
+            overflow: auto;
+
+            @media screen and (min-width: $tabletSize) {
+                grid-row: 1/3;
+                grid-column: 2;
+            }
+
+            .MenuCardInfo {
+                cursor: pointer;
+            }
+
+            .menuDate {
+                height: 35px;
+            }
+
+            .MenuOptions {
+                >div {
+                    padding: 1rem;
+                    box-sizing: border-box;
+                    border-radius: 10px;
+                    color: #fff;
+                }
+
+                .principalMenu {
+                    background-color: $background_MP;
+                }
+
+                .secodaryMenu {
+                    background-color: $background_MS;
+                }
+            }
         }
     }
 }
