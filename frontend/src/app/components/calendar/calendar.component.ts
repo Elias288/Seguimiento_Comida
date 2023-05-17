@@ -1,21 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { SocketIoService } from 'src/app/services/socket-io/socket-io.service';
 import { Menu } from 'src/app/utils/menu.inteface';
 import { CreateMenuDialogComponent } from '../create-menu-dialog/create-menu-dialog.component';
 import { MenuDialogComponent } from '../menu-dialog/menu-dialog.component';
 import { Day } from 'src/app/utils/day.interface';
-
-
+import { DOCUMENT } from '@angular/common';
 
 @Component({
     selector: 'app-calendar',
     templateUrl: './calendar.component.html',
     styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, AfterViewInit {
     loading: boolean = true
     menues: Array<Menu> = []
     rol!: number
@@ -34,6 +32,7 @@ export class CalendarComponent implements OnInit {
     currentDateText!: string
     currYear!: number
     currMonth!: number
+    actualMonth!: boolean                // ES EL MES ACTUAL?
 
     lastDateOfMonth!: Date
     lastDayOfMonth!: Date
@@ -42,14 +41,18 @@ export class CalendarComponent implements OnInit {
     calendarPC: Array<Day> = []
     calendarMovil: Array<Day> = []
 
+    @ViewChildren('listOfDays') private listOfDays!: QueryList<any>
+
     constructor(
         private authService: AuthService,
         public dialog: MatDialog,
         public socketIoService: SocketIoService,
+        @Inject(DOCUMENT) private document: any,
     ) {
         this.date = new Date()
         this.currYear = this.date.getFullYear()
         this.currMonth = this.date.getMonth()
+        this.actualMonth = this.date.getMonth() == this.currMonth
 
         socketIoService.requestMenusOfMonth(this.currMonth + 1)
 
@@ -60,6 +63,17 @@ export class CalendarComponent implements OnInit {
 
         socketIoService.loadMenus(() => {
             socketIoService.requestMenusOfMonth(this.currMonth + 1)
+        })
+    }
+    
+    ngAfterViewInit(): void {
+        this.listOfDays.changes.subscribe(() => {
+            if (this.actualMonth) {
+                setTimeout(() => {
+                    this.scrollToToday()
+                }, 0);
+            }
+            if (!this.actualMonth) this.scrollToTop()
         })
     }
 
@@ -82,6 +96,7 @@ export class CalendarComponent implements OnInit {
         const dialogRef = this.dialog.open(MenuDialogComponent, {
             data: {
                 menu,
+                mySelectedMenu: menu.users?.find(user => user._id == this.myId)?.Menu_User?.selectedMenu,
             },
             width: "100%"
         });
@@ -103,18 +118,19 @@ export class CalendarComponent implements OnInit {
         this.lastDayOfMonth = new Date(this.currYear, this.currMonth, this.lastDateOfMonth.getDate())
         this.lastDateOfLastMonth = new Date(this.currYear, this.currMonth, 0)
 
-        const numberOfFirstDayofMont = this.firstDayOfMonth.getDay(),
-            numberOfLastDateOfMonth = this.lastDateOfMonth.getDate(),
-            numberOfLastDayOfMonth = this.lastDayOfMonth.getDay(),
-            numberOfLastDateOfLastMonth = this.lastDateOfLastMonth.getDate()
+        const numberOfFirstDayofMont = this.firstDayOfMonth.getDay(),           // NÚMERO DEL PRIMER DÍA DE LA SEMANA DEL MES
+            numberOfLastDateOfMonth = this.lastDateOfMonth.getDate(),           // NÚMERO DEL ULTIMO DIA DEL MES
+            numberOfLastDayOfMonth = this.lastDayOfMonth.getDay(),              // NÚMERO DE LA SEMANA DEL ULTIMO DÍA DEL MES
+            numberOfLastDateOfLastMonth = this.lastDateOfLastMonth.getDate()    // NÚMERO DEL ULTIMO DIA DEL ULTIMO MES
 
         for (let i = numberOfFirstDayofMont; i > 0; i--) {
             const day = numberOfLastDateOfLastMonth - i + 1
-            const thisDay = new Date(this.currYear, this.currMonth, day)
+            const thisDay = new Date(this.currYear, this.lastDateOfLastMonth.getMonth(), day)
 
             const dayInfo: Day = {
                 dayInfo: thisDay,
-                status: 'inactive',
+                dayName: '',
+                status: -1, //inactivo
                 menu: undefined,
                 isWeekend: false,
                 validToAdd: false
@@ -128,21 +144,25 @@ export class CalendarComponent implements OnInit {
             const isToday = i === this.date.getDate()
                 && this.currMonth === new Date().getMonth()
                 && this.currYear === new Date().getFullYear()
+            const status = isToday ? 0 : i == 1 ? 2 : i == numberOfLastDateOfMonth ? 3 : 1
 
             const day = new Date(this.currYear, this.currMonth, i).getDay()
-            const thisDay = new Date(this.currYear, this.currMonth, i)
+            const dayInfo = new Date(this.currYear, this.currMonth, i)
 
             const tomorrow = new Date()
             tomorrow.setDate(tomorrow.getDate() + 1)
-            const validToAdd = +new Date(this.currYear, this.currMonth, i) > +tomorrow
+            tomorrow.setHours(0, 0, 0, 0)
 
-            const dayName = this.getDayName(thisDay)
+            const isWeekend = day == 0 || day == 6
+            const validToAdd = !isWeekend && +new Date(this.currYear, this.currMonth, i) >= +tomorrow
+
+            const dayName = this.getDayName(dayInfo)
             const thisDayInfo: Day = {
-                dayInfo: thisDay,
-                dayName: dayName,
-                status: isToday ? 'today' : '',
+                dayInfo,
+                dayName,
+                status,
                 menu,
-                isWeekend: day == 0 || day == 6,
+                isWeekend,
                 validToAdd
             }
 
@@ -157,7 +177,7 @@ export class CalendarComponent implements OnInit {
             const dayInfo: Day = {
                 dayInfo: thisDay,
                 dayName: '',
-                status: 'inactive',
+                status: -1, // inactivo
                 menu: undefined,
                 isWeekend: false,
                 validToAdd: false
@@ -182,7 +202,16 @@ export class CalendarComponent implements OnInit {
         }
 
         this.socketIoService.requestMenusOfMonth(this.currMonth + 1)
+        this.actualMonth = this.date.getMonth() == this.currMonth
         this.constructCalendar()
+    }
+
+    scrollToTop () {
+        this.document.querySelector('.calendar').scrollTop = 0
+    }
+
+    scrollToToday () {
+        this.document.querySelector('#today').scrollIntoView()
     }
 
     private checkMenu(day: number) {

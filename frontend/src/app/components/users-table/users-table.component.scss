@@ -36,6 +36,10 @@ $titleHeight: 50px;
             margin: auto;
             max-width: $pcSize;
         }
+
+        table {
+            width: max-content;
+        }
     }
 }
 

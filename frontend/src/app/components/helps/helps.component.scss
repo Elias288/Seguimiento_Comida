@@ -47,17 +47,19 @@ p {
 
     @media screen and (max-width: $pcSize) {
         display: none;
+
+        width: 100%;
+        height: calc(100vh - $navbarHeight * 2);
+        max-height: 100%;
         padding: 0;
         margin: 0;
+        position: absolute;
+        background: rgb(255 255 255 / 95%);
         border: none;
+        margin: 0;
 
         &.is-open {
             display: block;
-            position: absolute;
-            width: 100%;
-            background: rgb(255 255 255 / 95%);
-            margin: 0;
-            height: calc(100% - $navbarHeight * 2);
         }
     }
 

@@ -110,6 +110,7 @@ export class PerfilComponent {
         this.dialog.open(MenuDialogComponent, {
             data: {
                 menu,
+                mySelectedMenu: menu.Menu_Users?.selectedMenu
             },
             width: "100%"
         });

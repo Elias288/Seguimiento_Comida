@@ -8,8 +8,7 @@
             <div>
                 <p class="current-date">{{currentDateText}}</p>
                 <div class="todayBtn">
-                    <a mat-button color="primary" href="seguimiento-almuerzo/calendar#today"
-                        *ngIf="date.getMonth() == currentDate.getMonth()">Hoy</a>
+                    <button mat-raised-button color="primary" *ngIf="date.getMonth() == currentDate.getMonth()" (click)="scrollToToday()">Hoy</button>
                 </div>
                 <div class="icons">
                     <mat-icon id="prev" (click)="prevNextMonth($event)" fontIcon="chevron_left" />
@@ -20,8 +19,8 @@
         <div class="calendarMovil">
             <div class="calendar">
                 <ul class="days">
-                    <li *ngFor="let day of calendarMovil" [class.inactive]="day.status === 'inactive'"
-                        [class.today]="day.status === 'today'" [id]="day.status === 'today' ? 'today' : ''">
+                    <li *ngFor="let day of calendarMovil" [id]="day.status == 0 ? 'today' : day.dayInfo.getDate()"
+                        [class.inactive]="day.status == -1" [class.today]="day.status == 0" #listOfDays>
                         <h2>{{day.dayName}}, {{day.dayInfo.getDate()}}</h2>
 
                         <div *ngIf="day.menu" class="menu" (click)="openDialog(day.menu)">
@@ -36,7 +35,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="!day.menu && canAddMenus && day.status != 'inactive' && day.validToAdd"
+                        <div *ngIf="!day.menu && canAddMenus && day.status != -1 && day.validToAdd && !day.isWeekend"
                             class="addMenu">
                             <button mat-raised-button color="primary" (click)="addMenu(day.dayInfo.getDate())"
                                 id="{{day.dayInfo.getDay()}}">
@@ -44,6 +43,7 @@
                                 Agregar Menu
                             </button>
                         </div>
+                        <!-- <pre>{{day | json}}</pre> -->
                     </li>
                 </ul>
             </div>
@@ -61,8 +61,8 @@
                         <li><strong>Sabado</strong></li>
                     </ul>
                     <ul class="days">
-                        <li *ngFor="let day of calendarPC" [class.inactive]="day.status === 'inactive'"
-                            [class.today]="day.status === 'today'">
+                        <li *ngFor="let day of calendarPC" [class.inactive]="day.status == -1"
+                            [class.today]="day.status == 0">
                             <p>{{day.dayInfo.getDate()}}</p>
 
                             <div *ngIf="day.menu" class="menu" (click)="openDialog(day.menu)">
@@ -77,7 +77,7 @@
                                 </div>
                             </div>
 
-                            <div *ngIf="!day.menu && canAddMenus && day.status != 'inactive' && day.validToAdd && !day.isWeekend"
+                            <div *ngIf="!day.menu && canAddMenus && day.status != -1 && day.validToAdd && !day.isWeekend"
                                 class="addMenu">
                                 <button mat-raised-button color="primary" (click)="addMenu(day.dayInfo.getDate())"
                                     id="{{day.dayInfo.getDay()}}">
@@ -85,6 +85,7 @@
                                     Agregar Menu
                                 </button>
                             </div>
+                            <!-- <pre>{{day | json}}</pre> -->
                         </li>
                     </ul>
                 </div>

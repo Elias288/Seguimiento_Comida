@@ -74,6 +74,12 @@ export class MenuDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.authService.user$.subscribe(user => {
+            this.userRol = user.rol
+            this.canBeAddedToMenu = user.rol >= 0
+            this.canManageMenus = user.rol >= 0 && user.rol < 2
+        })
+
         if (this.menu.users) {
             this.usersInMenu = this.menu.users
             this.dataCountMenuOption = [{
@@ -107,13 +113,6 @@ export class MenuDialogComponent implements OnInit {
             date: new FormControl(this.completeDate, [
                 Validators.required,
             ])
-        })
-
-        this.authService.user$.subscribe(user => {
-            this.userRol = user.rol
-            this.canBeAddedToMenu = user.rol >= 0
-            this.canManageMenus = user.rol >= 0 && user.rol < 2
-
         })
     }
 

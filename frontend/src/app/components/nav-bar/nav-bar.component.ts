@@ -99,15 +99,6 @@ export class NavBarComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.activatedRoute.fragment.subscribe((value) => {
-            value && this.jumpTo(value)
-        })
-    }
-
-    jumpTo(section: string) {
-        setTimeout(() => {
-            document.getElementById(section)?.scrollIntoView()
-        }, 500);
     }
 
     public toggleMenu(value: boolean) {

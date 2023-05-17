@@ -1,7 +1,7 @@
 <nav class="navBar">
     <ul>
         <li class="home">
-            <a [routerLink]="['./calendar']" fragment="today">
+            <a [routerLink]="['./calendar']">
                 <img src="assets/images/logo-sofka-blanco.png" alt="Logo Sofka" class="sofkaLogo">
             </a>
         </li>
@@ -16,8 +16,7 @@
                 reqRol
             </button>
 
-            <button mat-button class="menu-item" [routerLink]="['./calendar']" fragment="today"
-                (click)="toggleMenu(false)">
+            <button mat-button class="menu-item" [routerLink]="['./calendar']" (click)="toggleMenu(false)">
                 <mat-icon fontIcon="home" />
                 Inicio
             </button>
