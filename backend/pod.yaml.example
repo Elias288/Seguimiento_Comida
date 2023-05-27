@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: proyecto_comida
+spec:
+  containers:
+  - name: back
+    image: localhost/proyecto_comida_backend_img:latest
+    ports:
+      - containerPort: 3000
+        hostPort: 8080
+    volumeMounts:
+    - mountPath: /usr/src/app
+      name: backendVolume
+    env:
+    - name: PORT
+      value: 3000
+    - name: DEV
+      value: true
+  - name: database
+    image: docker.io/library/mysql:8.0
+    env:
+    - name: MYSQL_DATABASE
+      value: Pcomida_db
+    - name: MYSQL_ROOT_PASSWORD
+      value: <DBpassword>
+    ports:
+      - containerPort: 3306
+        hostPort: 3306
+    volumeMounts:
+    - mountPath: /var/lib/mysql
+      name: proyecto_comida_dbVolume # cualquier contenedor que acceda a este volumen comparte db
+  volumes:
+    - name: backendVolume
+      hostPath:
+        path: <hostPath>/proyecto_comida/backend
+        type: Directory
+    - name: proyecto_comida_dbVolume
+      persistentVolumeClaim:
+        claimName: proyecto_comida_dbVolume

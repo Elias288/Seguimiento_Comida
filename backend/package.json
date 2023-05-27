@@ -4,15 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "podh": "echo podI (init) && echo podU (update) && echo podC (clean) && echo podP (pause) && && echo podS (start)",
-    "podI": "bash ./scripts/podmanInit.sh",
-    "podU": "bash ./scripts/podmanUpdate.sh",
-    "podC": "podman pod stop my_pod && podman pod rm my_pod",
-    "podP": "podman pod stop my_pod",
-    "podS": "podman pod start my_pod"
+    "start": "if $DEV; then nodemon -L src/index.js; else node src/index.js; fi",
+
+    "podH": "bash ./scripts/podmanScript.sh help",
+    "podI": "bash ./scripts/podmanScript.sh init",
+    "podU": "bash ./scripts/podmanScript.sh update",
+    "podP": "bash ./scripts/podmanScript.sh stop",
+    "podC": "bash ./scripts/podmanScript.sh clear"
   },
   "keywords": [],
   "author": "Elias",
