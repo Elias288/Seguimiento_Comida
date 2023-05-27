@@ -9,14 +9,14 @@ Para este proyecto se utilizan 2 contenedores, uno para la [base de datos](#mysq
 
 ### Variables de entorno
 
-Para poder ejecutar el proyecto es necesario tener el archivo `.env` en nuestro directorio raiz del backend. Para eso se debe duplicar el archivo de ejemplo: [/backend/.env.example](./.env.example), eliminar la extención '.example' y agregar todos los datos necesarios.
+Para poder ejecutar el proyecto es necesario tener el archivo `.env` en nuestro directorio raiz del backend. Para eso se puede duplicar el archivo que se dejó de ejemplo: [/backend/.env.example](./.env.example), eliminar la extención '.example' y agregar todos los datos necesarios.
 
 ### Generar imagen del backend
 
-> Para iniciar este proyecto de forma local necesitaremos generar la imagen del backend y para hacerlo ejecutaremos el siguiente comando. <br>Para saber mas [Ensamblar imagen de contenedor](#ensamble-de-imagen)
-> ```bash
-> podman build -t proyecto_comida_backend_img .
-> ```
+Para iniciar este proyecto de forma local necesitaremos generar la imagen del backend y para hacerlo ejecutaremos el siguiente comando. <br>Para saber mas [Ensamblar imagen de contenedor](#ensamble-de-imagen)
+```bash
+podman build -t proyecto_comida_backend_img .
+```
 
 ### Generar POD
 
@@ -24,15 +24,15 @@ Los [PODS](#pod) son contenedores de podman que permiten administrar multiples c
 
 #### Generar POD - Usando Kubernet
 
-> Para generar nuestro POD usando Kubernet necesitaremos un manifiesto kubernete. Para eso se debe duplicar el archivo de ejemplo: [/backend/pod.yaml.example](./pod.yaml.example), eliminar la extención '.example' y entraremos a modificar:
-> 
-> - `<DBpassword>` por una contraseña para nuestra base de datos.
-> - `<hostPath>` por un path absoluto hasta donde tenemos guardado este repositorio (en windows, si una carpeta tiene espacios rodearlo de comillas, ej `mnt/c/Users/"jose carpincho"/.../proyecto_comida/backend`)
+Para generar nuestro POD usando Kubernet necesitaremos un manifiesto kubernete. Para eso se puede duplicar el archivo que se dejó de ejemplo: [/backend/pod.yaml.example](./pod.yaml.example), eliminar la extención '.example' y modificar:
 
-> Una vez que ya contamos con nuestro archivo `pod.yaml` podremos ejecutar el siguiente comando para crear nuestro pod junto con el backend y la base de datos especificados en el archivo.
-> ```bash
-> podman play kube pod.yaml
-> ```
+- `<DBpassword>` por una contraseña para nuestra base de datos.
+- `<hostPath>` por un path absoluto hasta donde tenemos guardado este repositorio (en windows, si una carpeta tiene espacios rodearlo de comillas, ej `mnt/c/Users/"jose carpincho"/.../proyecto_comida/backend`)
+
+Una vez que ya contamos con nuestro archivo `pod.yaml` podremos ejecutar el siguiente comando para crear nuestro pod junto con el backend y la base de datos especificados en el archivo.
+```bash
+podman play kube pod.yaml
+```
 
 #### Generar POD - Manualmente
 
