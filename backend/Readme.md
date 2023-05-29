@@ -14,27 +14,22 @@ Para poder ejecutar el proyecto es necesario tener el archivo `.env` en nuestro 
 ### Generar imagen del backend
 
 > Para iniciar este proyecto de forma local necesitaremos generar la imagen del backend y para hacerlo ejecutaremos el siguiente comando. <br>Para saber mas [Ensamblar imagen de contenedor](#ensamble-de-imagen)
-> ```bash
+> ```sh
 > podman build -t proyecto_comida_backend_img .
 > ```
 
-### Generar POD
+### Generar POD - Usando Kubernet
 
-Los [PODS](#pod) son contenedores de podman que permiten administrar multiples contenedores.
-
-#### Generar POD - Usando Kubernet
-
-> Para generar nuestro POD usando Kubernet necesitaremos un manifiesto kubernete. Para eso se debe duplicar el archivo de ejemplo: [/backend/pod.yaml.example](./pod.yaml.example), eliminar la extención '.example' y entraremos a modificar:
-> 
-> - `<DBpassword>` por una contraseña para nuestra base de datos.
-> - `<hostPath>` por un path absoluto hasta donde tenemos guardado este repositorio (en windows, si una carpeta tiene espacios rodearlo de comillas, ej `mnt/c/Users/"jose carpincho"/.../proyecto_comida/backend`)
+> Para generar nuestro POD usando Kubernet necesitaremos un manifiesto kubernete. Para eso se debe duplicar el archivo de ejemplo: [/backend/pod.yaml.example](./pod.yaml.example), eliminar la extención '.example' y entraremos a modificar el `<DBpassword>` por una contraseña para nuestra base de datos.
 
 > Una vez que ya contamos con nuestro archivo `pod.yaml` podremos ejecutar el siguiente comando para crear nuestro pod junto con el backend y la base de datos especificados en el archivo.
-> ```bash
+> 
+> *Ejecutar este comando desde el path del backend*
+> ```sh
 > podman play kube pod.yaml
 > ```
 
-#### Generar POD - Manualmente
+### Generar POD - Manualmente
 
 Para facilitar usaremos los datos del pod.yaml.
 
@@ -42,8 +37,11 @@ Para facilitar usaremos los datos del pod.yaml.
 > 
 > Lo primero que hay que hacer es crear un pod de contenedores local que llaremos `proyecto_comida` con salida al puerto `8080` y al `3306`.
 > 
-> ```BASH
-> podman pod create --name proyecto_comida -p 8080:3000 -p 3306:3306
+> ```sh
+> podman pod create \
+> --name proyecto_comida \
+> -p 8080:3000 \
+> -p 3306:3306
 > ```
 >
 > [Ayuda Pod](https://mohitgoyal-co.translate.goog/2021/04/23/spinning-up-and-managing-pods-with-multiple-containers-with-podman/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=sc)
@@ -53,17 +51,29 @@ Para facilitar usaremos los datos del pod.yaml.
 > Generaremos nuestra Base de datos MYSQL en el pod `proyecto_comida`.<br>
 > *Agregar una contraseña en `<DBpassword>`*
 >
-> ```BASH
-> podman run -d --pod proyecto_comida --name db -e MYSQL_ROOT_PASSWORD=<DBpassword> -e MYSQL_DATABASE=Pcomida_db -v proyecto_comida_dbVolume mysql:8.0
+> ```sh
+> podman run -d \
+> --pod proyecto_comida \
+> --name proyecto_comida-db \
+> -e MYSQL_ROOT_PASSWORD=<DBpassword> \
+> -e MYSQL_DATABASE=Pcomida_db \
+> -v proyecto_comida_dbVolume:/var/lib/mysql \
+> mysql:8.0
 > ```
 
->   **BACKEND**
+> **BACKEND**
 > 
 > Por ultimo generaremos el contenedor con el backend en el pod `proyecto_comida`.<br>
-> *Agrgar el path hasta el repositorio en `<hostPath>`*
+> *Ejecutar este comando desde el path del backend*
 >
-> ```BASH
-> podman run -d --pod proyecto_comida -p 8080:3000 -v <hostPath>:/usr/src/app -e PORT=3000 -e DEV=true --name backend proyecto_comida_backend_img
+> ```sh
+> podman run -d \
+> --pod proyecto_comida \
+> -v "$(pwd)":/usr/src/app \
+> -e PORT=3000 \
+> -e DEV=true \
+> --name proyecto_comida-backend \
+> proyecto_comida_backend_img
 > ```
 
 --- 
@@ -76,7 +86,7 @@ Para facilitar usaremos los datos del pod.yaml.
 
 > Para iniciar el contenedor [Pod](#pod) con [Node](#contenedor-node) y [MYSQL](#mysql) se utiliza el archivo kube [container-compose.yaml](./container-compose.yaml) explicado en [Generar manifiesto kubernete](#generar-manifiesto-kubernete).
 > 
-> ```BASH 
+> ```sh 
 > npm run podI
 > ```
 >
@@ -86,7 +96,7 @@ Para facilitar usaremos los datos del pod.yaml.
 
 > Para actualizar contenedor de node:
 >
-> ```BASH
+> ```sh
 > npm run podU
 > ```
 >
@@ -96,7 +106,7 @@ Para facilitar usaremos los datos del pod.yaml.
 
 > Para pausar la ejecución del pod `my_pod`:
 > 
-> ```BASH
+> ```sh
 > npm run podP
 > ```
 
@@ -104,28 +114,28 @@ Para facilitar usaremos los datos del pod.yaml.
 
 > Para reanudar ejecución del pod `my_pod`: 
 > 
-> ```BASH
+> ```sh
 > npm run podS
 > ```
 
 ### Limpiar contenedor
 
 > Para parar y eliminar los contenedores dentro del pod:
-> ```BASH
+> ```sh
 > npm run podC
 > ```
 
 ### Entrar a un contenedor
 
 > Para explorador bash del conenedor de nombre `<containerName>`
-> ```BASH
+> ```sh
 > podman exec -it <containerName> bash
 > ```
 
 ### Logs de contenedor
 
 > Ver de forma interactiva los logs de un contenedor de nombre `<containerName>`
-> ```BASH
+> ```sh
 > podman logs -f <containerName>
 > ```
 
@@ -137,7 +147,7 @@ Para facilitar usaremos los datos del pod.yaml.
 >
 > Teniendo ya [creado](#crear-un-pod) con sus contenedores adentro, el siguiente comando genera el manifiesto kubernete:
 >
-> ```BASH
+> ```sh
 > podman generate kube my_pod > container-compose.yaml
 > ```
 
@@ -146,7 +156,7 @@ Para facilitar usaremos los datos del pod.yaml.
 
 > Para ejecutar el [manifiesto kubernete](#generar-manifiesto-kubernete) se utiliza el siguiente comando:
 >
-> ```BASH
+> ```sh
 > podman play kube <container-compose.yaml>
 > ```
 
@@ -160,7 +170,7 @@ Para facilitar usaremos los datos del pod.yaml.
 > - [Entrar al contenedor](#entrar-a-un-contenedor)
 > - Loguearse con la contraseña
 >
-> ```BASH
+> ```sh
 > mysql -u root -p
 > ```
 
@@ -176,7 +186,7 @@ Estos comandos ya vienen con parametros por defecto para facilitar la implementa
 >
 > En este caso nuestro archivo `Containerfile` contendra las siguientes ordenes:
 > 
-> ```bash
+> ```sh
 > FROM node:18                  # Le indicamos que imagen debe tomar
 > RUN mkdir -p /usr/src/app     # Creara si no existen el directorio /usr/src/app
 > WORKDIR /usr/src/app          # Definira el siguiente directorio en el que trabajaremos
@@ -189,7 +199,7 @@ Estos comandos ya vienen con parametros por defecto para facilitar la implementa
 >
 > Para crear nuestra imagen ejecutaremos el siguiente comando:
 > 
-> ```BASH
+> ```sh
 > podman build -t <img_name> .
 > ```
 > Documentacion - [podman build](https://docs.podman.io/en/latest/markdown/podman-build.1.html)
@@ -198,7 +208,7 @@ Estos comandos ya vienen con parametros por defecto para facilitar la implementa
 
 > Para instanciar el contenedor
 >
-> ```BASH
+> ```sh
 > podman run --name <container_name> <img_name>
 > ```
 > Documentacion - [podman run](https://docs.podman.io/en/latest/markdown/podman-run.1.html)

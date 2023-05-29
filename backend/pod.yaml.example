@@ -33,7 +33,7 @@ spec:
   volumes:
     - name: backendVolume
       hostPath:
-        path: <hostPath>/proyecto_comida/backend
+        path: ./
         type: Directory
     - name: proyecto_comida_dbVolume
       persistentVolumeClaim:
